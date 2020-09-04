@@ -18,7 +18,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/loginIDEditText"
+                android:id="@+id/joinUserEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/userName"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/joinIDEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/email"/>
@@ -28,44 +37,31 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/loginPWEditText"
+                android:id="@+id/joinPWEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="@string/password"/>
         </com.google.android.material.textfield.TextInputLayout>
-
         <Button
-            android:id="@+id/loginBtn"
+            android:id="@+id/joinBtn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
+            android:text="@string/join"
+            android:textColor="@android:color/white"
             android:background="@drawable/btn_pinktored"
-            android:onClick="onLoginBtnClicked"
-            android:text="@string/login"
-            android:textColor="@android:color/white" />
-        <TextView
-            android:id="@+id/lostPW"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lostPassword"
-            android:gravity="center"
-            android:paddingTop="16dp"
-            android:visibility="invisible"/>
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:onClick="onJoinBtnClicked"/>
     </LinearLayout>
 
     <TextView
-        android:id="@+id/joinTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/noJoinYet"
-        android:layout_weight="8"
-        android:layout_gravity="center"
+        android:id="@+id/welcomeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F28379"
+        android:text="Welcome"
+        android:textSize="50sp"
+        android:textColor="@android:color/white"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:onClick="onNotJoinYetClicked"/>
+        android:visibility="invisible"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
