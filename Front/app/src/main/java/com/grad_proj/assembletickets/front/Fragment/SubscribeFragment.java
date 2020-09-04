@@ -1,4 +1,4 @@
-package Fragment;
+package com.grad_proj.assembletickets.front.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

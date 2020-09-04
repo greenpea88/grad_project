@@ -11,10 +11,10 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grad_proj.assembletickets.front.R;
 
-import Fragment.CalendarFragment;
-import Fragment.SubscribeFragment;
-import Fragment.TicketFragment;
-import Fragment.UserFragment;
+import com.grad_proj.assembletickets.front.Fragment.CalendarFragment;
+import com.grad_proj.assembletickets.front.Fragment.SubscribeFragment;
+import com.grad_proj.assembletickets.front.Fragment.TicketFragment;
+import com.grad_proj.assembletickets.front.Fragment.UserFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
