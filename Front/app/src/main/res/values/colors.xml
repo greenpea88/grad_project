@@ -3,4 +3,19 @@
     <color name="colorPrimary">#F28379</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#5897A6</color>
+    <color name="colorFastWithUs1">#5897A6</color>
+    <color name="colorFastWithUs2">#F2E9E4</color>
+    <color name="colorFastWithUs3">#F25E3D</color>
+    <color name="colorFastWithUs4">#F21905</color>
+    <color name="colorFastWithUs5">#F28379</color>
+    <color name="colorKindCar1">#F27E88</color>
+    <color name="colorKindCar2">#A63F52</color>
+    <color name="colorKindCar3">#2A3159</color>
+    <color name="colorKindCar4">#9ACDD9</color>
+    <color name="colorKindCar5">#BDF2ED</color>
+    <color name="colorNanaKomatsu1">#F2E6D8</color>
+    <color name="colorNanaKomatsu2">#D9B6A9</color>
+    <color name="colorNanaKomatsu3">#F23E2E</color>
+    <color name="colorNanaKomatsu4">#BF3326</color>
+    <color name="colorNanaKomatsu5">#0D0D0D</color>
 </resources>
