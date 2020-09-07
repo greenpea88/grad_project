@@ -17,30 +17,36 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/joinUserEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="@string/userName"/>
+                android:hint="@string/userName"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/joinIDEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="@string/email"/>
+                android:hint="@string/email"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/joinPWEditText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="@string/password"/>
+                android:hint="@string/password"
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
         <Button
             android:id="@+id/joinBtn"
