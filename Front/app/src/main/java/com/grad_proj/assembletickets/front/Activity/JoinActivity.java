@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -30,6 +31,9 @@ public class JoinActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.join);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         joinUserEditText = findViewById(R.id.joinUserEditText);
         joinIDEditText = findViewById(R.id.joinIDEditText);

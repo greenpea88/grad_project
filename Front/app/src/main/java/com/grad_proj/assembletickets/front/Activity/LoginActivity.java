@@ -1,5 +1,6 @@
 package com.grad_proj.assembletickets.front.Activity;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -19,7 +20,6 @@ import com.grad_proj.assembletickets.front.R;
 
 //TODO: 비밀번호 잊엇는지에 대한 문구를 언제 띄울 것인가?
 //TODO: 키보드 올라가면 가리는만큼 올리기
-//TODO: Enter 입력하면 줄바꿈 말고 다음 입력칸으로 이동 또는 Login 실행하도록
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,6 +33,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         loginIDEditText = findViewById(R.id.loginIDEditText);
         loginPWEditText = findViewById(R.id.loginPWEditText);
