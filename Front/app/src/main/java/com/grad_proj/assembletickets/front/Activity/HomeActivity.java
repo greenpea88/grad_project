@@ -6,10 +6,15 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.grad_proj.assembletickets.front.R;
 
 import com.grad_proj.assembletickets.front.Fragment.CalendarFragment;
@@ -26,13 +31,15 @@ public class HomeActivity extends AppCompatActivity {
     private SubscribeFragment subscribeFragment = new SubscribeFragment();
     private UserFragment userFragment = new UserFragment();
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.home);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("캘린더");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
 
@@ -49,18 +56,22 @@ public class HomeActivity extends AppCompatActivity {
                 switch(menuItem.getItemId()){
                     case R.id.navigation_calendar:{
                         fragmentTransaction.replace(R.id.frameLayout,calendarFragment).commitAllowingStateLoss();
+                        toolbar.setTitle("캘린더");
                         break;
                     }
                     case R.id.navigation_ticket:{
                         fragmentTransaction.replace(R.id.frameLayout,ticketFragment).commitAllowingStateLoss();
+                        toolbar.setTitle("둘러보기");
                         break;
                     }
                     case R.id.navigation_sub:{
                         fragmentTransaction.replace(R.id.frameLayout,subscribeFragment).commitAllowingStateLoss();
+                        toolbar.setTitle("구독");
                         break;
                     }
                     case R.id.navigation_profile:{
                         fragmentTransaction.replace(R.id.frameLayout,userFragment).commitAllowingStateLoss();
+                        toolbar.setTitle("설정");
                         break;
                     }
                 }
@@ -69,4 +80,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+//    @Override
+//    public void onBackPressed() {
+//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
+
 }

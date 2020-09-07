@@ -32,9 +32,6 @@ public class JoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.join);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
-
         joinUserEditText = findViewById(R.id.joinUserEditText);
         joinIDEditText = findViewById(R.id.joinIDEditText);
         joinPWEditText = findViewById(R.id.joinPWEditText);
