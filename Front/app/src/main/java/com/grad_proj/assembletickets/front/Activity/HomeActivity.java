@@ -2,6 +2,7 @@ package com.grad_proj.assembletickets.front.Activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -31,15 +32,15 @@ public class HomeActivity extends AppCompatActivity {
     private SubscribeFragment subscribeFragment = new SubscribeFragment();
     private UserFragment userFragment = new UserFragment();
 
-    Toolbar toolbar;
+    TextView titleText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
 
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("캘린더");
+        titleText = findViewById(R.id.titleText);
+        titleText.setText("캘린더");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
 
@@ -56,22 +57,22 @@ public class HomeActivity extends AppCompatActivity {
                 switch(menuItem.getItemId()){
                     case R.id.navigation_calendar:{
                         fragmentTransaction.replace(R.id.frameLayout,calendarFragment).commitAllowingStateLoss();
-                        toolbar.setTitle("캘린더");
+                        titleText.setText("캘린더");
                         break;
                     }
                     case R.id.navigation_ticket:{
                         fragmentTransaction.replace(R.id.frameLayout,ticketFragment).commitAllowingStateLoss();
-                        toolbar.setTitle("둘러보기");
+                        titleText.setText("둘러보기");
                         break;
                     }
                     case R.id.navigation_sub:{
                         fragmentTransaction.replace(R.id.frameLayout,subscribeFragment).commitAllowingStateLoss();
-                        toolbar.setTitle("구독");
+                        titleText.setText("구독");
                         break;
                     }
                     case R.id.navigation_profile:{
                         fragmentTransaction.replace(R.id.frameLayout,userFragment).commitAllowingStateLoss();
-                        toolbar.setTitle("설정");
+                        titleText.setText("설정");
                         break;
                     }
                 }
