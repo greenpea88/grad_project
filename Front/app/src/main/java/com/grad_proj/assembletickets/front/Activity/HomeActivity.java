@@ -2,6 +2,12 @@ package com.grad_proj.assembletickets.front.Activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,7 +38,15 @@ public class HomeActivity extends AppCompatActivity {
     private SubscribeFragment subscribeFragment = new SubscribeFragment();
     private UserFragment userFragment = new UserFragment();
 
-    TextView titleText;
+    private TextView titleText;
+    private ImageButton searchBtn;
+    private ImageButton notificationBtn;
+    private LinearLayout notiPage;
+
+    private boolean isPageOpen;
+
+    private Animation translateLeft;
+    private Animation translateRight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
 
         titleText = findViewById(R.id.titleText);
         titleText.setText("캘린더");
+        notiPage = findViewById(R.id.notiPage);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
 
@@ -52,34 +67,85 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                switch(menuItem.getItemId()){
-                    case R.id.navigation_calendar:{
-                        fragmentTransaction.replace(R.id.frameLayout,calendarFragment).commitAllowingStateLoss();
-                        titleText.setText("캘린더");
-                        break;
-                    }
-                    case R.id.navigation_ticket:{
-                        fragmentTransaction.replace(R.id.frameLayout,ticketFragment).commitAllowingStateLoss();
-                        titleText.setText("둘러보기");
-                        break;
-                    }
-                    case R.id.navigation_sub:{
-                        fragmentTransaction.replace(R.id.frameLayout,subscribeFragment).commitAllowingStateLoss();
-                        titleText.setText("구독");
-                        break;
-                    }
-                    case R.id.navigation_profile:{
-                        fragmentTransaction.replace(R.id.frameLayout,userFragment).commitAllowingStateLoss();
-                        titleText.setText("설정");
-                        break;
-                    }
-                }
-
+                switchFragment(menuItem);
                 return true;
             }
         });
+
+        translateLeft = AnimationUtils.loadAnimation(this, R.anim.translate_left);
+        translateRight = AnimationUtils.loadAnimation(this, R.anim.translate_right);
+
+        SlidingPageAnimationListner animListner = new SlidingPageAnimationListner();
+        translateLeft.setAnimationListener(animListner);
+        translateRight.setAnimationListener(animListner);
+
+        // 검색 사이드바
+        searchBtn = findViewById(R.id.searchButton);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        // 알림 사이드바
+        notificationBtn = findViewById(R.id.notiButton);
+        notificationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPageOpen) {
+                    notiPage.startAnimation(translateRight);
+                } else {
+                    notiPage.setVisibility(View.VISIBLE);
+                    notiPage.startAnimation(translateLeft);
+                }
+            }
+        });
+
+    }
+
+    private void switchFragment(@NonNull MenuItem menuItem) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch(menuItem.getItemId()){
+            case R.id.navigation_calendar:{
+                fragmentTransaction.replace(R.id.frameLayout,calendarFragment).commitAllowingStateLoss();
+                titleText.setText("캘린더");
+                break;
+            }
+            case R.id.navigation_ticket:{
+                fragmentTransaction.replace(R.id.frameLayout,ticketFragment).commitAllowingStateLoss();
+                titleText.setText("둘러보기");
+                break;
+            }
+            case R.id.navigation_sub:{
+                fragmentTransaction.replace(R.id.frameLayout,subscribeFragment).commitAllowingStateLoss();
+                titleText.setText("구독");
+                break;
+            }
+            case R.id.navigation_profile:{
+                fragmentTransaction.replace(R.id.frameLayout,userFragment).commitAllowingStateLoss();
+                titleText.setText("설정");
+                break;
+            }
+        }
+    }
+
+    private class SlidingPageAnimationListner implements Animation.AnimationListener {
+
+        public void onAnimationEnd(Animation animation) {
+            if (isPageOpen) {
+                notiPage.setVisibility(View.INVISIBLE);
+                isPageOpen = false;
+            } else {
+                isPageOpen = true;
+            }
+        }
+
+        @Override
+        public void onAnimationStart(Animation animation) { }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) { }
     }
 
 //    @Override
