@@ -11,4 +11,8 @@
         <item name="colorPrimary">@color/colorFastWithUs1</item>
     </style>
 
+    <style name="ToolbarTitle" parent="Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">24sp</item>
+    </style>
+
 </resources>
