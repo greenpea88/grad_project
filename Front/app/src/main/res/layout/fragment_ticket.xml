@@ -23,35 +23,35 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="전체보기" />
 
                 <Button
                     android:id="@+id/categoryMusical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="뮤지컬" />
 
                 <Button
                     android:id="@+id/categoryConcert"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="콘서트" />
 
                 <Button
                     android:id="@+id/categoryPlay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="연극" />
 
                 <Button
                     android:id="@+id/categoryKid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Button" />
+                    android:text="클래식" />
             </LinearLayout>
         </ScrollView>
 
