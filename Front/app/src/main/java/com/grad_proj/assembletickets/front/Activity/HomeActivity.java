@@ -5,23 +5,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 import com.grad_proj.assembletickets.front.R;
 
 import com.grad_proj.assembletickets.front.Fragment.CalendarFragment;
@@ -45,8 +38,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private boolean isPageOpen;
 
-    private Animation translateLeft;
-    private Animation translateRight;
+    private Animation translateDown;
+    private Animation translateUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +65,12 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        translateLeft = AnimationUtils.loadAnimation(this, R.anim.translate_left);
-        translateRight = AnimationUtils.loadAnimation(this, R.anim.translate_right);
+        translateDown = AnimationUtils.loadAnimation(this, R.anim.translate_down);
+        translateUp = AnimationUtils.loadAnimation(this, R.anim.translate_up);
 
         SlidingPageAnimationListner animListner = new SlidingPageAnimationListner();
-        translateLeft.setAnimationListener(animListner);
-        translateRight.setAnimationListener(animListner);
+        translateDown.setAnimationListener(animListner);
+        translateUp.setAnimationListener(animListner);
 
         // 검색 사이드바
         searchBtn = findViewById(R.id.searchButton);
@@ -94,10 +87,10 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (isPageOpen) {
-                    notiPage.startAnimation(translateRight);
+                    notiPage.startAnimation(translateUp);
                 } else {
                     notiPage.setVisibility(View.VISIBLE);
-                    notiPage.startAnimation(translateLeft);
+                    notiPage.startAnimation(translateDown);
                 }
             }
         });

@@ -85,8 +85,8 @@
     <LinearLayout
         android:id="@+id/notiPage"
         android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="right"
+        android:layout_height="800dp"
+        android:layout_gravity="top|end"
         android:background="@color/colorFastWithUs2"
         android:orientation="vertical"
         android:visibility="gone"
