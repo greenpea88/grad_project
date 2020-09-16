@@ -1,6 +1,6 @@
 package com.grad_proj.assembletickets.front.Activity;
 
-import androidx.appcompat.app.ActionBar;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,11 +10,15 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.grad_proj.assembletickets.front.R;
 
@@ -25,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
 
     TextInputEditText loginIDEditText, loginPWEditText;
     TextView lostPW;
+    GoogleSignInClient mGoogleSignInClient;
+    private static final int RC_SIGN_IN = 9001;
 
     String inputID = "";
     String inputPW = "";
@@ -37,6 +43,11 @@ public class LoginActivity extends AppCompatActivity {
         loginIDEditText = findViewById(R.id.loginIDEditText);
         loginPWEditText = findViewById(R.id.loginPWEditText);
         lostPW = findViewById(R.id.lostPW);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         loginIDEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -91,6 +102,34 @@ public class LoginActivity extends AppCompatActivity {
         else{
             Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
 
+            startActivity(intent);
+        }
+    }
+
+    public void onGoogleLoginClicked(View v){
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            // 로그인 인텐트가 꺼진 이후 로그인 결과 처리
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            Toast.makeText(this, account.getDisplayName()+"("+account.getEmail()+")님, 안녕하세요!", Toast.LENGTH_LONG).show();
+        } catch (ApiException e) {
+            Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());
+            Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
             startActivity(intent);
         }
     }
