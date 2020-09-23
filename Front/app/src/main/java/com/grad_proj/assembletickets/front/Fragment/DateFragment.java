@@ -19,6 +19,8 @@ public class DateFragment extends Fragment {
     private static final String DATE = "";
     private String date;
 
+    public View view;
+
     TextView dateTextView;
 
     public static DateFragment newInstance(String date) {
@@ -35,21 +37,15 @@ public class DateFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        dateTextView = (TextView)getActivity().findViewById(R.id.dateTextView);
-
+        view = inflater.inflate(R.layout.fragment_date,container, false);
+        dateTextView = (TextView)view.findViewById(R.id.dateTextView);
 
         if(getArguments() != null){
             date = getArguments().getString(DATE);
-//            dateTextView.setText(date);
+            dateTextView.setText(date);
         }
 
-        return inflater.inflate(R.layout.fragment_date,container, false);
-//        return view;
+        return view;
     }
 
-    public void setTextViewValue(){
-
-        dateTextView.setText(date); //전달 받은 문자열로 TextView의 글씨를 변경
-
-    }
 }
