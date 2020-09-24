@@ -1,5 +1,6 @@
 package com.grad_proj.assembletickets.front.Activity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,10 +12,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.grad_proj.assembletickets.front.Fragment.DateFragment;
 import com.grad_proj.assembletickets.front.R;
 
 import com.grad_proj.assembletickets.front.Fragment.CalendarFragment;
@@ -43,6 +46,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
 
@@ -139,6 +143,14 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public void onAnimationRepeat(Animation animation) { }
+    }
+
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Fragment로 사용할 MainActivity내의 layout공간을 선택
+        // 뒤로가기 버튼 누르면 이전 fragment로 되돌아옴
+        fragmentTransaction.replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
 //    @Override
