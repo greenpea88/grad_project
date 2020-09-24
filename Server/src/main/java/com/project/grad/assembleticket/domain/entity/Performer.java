@@ -16,11 +16,11 @@ public class Performer {
     private Long id;
 
     // 이름
-    @Column(length = 20, nullable = false)
+    @Column(length = 20, nullable = false, unique = true)
     private String name;
 
     // 사진
-    @Column(length = 50)
+    @Column(length = 200)
     private String imgSrc;
 
     @Builder

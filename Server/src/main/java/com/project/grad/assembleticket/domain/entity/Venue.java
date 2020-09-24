@@ -16,7 +16,7 @@ public class Venue {
     private Long id;
 
     // 공연장 이름
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = false, unique = true)
     private String name;
 
     // 공연장 위치

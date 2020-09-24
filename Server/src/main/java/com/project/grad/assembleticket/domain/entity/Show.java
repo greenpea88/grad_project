@@ -18,7 +18,7 @@ public class Show {
     private Long id;
 
     // 공연 제목
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String title;
 
     // 공연 종류
@@ -38,7 +38,7 @@ public class Show {
     private LocalDateTime ticketOpen;
 
     // 공연 시간 관련 정보
-    @Column(length = 100)
+    @Column(length = 200)
     private String time;
 
     // 러닝타임
@@ -46,7 +46,7 @@ public class Show {
     private int runningTime;
 
     // 티켓 가격 관련 정보
-    @Column(length = 100)
+    @Column(length = 200)
     private String price;
 
     // 티켓 구매처
@@ -54,7 +54,7 @@ public class Show {
     private String buyTicket;
 
     // 포스터 이미지
-    @Column(length = 50, nullable = false)
+    @Column(length = 200, nullable = false)
     private String posterSrc;
 
     // 공연장
@@ -64,7 +64,7 @@ public class Show {
 
     @Builder
     public Show(String title, int type, LocalDate startDate, LocalDate endDate, LocalDateTime ticketOpen,
-                String time, int runningTime, String price, String buyTicket, String posterSrc){
+                String time, int runningTime, String price, String buyTicket, String posterSrc, Venue venue){
         this.title = title;
         this.type = type;
         this.startDate = startDate;
@@ -75,6 +75,7 @@ public class Show {
         this.price = price;
         this.buyTicket = buyTicket;
         this.posterSrc = posterSrc;
+        this.venue = venue;
     }
 
 }
