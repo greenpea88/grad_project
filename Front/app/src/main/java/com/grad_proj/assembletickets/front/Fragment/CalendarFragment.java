@@ -44,7 +44,7 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 int Year = date.getYear();
-                int Month = date.getMonth() + 1;
+                int Month = date.getMonth();
                 int Day = date.getDay();
 
                 Log.i("Year test", Year + "");

@@ -153,6 +153,8 @@ public class HomeActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
+
+
 //    @Override
 //    public void onBackPressed() {
 //        DrawerLayout drawer = findViewById(R.id.drawer_layout);
