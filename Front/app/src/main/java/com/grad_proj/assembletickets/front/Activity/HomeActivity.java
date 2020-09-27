@@ -28,7 +28,6 @@ import com.grad_proj.assembletickets.front.Fragment.UserFragment;
 public class HomeActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
-
     private CalendarFragment calendarFragment = new CalendarFragment();
     private TicketFragment ticketFragment = new TicketFragment();
     private SubscribeFragment subscribeFragment = new SubscribeFragment();

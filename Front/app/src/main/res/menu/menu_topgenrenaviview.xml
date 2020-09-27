@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_total"
+        android:title="전체 보기"
+        android:icon="@drawable/icon_calendar"/>
+    <item
+        android:id="@+id/navigation_musical"
+        android:title="뮤지컬"
+        android:icon="@drawable/icon_ticket"/>
+    <item
+        android:id="@+id/navigation_concert"
+        android:title="콘서트"
+        android:icon="@drawable/icon_subscribe"/>
+    <item
+        android:id="@+id/navigation_play"
+        android:title="연극"
+        android:icon="@drawable/icon_user"/>
+    <item
+        android:id="@+id/navigation_classic"
+        android:title="클래식"
+        android:icon="@drawable/icon_user"/>
+</menu>
