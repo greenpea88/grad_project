@@ -9,9 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
+import com.grad_proj.assembletickets.front.DateEventAdapter;
+import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.R;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class DateFragment extends Fragment {
@@ -20,6 +27,10 @@ public class DateFragment extends Fragment {
     private String date;
 
     public View view;
+    public RecyclerView eventRecyclerView;
+    private DateEventAdapter dateEventAdapter;
+
+
 
     TextView dateTextView;
 
@@ -38,14 +49,43 @@ public class DateFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_date,container, false);
+
+        //getActivity()를 통해 불러올 경우 null pointer error가 발생함
         dateTextView = (TextView)view.findViewById(R.id.dateTextView);
+        eventRecyclerView = (RecyclerView)view.findViewById(R.id.dateEventList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
+        eventRecyclerView.setLayoutManager(linearLayoutManager);
+
+        dateEventAdapter = new DateEventAdapter();
+        eventRecyclerView.setAdapter(dateEventAdapter);
 
         if(getArguments() != null){
             date = getArguments().getString(DATE);
             dateTextView.setText(date);
         }
 
+        getData();
+
         return view;
+    }
+
+    private void getData(){
+        //서버로부터 데이터를 받아오도록 할 것
+        List<String> eventName = Arrays.asList("test1","test2","test3");
+        List<String> eventTime = Arrays.asList("time1","time2","time2");
+
+        for(int i=0; i<eventName.size(); i++){
+            Event event = new Event();
+            event.setEventName(eventName.get(i));
+            event.setTime(eventTime.get(i));
+
+            //data를 adpater에 추가하
+            dateEventAdapter.addItem(event);
+        }
+
+        //adapter값 변경을 알림
+        //호출하지 않을 경우 추가된 data가 보여지지 않
+        dateEventAdapter.notifyDataSetChanged();
     }
 
 }
