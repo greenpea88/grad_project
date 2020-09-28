@@ -27,6 +27,10 @@ public class TicketFragment extends Fragment {
 
     View view;
 
+    public static TicketFragment getInstance(){
+        return new TicketFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -36,6 +40,8 @@ public class TicketFragment extends Fragment {
         setMenu();
 
         viewPager = (ViewPager)view.findViewById(R.id.pagerView);
+        FragmentManager childFragmentManager = getChildFragmentManager();
+
         topMenuBarAdapter = new TopMenuBarAdapter(
                 getChildFragmentManager(),topMenuTab.getTabCount()
         );

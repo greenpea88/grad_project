@@ -27,9 +27,12 @@ import com.grad_proj.assembletickets.front.Fragment.UserFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private static final String TAG_PARENT = "TAG_PARENT";
+
     private FragmentManager fragmentManager = getSupportFragmentManager();
     private CalendarFragment calendarFragment = new CalendarFragment();
-    private TicketFragment ticketFragment = new TicketFragment();
+//    private TicketFragment ticketFragment = new TicketFragment();
+    private Fragment ticketFragment;
     private SubscribeFragment subscribeFragment = new SubscribeFragment();
     private UserFragment userFragment = new UserFragment();
 
@@ -109,7 +112,12 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             }
             case R.id.navigation_ticket:{
-                fragmentTransaction.replace(R.id.frameLayout,ticketFragment).commitAllowingStateLoss();
+                //중첩 프래그먼트 사용 시 프래그먼트 재생성으로 인한 오류를 해결하기 위함
+                ticketFragment = fragmentManager.findFragmentByTag(TAG_PARENT);
+                if(ticketFragment == null){
+                    ticketFragment = TicketFragment.getInstance();
+                }
+                fragmentTransaction.replace(R.id.frameLayout,ticketFragment,TAG_PARENT).commitAllowingStateLoss();
                 titleText.setText("둘러보기");
                 break;
             }
