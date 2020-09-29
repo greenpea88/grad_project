@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.R;
 
 public class AddEventFragment extends Fragment {
@@ -19,9 +20,7 @@ public class AddEventFragment extends Fragment {
     Button submitBtn;
 
     public static AddEventFragment newInstance() {
-        //fragment 전환 시 이전 fragment로부터 데이터 넘겨받기
         AddEventFragment addEventFragment = new AddEventFragment();
-
         return addEventFragment;
     }
 
@@ -32,12 +31,12 @@ public class AddEventFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_addevent,container, false);
 
         submitBtn = (Button)view.findViewById(R.id.submitBtn);
-//        submitBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((HomeActivity)getActivity()).popFromBackStack();
+            }
+        });
 
         return view;
     }

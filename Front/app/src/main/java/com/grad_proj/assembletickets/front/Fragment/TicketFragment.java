@@ -40,7 +40,7 @@ public class TicketFragment extends Fragment {
         setMenu();
 
         viewPager = (ViewPager)view.findViewById(R.id.pagerView);
-        FragmentManager childFragmentManager = getChildFragmentManager();
+//        FragmentManager childFragmentManager = getChildFragmentManager();
 
         topMenuBarAdapter = new TopMenuBarAdapter(
                 getChildFragmentManager(),topMenuTab.getTabCount()

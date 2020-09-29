@@ -45,6 +45,10 @@ public class DateFragment extends Fragment {
         return dateFragment;
     }
 
+//    public static DateFragment getInstance(){
+//        return new DateFragment();
+//    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

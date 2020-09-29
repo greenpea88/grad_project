@@ -25,8 +25,11 @@ import com.grad_proj.assembletickets.front.Fragment.SubscribeFragment;
 import com.grad_proj.assembletickets.front.Fragment.TicketFragment;
 import com.grad_proj.assembletickets.front.Fragment.UserFragment;
 
+import java.util.Stack;
+
 public class HomeActivity extends AppCompatActivity {
 
+//    public static Stack<Fragment> fragmentStack;
     private static final String TAG_PARENT = "TAG_PARENT";
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
@@ -104,6 +107,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void switchFragment(@NonNull MenuItem menuItem) {
+
+        //tab이 바뀌는 경우 backstack에 쌓인 fragment들 전부 비우기
+        fragmentManager.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch(menuItem.getItemId()){
             case R.id.navigation_calendar:{
@@ -134,6 +140,21 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Fragment로 사용할 MainActivity내의 layout공간을 선택
+        // 뒤로가기 버튼 누르면 이전 fragment로 되돌아옴
+        fragmentTransaction.replace(R.id.frameLayout, fragment).addToBackStack(null).commitAllowingStateLoss();
+
+    }
+
+    public void popFromBackStack(){
+        //backstack에서 fragment 제거하도록 하기
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack();
+    }
+
     private class SlidingPageAnimationListner implements Animation.AnimationListener {
 
         public void onAnimationEnd(Animation animation) {
@@ -150,14 +171,6 @@ public class HomeActivity extends AppCompatActivity {
 
         @Override
         public void onAnimationRepeat(Animation animation) { }
-    }
-
-    public void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        // Fragment로 사용할 MainActivity내의 layout공간을 선택
-        // 뒤로가기 버튼 누르면 이전 fragment로 되돌아옴
-        fragmentTransaction.replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
     }
 
 
