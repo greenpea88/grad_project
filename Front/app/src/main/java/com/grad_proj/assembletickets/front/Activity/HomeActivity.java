@@ -2,6 +2,7 @@ package com.grad_proj.assembletickets.front.Activity;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -29,10 +30,10 @@ import java.util.Stack;
 
 public class HomeActivity extends AppCompatActivity {
 
-//    public static Stack<Fragment> fragmentStack;
+    public Stack<Fragment> fragmentStack = new Stack<>();
     private static final String TAG_PARENT = "TAG_PARENT";
 
-    private FragmentManager fragmentManager = getSupportFragmentManager();
+    public FragmentManager fragmentManager = getSupportFragmentManager();
     private CalendarFragment calendarFragment = new CalendarFragment();
 //    private TicketFragment ticketFragment = new TicketFragment();
     private Fragment ticketFragment;
@@ -109,10 +110,13 @@ public class HomeActivity extends AppCompatActivity {
     private void switchFragment(@NonNull MenuItem menuItem) {
 
         //tab이 바뀌는 경우 backstack에 쌓인 fragment들 전부 비우기
-        fragmentManager.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//        fragmentManager.popBackStackImmediate(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        //tab 바뀔 때마다 stack 초기화
+        fragmentStack = new Stack<>();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch(menuItem.getItemId()){
             case R.id.navigation_calendar:{
+                fragmentStack.push(calendarFragment);
                 fragmentTransaction.replace(R.id.frameLayout,calendarFragment).commitAllowingStateLoss();
                 titleText.setText("캘린더");
                 break;
@@ -145,14 +149,17 @@ public class HomeActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         // Fragment로 사용할 MainActivity내의 layout공간을 선택
         // 뒤로가기 버튼 누르면 이전 fragment로 되돌아옴
-        fragmentTransaction.replace(R.id.frameLayout, fragment).addToBackStack(null).commitAllowingStateLoss();
+        fragmentTransaction.replace(R.id.frameLayout, fragment).commitAllowingStateLoss();
 
     }
 
-    public void popFromBackStack(){
-        //backstack에서 fragment 제거하도록 하기
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.popBackStack();
+    public void submitBtnAction(){
+        Log.i("submit button","pressed");
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if(!fragmentStack.isEmpty()){
+            Fragment lastFragment = fragmentStack.pop();
+            fragmentTransaction.replace(R.id.frameLayout, lastFragment).commitAllowingStateLoss();
+        }
     }
 
     private class SlidingPageAnimationListner implements Animation.AnimationListener {
@@ -175,14 +182,23 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-//    @Override
-//    public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
 //        DrawerLayout drawer = findViewById(R.id.drawer_layout);
 //        if (drawer.isDrawerOpen(GravityCompat.START)) {
 //            drawer.closeDrawer(GravityCompat.START);
 //        } else {
 //            super.onBackPressed();
 //        }
-//    }
+        Log.i("Back button","pressed");
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if(!fragmentStack.isEmpty()){
+            Fragment lastFragment = fragmentStack.pop();
+            fragmentTransaction.replace(R.id.frameLayout,lastFragment).commit();
+        }
+        else{
+            super.onBackPressed();
+        }
+    }
 
 }

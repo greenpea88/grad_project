@@ -76,6 +76,9 @@ public class DateFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //fragment 전환
+                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+
+                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
                 ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance());
             }
         });

@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
         inputToast.setGravity(Gravity.CENTER,0,0);
 //        inputToast.show();
         Log.d("Text",inputID+" / "+inputPW);
-        if(inputID.equals("") || inputPW.equals("")){
+        if("".equals(inputID) || "".equals(inputPW)){
             inputToast.show();
         }
         //TODO: 로그인 토큰 받도록 서버 설정해서 받도록 하기

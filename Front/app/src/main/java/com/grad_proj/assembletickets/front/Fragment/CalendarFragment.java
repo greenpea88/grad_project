@@ -59,6 +59,9 @@ public class CalendarFragment extends Fragment {
 //                Toast.makeText(getActivity(), shot_Day, Toast.LENGTH_SHORT).show();
 
                 //누른 날짜의 화면으로 전환
+                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+
+                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
                 ((HomeActivity)getActivity()).replaceFragment(DateFragment.newInstance(shot_Day));
             }
         });
