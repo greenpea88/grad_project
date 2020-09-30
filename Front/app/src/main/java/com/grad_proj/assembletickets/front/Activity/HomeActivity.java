@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.Fragment.DateFragment;
 import com.grad_proj.assembletickets.front.R;
 
@@ -153,11 +154,15 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void submitBtnAction(){
+    public void submitBtnAction(String eventTitle,String eventTime){
         Log.i("submit button","pressed");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Event event = new Event();
         if(!fragmentStack.isEmpty()){
-            Fragment lastFragment = fragmentStack.pop();
+//            event.setEventName(eventTitle);
+//            event.setTime(eventTime);
+            DateFragment lastFragment = (DateFragment)fragmentStack.pop();
+//            lastFragment.addEvent(event);
             fragmentTransaction.replace(R.id.frameLayout, lastFragment).commitAllowingStateLoss();
         }
     }

@@ -8,14 +8,30 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.ShowAdapter;
 
 public class PlayFragment extends Fragment {
+
+    public View view;
+    private ShowAdapter playShowAdapter;
+    RecyclerView playTicketList;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_play, container, false);
+        view = inflater.inflate(R.layout.fragment_play,container, false);
+
+        playTicketList = (RecyclerView)view.findViewById(R.id.totalTicketList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
+        playTicketList.setLayoutManager(linearLayoutManager);
+
+        playShowAdapter = new ShowAdapter();
+        playTicketList.setAdapter(playShowAdapter);
+
+        return view;
     }
 }

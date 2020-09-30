@@ -60,4 +60,49 @@ public class Show {
     public int getStartDate() {
         return startDate;
     }
+
+    //MARK: - setter
+    public void setsName(String sName) {
+        this.sName = sName;
+    }
+
+    public void setStartDate(int startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(int endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setsTime(String sTime) {
+        this.sTime = sTime;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public void setTicketOpen(Date ticketOpen) {
+        this.ticketOpen = ticketOpen;
+    }
+
+    public void setBuyTicket(String buyTicket) {
+        this.buyTicket = buyTicket;
+    }
+
+    public void setRunningTime(int runningTime) {
+        this.runningTime = runningTime;
+    }
+
+    public void setPicSrc(String picSrc) {
+        this.picSrc = picSrc;
+    }
+
+    public void setPerformerList(ArrayList<Performer> performerList) {
+        this.performerList = performerList;
+    }
 }

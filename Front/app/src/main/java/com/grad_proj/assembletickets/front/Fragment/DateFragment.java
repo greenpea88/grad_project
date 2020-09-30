@@ -1,6 +1,7 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ public class DateFragment extends Fragment {
     public RecyclerView eventRecyclerView;
     private DateEventAdapter dateEventAdapter;
 
+//    public List<Event> events;
+
 
     TextView dateTextView;
     Button eventAddBtn;
@@ -53,6 +56,7 @@ public class DateFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        Log.d("DataFragment","onCreateView()");
         view = inflater.inflate(R.layout.fragment_date,container, false);
 
         //getActivity()를 통해 불러올 경우 null pointer error가 발생함
@@ -86,6 +90,12 @@ public class DateFragment extends Fragment {
         return view;
     }
 
+//    public void addEvent(Event event){
+//        //List에 새로운 값 추가하기
+//        eventName.add(event.getEventName());
+//        eventTime.add(event.getTime());
+//    }
+
     private void getData(){
         //서버로부터 데이터를 받아오도록 할 것
         List<String> eventName = Arrays.asList("test1","test2","test3","test4","test5","test6","test7");
@@ -104,5 +114,4 @@ public class DateFragment extends Fragment {
         //호출하지 않을 경우 추가된 data가 보여지지 않
         dateEventAdapter.notifyDataSetChanged();
     }
-
 }
