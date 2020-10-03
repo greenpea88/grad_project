@@ -66,7 +66,7 @@
                             android:paddingVertical="10dp">
 
                             <TextView
-                                android:id="@+id/text_bitrh"
+                                android:id="@+id/text_birth"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="생일"
@@ -136,7 +136,7 @@
                         android:paddingVertical="10dp"
                         android:background="@drawable/btn_transparent"
                         android:gravity="start|center_vertical"
-                        android:text="개발자연락처"
+                        android:text="개발자 연락처"
                         android:textSize="16dp" />
                 </LinearLayout>
 

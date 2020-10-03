@@ -25,7 +25,7 @@ public class ClassicFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_classic,container, false);
 
-        classicTicketList = (RecyclerView)view.findViewById(R.id.totalTicketList);
+        classicTicketList = (RecyclerView)view.findViewById(R.id.classicTicketList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         classicTicketList.setLayoutManager(linearLayoutManager);
 

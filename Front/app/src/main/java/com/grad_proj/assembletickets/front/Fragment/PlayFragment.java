@@ -25,7 +25,7 @@ public class PlayFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_play,container, false);
 
-        playTicketList = (RecyclerView)view.findViewById(R.id.totalTicketList);
+        playTicketList = (RecyclerView)view.findViewById(R.id.playTicketList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         playTicketList.setLayoutManager(linearLayoutManager);
 

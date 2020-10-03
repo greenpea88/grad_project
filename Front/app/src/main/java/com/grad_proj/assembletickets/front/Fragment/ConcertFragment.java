@@ -25,7 +25,7 @@ public class ConcertFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_concert,container, false);
 
-        concertTicketList = (RecyclerView)view.findViewById(R.id.totalTicketList);
+        concertTicketList = (RecyclerView)view.findViewById(R.id.concertTicketList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         concertTicketList.setLayoutManager(linearLayoutManager);
 

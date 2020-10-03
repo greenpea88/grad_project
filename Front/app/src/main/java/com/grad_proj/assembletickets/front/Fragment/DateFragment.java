@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.DateEventAdapter;
@@ -37,6 +38,7 @@ public class DateFragment extends Fragment {
 
     TextView dateTextView;
     Button eventAddBtn;
+    SwipeRefreshLayout eventRefresh;
 
     public static DateFragment newInstance(String date) {
         //fragment 전환 시 이전 fragment로부터 데이터 넘겨받기
@@ -63,6 +65,9 @@ public class DateFragment extends Fragment {
         dateTextView = (TextView)view.findViewById(R.id.dateTextView);
         eventAddBtn = (Button)view.findViewById(R.id.eventAddBtn);
         eventRecyclerView = (RecyclerView)view.findViewById(R.id.dateEventList);
+        //당겨서 새로고침
+        eventRefresh = (SwipeRefreshLayout)view.findViewById(R.id.eventRefresh);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         eventRecyclerView.setLayoutManager(linearLayoutManager);
 
@@ -90,7 +95,13 @@ public class DateFragment extends Fragment {
         return view;
     }
 
-//    public void addEvent(Event event){
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        Log.d("DataFragment","onCreate()");
+//        super.onCreate(savedInstanceState);
+//    }
+
+    //    public void addEvent(Event event){
 //        //List에 새로운 값 추가하기
 //        eventName.add(event.getEventName());
 //        eventTime.add(event.getTime());
