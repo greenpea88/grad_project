@@ -44,12 +44,4 @@ public class ShowService {
         return showRepository.findAllByType(pageRequest, type);
     }
 
-    /**
-     * 타이틀로 공연 조회
-     */
-    @Transactional
-    public List<Shows> searchTitle(String title) {
-        return showRepository.findAllByTitleContaining(title);
-    }
-
 }
