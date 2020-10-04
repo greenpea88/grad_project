@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
@@ -27,6 +29,7 @@ public class SubscribeFragment extends Fragment {
 
     View view;
     public RecyclerView subscribeRecyclerView, subscribeShowRecyclerView;
+    public Button totalBtn;
     private SubscribeAdapter subscribeAdapter;
     private SubscribeListDeco subscribeListDeco;
     private ShowAdapter showAdapter;
@@ -55,6 +58,17 @@ public class SubscribeFragment extends Fragment {
 
         showAdapter = new ShowAdapter();
         subscribeShowRecyclerView.setAdapter(showAdapter);
+
+        totalBtn = (Button)view.findViewById(R.id.totalBtn);
+        totalBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+
+                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
+                ((HomeActivity)getActivity()).replaceFragment(TotalSubscribeFragment.newInstance());
+            }
+        });
 
         getSubscribeData();
 //        getSubscribeShowData();

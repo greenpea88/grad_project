@@ -69,7 +69,6 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
                         selectedList.clear();
                         Subscribe subscribe = subscribeList.get(position);
                         Log.d("SubscribeAdapter","itemClicked");
-                        view.setBackgroundColor(Color.parseColor("#B3F28379"));
                         if(!selectedList.get(position,false)){
                             selectedList.put(position,true);
                             view.setBackgroundColor(Color.parseColor("#B3F28379"));
