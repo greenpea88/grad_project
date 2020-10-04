@@ -6,6 +6,8 @@ import com.project.grad.assembleticket.domain.repository.ShowPerformerRepository
 import com.project.grad.assembleticket.domain.repository.ShowRepository;
 import com.project.grad.assembleticket.dto.ShowDetailResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,20 +32,16 @@ public class ShowService {
         return new ShowDetailResponseDto(show, performers);
     }
 
-    /**
-     * 전체 공연 조회
-     */
-    @Transactional
-    public List<Shows> findAllShows() {
-        return showRepository.findAll();
+    // 공연 목록 페이지 - 전체
+    public List<Shows> getAllShows(int page) {
+        PageRequest pageRequest = PageRequest.of(page, 20, Sort.by("title"));
+        return showRepository.findAll(pageRequest).getContent();
     }
 
-    /**
-     * 카테고리별 공연 조회
-     */
-    @Transactional
-    public List<Shows> findFilteredShow(int type) {
-        return showRepository.findAllByType(type);
+    // 공연 목록 페이지 - 타입별
+    public List<Shows> getTypeShows(int page, int type) {
+        PageRequest pageRequest = PageRequest.of(page, 20, Sort.by("title"));
+        return showRepository.findAllByType(pageRequest, type);
     }
 
     /**

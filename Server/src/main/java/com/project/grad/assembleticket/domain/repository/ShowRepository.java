@@ -1,6 +1,7 @@
 package com.project.grad.assembleticket.domain.repository;
 
 import com.project.grad.assembleticket.domain.entity.Shows;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,6 @@ import java.util.List;
 public interface ShowRepository extends JpaRepository<Shows, Long> {
 
     List<Shows> findAllByTitleContaining(String title);
-    List<Shows> findAllByType(int type);
+    List<Shows> findAllByType(Pageable pageable, int type);
 
 }
