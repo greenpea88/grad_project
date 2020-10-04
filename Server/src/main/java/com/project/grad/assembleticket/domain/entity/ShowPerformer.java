@@ -17,15 +17,15 @@ public class ShowPerformer {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "show_id")
-    private Show show;
+    private Shows shows;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "performer_id")
     private Performer performer;
 
     @Builder
-    public ShowPerformer(Show show, Performer performer){
-        this.show = show;
+    public ShowPerformer(Shows shows, Performer performer){
+        this.shows = shows;
         this.performer = performer;
     }
 

@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Show {
+public class Shows {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // 공연 제목
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(length = 100, unique = true)
     private String title;
 
     // 공연 종류
@@ -26,15 +26,15 @@ public class Show {
     private int type;
 
     // 첫공 날짜
-    @Column(columnDefinition = "DATE", nullable = false)
+    @Column(/*columnDefinition = "DATE", */nullable = false)
     private LocalDate startDate;
 
     // 막공 날짜
-    @Column(columnDefinition = "DATE")
+    @Column(/*columnDefinition = "DATE"*/)
     private LocalDate endDate;
 
     // 티켓오픈 일시
-    @Column(columnDefinition = "DATETIME")
+    @Column(/*columnDefinition = "DATETIME"*/)
     private LocalDateTime ticketOpen;
 
     // 공연 시간 관련 정보
@@ -63,7 +63,7 @@ public class Show {
     private Venue venue;
 
     @Builder
-    public Show(String title, int type, LocalDate startDate, LocalDate endDate, LocalDateTime ticketOpen,
+    public Shows(String title, int type, LocalDate startDate, LocalDate endDate, LocalDateTime ticketOpen,
                 String time, int runningTime, String price, String buyTicket, String posterSrc, Venue venue){
         this.title = title;
         this.type = type;

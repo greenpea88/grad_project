@@ -1,6 +1,6 @@
 package com.project.grad.assembleticket.service;
 
-import com.project.grad.assembleticket.domain.entity.Show;
+import com.project.grad.assembleticket.domain.entity.Shows;
 import com.project.grad.assembleticket.domain.repository.ShowRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,21 +18,21 @@ public class ShowService {
     /**
      * 전체 공연 조회
      */
-    public List<Show> findAllShows() {
+    public List<Shows> findAllShows() {
         return showRepository.findAll();
     }
 
     /**
      * 카테고리별 공연 조회
      */
-    public List<Show> findFilteredShow(int type) {
+    public List<Shows> findFilteredShow(int type) {
         return showRepository.findByCategory(type);
     }
 
     /**
      * 타이틀로 공연 조회
      */
-    public List<Show> searchTitle(String title) {
+    public List<Shows> searchTitle(String title) {
         return showRepository.findByTitleContaining(title);
     }
 
