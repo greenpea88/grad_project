@@ -26,15 +26,15 @@ public class Shows {
     private int type;
 
     // 첫공 날짜
-    @Column(/*columnDefinition = "DATE", */nullable = false)
+    @Column(nullable = false)
     private LocalDate startDate;
 
     // 막공 날짜
-    @Column(/*columnDefinition = "DATE"*/)
+    @Column
     private LocalDate endDate;
 
     // 티켓오픈 일시
-    @Column(/*columnDefinition = "DATETIME"*/)
+    @Column
     private LocalDateTime ticketOpen;
 
     // 공연 시간 관련 정보
