@@ -32,7 +32,7 @@ public class DateEventAdapter extends RecyclerView.Adapter<DateEventAdapter.Item
 
     @Override
     public int getItemCount() {
-        //recyclerView item의 총 갯
+        //recyclerView item의 총 갯수
         return eventItems.size();
     }
 

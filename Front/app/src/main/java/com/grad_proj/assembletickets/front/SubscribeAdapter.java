@@ -1,5 +1,8 @@
 package com.grad_proj.assembletickets.front;
 
+import android.graphics.Color;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.ItemViewHolder> {
 
     ArrayList<Subscribe> subscribeList = new ArrayList<>();
+    private SparseBooleanArray selectedList = new SparseBooleanArray(0);
 
     @NonNull
     @Override
@@ -27,6 +31,12 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.setData(subscribeList.get(position));
+        if(selectedList.get(position,false)){
+            holder.itemView.setBackgroundColor(Color.parseColor("#B3F28379"));
+        }
+        else{
+            holder.itemView.setBackgroundColor(Color.parseColor("#00FF0000"));
+        }
     }
 
     @Override
@@ -43,12 +53,33 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private CircleImageView subscribeProfile;
         private TextView subscribeName;
+        private View notClickedView;
 
         public ItemViewHolder(View itemView){
             super(itemView);
 
             subscribeProfile = itemView.findViewById(R.id.subscribeProfile);
             subscribeName = itemView.findViewById(R.id.subscribeName);
+//            notClickedView = itemView.findViewById(R.id.notClickedView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if(position!=RecyclerView.NO_POSITION){
+                        selectedList.clear();
+                        Subscribe subscribe = subscribeList.get(position);
+                        Log.d("SubscribeAdapter","itemClicked");
+                        view.setBackgroundColor(Color.parseColor("#B3F28379"));
+                        if(!selectedList.get(position,false)){
+                            selectedList.put(position,true);
+                            view.setBackgroundColor(Color.parseColor("#B3F28379"));
+                        }
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+
+
         }
 
         void setData(Subscribe subscribe){
