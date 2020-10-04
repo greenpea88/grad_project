@@ -2,18 +2,17 @@ package com.project.grad.assembleticket.service;
 
 import com.project.grad.assembleticket.domain.entity.Shows;
 import com.project.grad.assembleticket.domain.repository.ShowRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
+@RequiredArgsConstructor
+@Service
 public class ShowService {
 
     private final ShowRepository showRepository;
-
-    public ShowService(ShowRepository showRepository) {
-        this.showRepository = showRepository;
-    }
 
     /**
      * 전체 공연 조회
