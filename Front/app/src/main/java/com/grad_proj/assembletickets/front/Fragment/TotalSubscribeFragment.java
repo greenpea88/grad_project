@@ -13,13 +13,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
+import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SubscribeAdapter;
+import com.grad_proj.assembletickets.front.SubscribeTotalAdapter;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class TotalSubscribeFragment extends Fragment {
 
     View view;
     public RecyclerView subscribeDetailList;
+    private SubscribeTotalAdapter subscribeTotalAdapter;
     Button editBtn;
 
     public static TotalSubscribeFragment newInstance(){
@@ -36,19 +42,31 @@ public class TotalSubscribeFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         subscribeDetailList.setLayoutManager(linearLayoutManager);
 
+        subscribeTotalAdapter = new SubscribeTotalAdapter();
+        subscribeDetailList.setAdapter(subscribeTotalAdapter);
 
+        getTotalSubData();
 
         editBtn = (Button)view.findViewById(R.id.editBtn);
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
-
-                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
                 ((HomeActivity)getActivity()).replaceFragment(EditSubscribeFragment.newInstance());
             }
         });
 
         return view;
+    }
+
+    public void getTotalSubData(){
+        List<String> totalSub = Arrays.asList("test1","test2","test3","test4","test5");
+
+        for(int i=0;i<totalSub.size();i++){
+            Performer performer = new Performer();
+
+            performer.setpName(totalSub.get(i));
+            subscribeTotalAdapter.addItem(performer);
+        }
+        subscribeTotalAdapter.notifyDataSetChanged();
     }
 }

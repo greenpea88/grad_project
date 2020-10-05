@@ -53,14 +53,12 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private CircleImageView subscribeProfile;
         private TextView subscribeName;
-        private View notClickedView;
 
         public ItemViewHolder(View itemView){
             super(itemView);
 
             subscribeProfile = itemView.findViewById(R.id.subscribeProfile);
             subscribeName = itemView.findViewById(R.id.subscribeName);
-//            notClickedView = itemView.findViewById(R.id.notClickedView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

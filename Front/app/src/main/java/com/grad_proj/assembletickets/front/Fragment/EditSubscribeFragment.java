@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SubscribeEditAdapter;
@@ -24,6 +26,8 @@ public class EditSubscribeFragment extends Fragment {
     View view;
     public RecyclerView editDetailList;
     private SubscribeEditAdapter subscribeEditAdapter;
+
+    Button submitEditBtn;
 
     public static EditSubscribeFragment newInstance() {
         return new EditSubscribeFragment();
@@ -43,6 +47,14 @@ public class EditSubscribeFragment extends Fragment {
 
         getEditData();
 
+        submitEditBtn = (Button)view.findViewById(R.id.submitEditBtn);
+        submitEditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //현재 setting 값 서버로 보내고
+                ((HomeActivity)getActivity()).replaceFragment(TotalSubscribeFragment.newInstance());
+            }
+        });
         return view;
     }
 
