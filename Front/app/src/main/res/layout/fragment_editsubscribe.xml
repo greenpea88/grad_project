@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/editBtn"
+        android:id="@+id/submitEditBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="편집"
-        android:textColor="@color/colorFastWithUs3"
+        android:layout_gravity="right"
+        android:text="완료"
         android:textSize="16sp"
-        android:background="#00FF0000"
-        android:layout_gravity="right"/>
+        android:textColor="@color/colorFastWithUs3"
+        android:background="#00FF0000"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/subscribeDetailList"
+        android:id="@+id/editDetailList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
 </LinearLayout>
