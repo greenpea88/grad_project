@@ -60,6 +60,19 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
                 @Override
                 public void onClick(View view) {
                     Log.d("Subscribe Edit","alarm clicked");
+                    int position = getAdapterPosition();
+                    if(position!=RecyclerView.NO_POSITION){
+                        Performer performer = subscribeEditList.get(position);
+                        Boolean alarm = performer.getSetAlarm();
+                        if(alarm){
+                            performer.setSetAlarm(false);
+                            subscribeEditAlarm.setImageResource(R.drawable.icon_alarmoff);
+                        }
+                        else{
+                            performer.setSetAlarm(true);
+                            subscribeEditAlarm.setImageResource(R.drawable.icon_alarmon);
+                        }
+                    }
                 }
             });
         }
@@ -69,10 +82,10 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
             //profile 설정 추가
             subscribeEditName.setText(performer.getpName());
             if(performer.getSetAlarm()){
-                subscribeEditAlarm.setImageResource(R.drawable.icon_alarmoff);
+                subscribeEditAlarm.setImageResource(R.drawable.icon_alarmon);
             }
             else{
-                subscribeEditAlarm.setImageResource(R.drawable.icon_alarmon);
+                subscribeEditAlarm.setImageResource(R.drawable.icon_alarmoff);
             }
         }
     }

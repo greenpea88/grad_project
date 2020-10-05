@@ -9,10 +9,12 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.SubscribeAdapter;
 
 public class TotalSubscribeFragment extends Fragment {
 
@@ -30,6 +32,11 @@ public class TotalSubscribeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_totalsubscribe,container,false);
 
         subscribeDetailList = (RecyclerView)view.findViewById(R.id.subscribeDetailList);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
+        subscribeDetailList.setLayoutManager(linearLayoutManager);
+
+
 
         editBtn = (Button)view.findViewById(R.id.editBtn);
         editBtn.setOnClickListener(new View.OnClickListener() {
