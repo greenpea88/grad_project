@@ -9,6 +9,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,11 +24,25 @@ import java.util.List;
 
 public class EditSubscribeFragment extends Fragment {
 
+    Button submitEditBtn;
+
     View view;
     public RecyclerView editDetailList;
     private SubscribeEditAdapter subscribeEditAdapter;
 
-    Button submitEditBtn;
+    private ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            subscribeEditAdapter.removeItem(position);
+            subscribeEditAdapter.notifyItemRemoved(position);
+        }
+    };
 
     public static EditSubscribeFragment newInstance() {
         return new EditSubscribeFragment();
@@ -44,6 +59,9 @@ public class EditSubscribeFragment extends Fragment {
 
         subscribeEditAdapter = new SubscribeEditAdapter();
         editDetailList.setAdapter(subscribeEditAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(editDetailList);
 
         getEditData();
 

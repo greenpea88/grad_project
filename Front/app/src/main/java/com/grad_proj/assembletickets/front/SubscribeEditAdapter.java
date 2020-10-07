@@ -43,6 +43,10 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
         subscribeEditList.add(performer);
     }
 
+    public void removeItem(int position){
+        subscribeEditList.remove(position);
+    }
+
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private CircleImageView subscribeEditProfile;
         private TextView subscribeEditName;
