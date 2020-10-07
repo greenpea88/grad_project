@@ -18,6 +18,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.ItemViewHolder> {
 
+    public interface OnItemClickListener{
+        void onItemClicked(View v, int position);
+    }
+
+    private OnItemClickListener onItemClickListener = null;
+
     ArrayList<Subscribe> subscribeList = new ArrayList<>();
     private SparseBooleanArray selectedList = new SparseBooleanArray(0);
 
@@ -49,6 +55,10 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
         subscribeList.add(subscribe);
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.onItemClickListener = listener;
+    }
+
     //subView(item setting)
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private CircleImageView subscribeProfile;
@@ -70,6 +80,9 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
                         if(!selectedList.get(position,false)){
                             selectedList.put(position,true);
                             view.setBackgroundColor(Color.parseColor("#B3F28379"));
+                        }
+                        if(onItemClickListener != null){
+                            onItemClickListener.onItemClicked(view,position);
                         }
                         notifyDataSetChanged();
                     }
