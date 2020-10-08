@@ -14,23 +14,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.ShowAdapter;
 
-public class ClassicFragment extends Fragment {
+public class TicketConcertFragment extends Fragment {
 
     public View view;
-    private ShowAdapter classicShowAdapter;
-    RecyclerView classicTicketList;
+    private ShowAdapter concertShowAdapter;
+    RecyclerView concertTicketList;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_classic,container, false);
+        view = inflater.inflate(R.layout.fragment_ticket_concert,container, false);
 
-        classicTicketList = (RecyclerView)view.findViewById(R.id.classicTicketList);
+        concertTicketList = (RecyclerView)view.findViewById(R.id.concertTicketList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
-        classicTicketList.setLayoutManager(linearLayoutManager);
+        concertTicketList.setLayoutManager(linearLayoutManager);
 
-        classicShowAdapter = new ShowAdapter();
-        classicTicketList.setAdapter(classicShowAdapter);
+        concertShowAdapter = new ShowAdapter();
+        concertTicketList.setAdapter(concertShowAdapter);
 
         return view;
     }
