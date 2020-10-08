@@ -152,7 +152,7 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
-        RectF rightBtn = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(),itemView.getBottom());
+        RectF rightBtn = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()-4, itemView.getRight(),itemView.getBottom()-4);
         p.setColor(Color.parseColor("#F21905"));
         c.drawRoundRect(rightBtn,corner,corner,p);
         drawText("DELETE",c,rightBtn,p);
