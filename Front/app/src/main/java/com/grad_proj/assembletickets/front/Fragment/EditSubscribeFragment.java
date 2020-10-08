@@ -17,6 +17,7 @@ import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SubscribeEditAdapter;
+import com.grad_proj.assembletickets.front.SwipeToDelete;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -30,19 +31,21 @@ public class EditSubscribeFragment extends Fragment {
     public RecyclerView editDetailList;
     private SubscribeEditAdapter subscribeEditAdapter;
 
-    private ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
+//    private ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
+//        @Override
+//        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//            return false;
+//        }
+//
+//        @Override
+//        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//            int position = viewHolder.getAdapterPosition();
+//            subscribeEditAdapter.removeItem(position);
+//            subscribeEditAdapter.notifyItemRemoved(position);
+//        }
+//    };
 
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            int position = viewHolder.getAdapterPosition();
-            subscribeEditAdapter.removeItem(position);
-            subscribeEditAdapter.notifyItemRemoved(position);
-        }
-    };
+    private SwipeToDelete swipeToDelete = new SwipeToDelete();
 
     public static EditSubscribeFragment newInstance() {
         return new EditSubscribeFragment();
@@ -60,8 +63,8 @@ public class EditSubscribeFragment extends Fragment {
         subscribeEditAdapter = new SubscribeEditAdapter();
         editDetailList.setAdapter(subscribeEditAdapter);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(editDetailList);
+       ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDelete);
+       itemTouchHelper.attachToRecyclerView(editDetailList);
 
         getEditData();
 
