@@ -12,7 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.Fragment.DateFragment;
+import com.grad_proj.assembletickets.front.Fragment.SearchFragment;
 import com.grad_proj.assembletickets.front.R;
 
 import com.grad_proj.assembletickets.front.Fragment.CalendarFragment;
@@ -40,13 +45,14 @@ public class HomeActivity extends AppCompatActivity {
     private Fragment ticketFragment;
     private SubscribeFragment subscribeFragment = new SubscribeFragment();
     private UserFragment userFragment = new UserFragment();
+    private SearchFragment searchFragment = new SearchFragment();
 
     private TextView titleText;
     private ImageButton searchBtn;
     private ImageButton notificationBtn;
     private LinearLayout notiPage;
 
-    private boolean isPageOpen;
+    private boolean isPageOpen = false;
 
     private Animation translateDown;
     private Animation translateUp;
@@ -57,6 +63,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
 
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         titleText = findViewById(R.id.titleText);
         titleText.setText("캘린더");
         notiPage = findViewById(R.id.notiPage);
@@ -65,7 +74,7 @@ public class HomeActivity extends AppCompatActivity {
 
         //첫화면 지정
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frameLayout,calendarFragment).commitAllowingStateLoss();
+        transaction.replace(R.id.frameLayout, calendarFragment).commitAllowingStateLoss();
 
         //bottomNavigationView의 아이템이 선택될 때 호출될 리스너 등록
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -88,7 +97,10 @@ public class HomeActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                fragmentStack.push(fragmentManager.findFragmentById(R.id.frameLayout));
+                replaceFragment(searchFragment);
+                ActionBar actionBar = getSupportActionBar();
+                actionBar.hide();
             }
         });
 
@@ -185,24 +197,21 @@ public class HomeActivity extends AppCompatActivity {
         public void onAnimationRepeat(Animation animation) { }
     }
 
-
-
     @Override
     public void onBackPressed() {
-//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-        Log.i("Back button","pressed");
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if(!fragmentStack.isEmpty()){
-            Fragment lastFragment = fragmentStack.pop();
-            fragmentTransaction.replace(R.id.frameLayout,lastFragment).commit();
-        }
-        else{
-            super.onBackPressed();
+        if (isPageOpen) {
+            notiPage.setVisibility(View.INVISIBLE);
+            isPageOpen = false;
+        } else {
+            Log.i("Back button","pressed");
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            if(!fragmentStack.isEmpty()){
+                Fragment lastFragment = fragmentStack.pop();
+                fragmentTransaction.replace(R.id.frameLayout,lastFragment).commit();
+            }
+            else{
+                super.onBackPressed();
+            }
         }
     }
 

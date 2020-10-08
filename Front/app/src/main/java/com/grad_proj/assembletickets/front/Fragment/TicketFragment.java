@@ -24,7 +24,6 @@ public class TicketFragment extends Fragment {
     private TopMenuBarAdapter topMenuBarAdapter;
 //    private FragmentActivity mContext;
 
-
     View view;
 
     public static TicketFragment getInstance(){
