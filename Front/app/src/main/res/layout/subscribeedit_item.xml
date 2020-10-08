@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="7dp"
-    android:layout_weight="10">
+    android:layout_weight="10"
+    android:background="@android:color/white">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/subscribeEditProfile"

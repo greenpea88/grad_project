@@ -1,5 +1,6 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,13 @@ public class EditSubscribeFragment extends Fragment {
 
        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDelete);
        itemTouchHelper.attachToRecyclerView(editDetailList);
+
+       editDetailList.addItemDecoration(new RecyclerView.ItemDecoration() {
+           @Override
+           public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+               swipeToDelete.onDraw(c);
+           }
+       });
 
         getEditData();
 
