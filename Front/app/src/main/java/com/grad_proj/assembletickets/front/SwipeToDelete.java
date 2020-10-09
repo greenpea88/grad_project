@@ -1,5 +1,6 @@
 package com.grad_proj.assembletickets.front;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,8 +30,10 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
     private RectF buttonInstance = null;
     private RecyclerView.ViewHolder currentViewHolder = null;
     private SwipeToDeleteAction swipeToDeleteAction = null;
+    private Context context;
 
-    public SwipeToDelete(SwipeToDeleteAction swipeToDeleteAction){
+    public SwipeToDelete(Context context,SwipeToDeleteAction swipeToDeleteAction){
+        this.context = context;
         this.swipeToDeleteAction = swipeToDeleteAction;
     }
 
@@ -160,7 +164,7 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
         RectF rightBtn = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()+20, itemView.getRight()-20,itemView.getBottom()-25);
         p.setColor(Color.parseColor("#F23E2E"));
         c.drawRoundRect(rightBtn,corner,corner,p);
-        drawText("DELETE",c,rightBtn,p);
+        drawBitmap(c,rightBtn,p);
 
         buttonInstance = null;
         if(buttonShowState == ButtonState.RIGHT_VISIBLE){
@@ -168,26 +172,47 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
         }
     }
 
-    private void drawText(String text, Canvas c, RectF button, Paint p){
-        float textSize = 60;
-        p.setColor(Color.WHITE);
-        p.setTextSize(textSize);
+    private void drawBitmap(Canvas c, RectF button, Paint p){
 
-        float textWidth = p.measureText(text);
-        c.drawText(text,button.centerX()-(textWidth/2),button.centerY()+(textWidth/2),p);
+        Drawable drawable = ContextCompat.getDrawable(context,R.drawable.icon_delete);
+        Bitmap bitmap = drawableToBitmap(drawable);
 
+        c.drawBitmap(bitmap,button.centerX()-((int)(bitmap.getWidth()/2)),button.centerY()-((int)(bitmap.getHeight()/2)),p);
     }
 
     private Bitmap drawableToBitmap(Drawable drawable){
+        Bitmap bitmap;
         if(drawable instanceof BitmapDrawable){
-            return ((BitmapDrawable)drawable).getBitmap();
+            bitmap = ((BitmapDrawable)drawable).getBitmap();
+            return resizeBitmap(bitmap,(int)(buttonWidth-100));
         }
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(),Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(),Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
         drawable.draw(canvas);
 
-        return bitmap;
+        return resizeBitmap(bitmap,(int)(buttonWidth-100));
+    }
+
+    private Bitmap resizeBitmap(Bitmap bitmap,int maxSize){
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate = 0.0f;
+
+        if(width>height){
+            rate = maxSize/(float)width;
+            newHeight = (int)(height*rate);
+            newWidth = maxSize;
+        }
+        else{
+            rate = maxSize/(float)height;
+            newWidth = (int)(width*rate);
+            newHeight = maxSize;
+        }
+
+        return Bitmap.createScaledBitmap(bitmap,newWidth,newHeight,true);
     }
 
     public void onDraw(Canvas c){

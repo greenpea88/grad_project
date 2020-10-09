@@ -65,13 +65,13 @@ public class EditSubscribeFragment extends Fragment {
         subscribeEditAdapter = new SubscribeEditAdapter();
         editDetailList.setAdapter(subscribeEditAdapter);
 
-        swipeToDelete = new SwipeToDelete(new SwipeToDeleteAction() {
+        swipeToDelete = new SwipeToDelete(view.getContext(),new SwipeToDeleteAction() {
             @Override
             public void onRightClicked(int position){
                 subscribeEditAdapter.removeItem(position);
                 subscribeEditAdapter.notifyItemRemoved(position);
                 subscribeEditAdapter.notifyItemRangeChanged(position,subscribeEditAdapter.getItemCount());
-                //구독 해제 후 서버에도 구독 해제했음을 알리기 
+                //구독 해제 후 서버에도 구독 해제했음을 알리기
             }
         });
 
