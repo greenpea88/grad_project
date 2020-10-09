@@ -19,6 +19,7 @@ import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SubscribeEditAdapter;
 import com.grad_proj.assembletickets.front.SwipeToDelete;
+import com.grad_proj.assembletickets.front.SwipeToDeleteAction;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -46,7 +47,7 @@ public class EditSubscribeFragment extends Fragment {
 //        }
 //    };
 
-    private SwipeToDelete swipeToDelete = new SwipeToDelete();
+    private SwipeToDelete swipeToDelete = null;
 
     public static EditSubscribeFragment newInstance() {
         return new EditSubscribeFragment();
@@ -64,8 +65,18 @@ public class EditSubscribeFragment extends Fragment {
         subscribeEditAdapter = new SubscribeEditAdapter();
         editDetailList.setAdapter(subscribeEditAdapter);
 
-       ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDelete);
-       itemTouchHelper.attachToRecyclerView(editDetailList);
+        swipeToDelete = new SwipeToDelete(new SwipeToDeleteAction() {
+            @Override
+            public void onRightClicked(int position){
+                subscribeEditAdapter.removeItem(position);
+                subscribeEditAdapter.notifyItemRemoved(position);
+                subscribeEditAdapter.notifyItemRangeChanged(position,subscribeEditAdapter.getItemCount());
+                //구독 해제 후 서버에도 구독 해제했음을 알리기 
+            }
+        });
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDelete);
+        itemTouchHelper.attachToRecyclerView(editDetailList);
 
        editDetailList.addItemDecoration(new RecyclerView.ItemDecoration() {
            @Override

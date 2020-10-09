@@ -1,9 +1,12 @@
 package com.grad_proj.assembletickets.front;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +27,11 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
     private static final float buttonWidth = 200;
     private RectF buttonInstance = null;
     private RecyclerView.ViewHolder currentViewHolder = null;
+    private SwipeToDeleteAction swipeToDeleteAction = null;
+
+    public SwipeToDelete(SwipeToDeleteAction swipeToDeleteAction){
+        this.swipeToDeleteAction = swipeToDeleteAction;
+    }
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -122,14 +130,11 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
                     setItemClickable(recyclerView,true);
                     swipeBack = false;
 
-//                    if (buttonsActions != null && buttonInstance != null && buttonInstance.contains(event.getX(), event.getY())) {
-//                        if (buttonShowedState == ButtonsState.LEFT_VISIBLE) {
-//                            buttonsActions.onLeftClicked(viewHolder.getAdapterPosition());
-//                        }
-//                        else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
-//                            buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
-//                        }
-//                    }
+                    if (swipeToDeleteAction != null && buttonInstance != null && buttonInstance.contains(motionEvent.getX(), motionEvent.getY())) {
+                        if (buttonShowState == ButtonState.RIGHT_VISIBLE) {
+                            swipeToDeleteAction.onRightClicked(viewHolder.getAdapterPosition());
+                        }
+                    }
 
                     buttonShowState = ButtonState.GONE;
                     currentViewHolder = null;
@@ -146,14 +151,14 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
     }
 
     private void drawBtn(Canvas c, RecyclerView.ViewHolder viewHolder){
-        float buttonWidthWithoutPadding = buttonWidth - 10;
+        float buttonWidthWithoutPadding = buttonWidth;
         float corner = 10;
 
         View itemView = viewHolder.itemView;
         Paint p = new Paint();
 
-        RectF rightBtn = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()-4, itemView.getRight(),itemView.getBottom()-4);
-        p.setColor(Color.parseColor("#F21905"));
+        RectF rightBtn = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()+20, itemView.getRight()-20,itemView.getBottom()-25);
+        p.setColor(Color.parseColor("#F23E2E"));
         c.drawRoundRect(rightBtn,corner,corner,p);
         drawText("DELETE",c,rightBtn,p);
 
@@ -170,6 +175,19 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
 
         float textWidth = p.measureText(text);
         c.drawText(text,button.centerX()-(textWidth/2),button.centerY()+(textWidth/2),p);
+
+    }
+
+    private Bitmap drawableToBitmap(Drawable drawable){
+        if(drawable instanceof BitmapDrawable){
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0,0,canvas.getWidth(),canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 
     public void onDraw(Canvas c){
