@@ -1,5 +1,6 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -19,6 +21,8 @@ import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.DateEventAdapter;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.SwipeToDelete;
+import com.grad_proj.assembletickets.front.SwipeToDeleteAction;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +36,8 @@ public class DateFragment extends Fragment {
     public View view;
     public RecyclerView eventRecyclerView;
     private DateEventAdapter dateEventAdapter;
+
+    private SwipeToDelete swipeToDelete = null;
 
 //    public List<Event> events;
 
@@ -73,6 +79,26 @@ public class DateFragment extends Fragment {
 
         dateEventAdapter = new DateEventAdapter();
         eventRecyclerView.setAdapter(dateEventAdapter);
+
+        swipeToDelete = new SwipeToDelete(view.getContext(), new SwipeToDeleteAction() {
+            @Override
+            public void onRightClicked(int position) {
+                dateEventAdapter.removeItem(position);
+                dateEventAdapter.notifyItemRemoved(position);
+                dateEventAdapter.notifyItemRangeChanged(position,dateEventAdapter.getItemCount());
+                //자체 db에 알릴 것
+            }
+        });
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDelete);
+        itemTouchHelper.attachToRecyclerView(eventRecyclerView);
+
+        eventRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                swipeToDelete.onDraw(c);
+            }
+        });
 
         if(getArguments() != null){
             date = getArguments().getString(DATE);

@@ -33,20 +33,6 @@ public class EditSubscribeFragment extends Fragment {
     public RecyclerView editDetailList;
     private SubscribeEditAdapter subscribeEditAdapter;
 
-//    private ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
-//        @Override
-//        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-//            return false;
-//        }
-//
-//        @Override
-//        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//            int position = viewHolder.getAdapterPosition();
-//            subscribeEditAdapter.removeItem(position);
-//            subscribeEditAdapter.notifyItemRemoved(position);
-//        }
-//    };
-
     private SwipeToDelete swipeToDelete = null;
 
     public static EditSubscribeFragment newInstance() {
@@ -75,9 +61,11 @@ public class EditSubscribeFragment extends Fragment {
             }
         });
 
+        //recycler view에 swipeToDelete 붙이기
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDelete);
         itemTouchHelper.attachToRecyclerView(editDetailList);
 
+        //화면에 삭제 버튼 그리기
        editDetailList.addItemDecoration(new RecyclerView.ItemDecoration() {
            @Override
            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
