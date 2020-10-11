@@ -80,7 +80,7 @@ public class DateFragment extends Fragment {
         dateEventAdapter = new DateEventAdapter();
         eventRecyclerView.setAdapter(dateEventAdapter);
 
-        swipeToDelete = new SwipeToDelete(view.getContext(), new SwipeToDeleteAction() {
+        swipeToDelete = new SwipeToDelete(view.getContext(), "event",new SwipeToDeleteAction() {
             @Override
             public void onRightClicked(int position) {
                 dateEventAdapter.removeItem(position);

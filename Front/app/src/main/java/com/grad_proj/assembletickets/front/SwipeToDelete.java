@@ -19,7 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 enum ButtonState{
     GONE,
-    RIGHT_VISIBLE
+    RIGHT_VISIBLE,
+    LEFT_VISIBLE
 }
 
 public class SwipeToDelete extends ItemTouchHelper.Callback {
@@ -31,15 +32,24 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
     private RecyclerView.ViewHolder currentViewHolder = null;
     private SwipeToDeleteAction swipeToDeleteAction = null;
     private Context context;
+    private String flag;
 
-    public SwipeToDelete(Context context,SwipeToDeleteAction swipeToDeleteAction){
+    public SwipeToDelete(Context context,String flag,SwipeToDeleteAction swipeToDeleteAction){
         this.context = context;
+        this.flag = flag;
         this.swipeToDeleteAction = swipeToDeleteAction;
     }
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(0,ItemTouchHelper.LEFT);
+        if ("subscribe".equals(flag)) {
+            return makeMovementFlags(0, ItemTouchHelper.LEFT);
+        }
+        else if("event".equals(flag)){
+            return makeMovementFlags(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT);
+        }
+
+        return makeMovementFlags(0, ItemTouchHelper.LEFT);
     }
 
     @Override
@@ -71,6 +81,9 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
                 if (buttonShowState == ButtonState.RIGHT_VISIBLE) {
                     dX = Math.min(dX, -buttonWidth);
                 }
+                else if(buttonShowState == ButtonState.LEFT_VISIBLE){
+                    dX = Math.max(dX,buttonWidth);
+                }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             } else {
                 setTouchListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -90,6 +103,9 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
                 if (swipeBack) {
                     if (dX < -buttonWidth) {
                         buttonShowState = ButtonState.RIGHT_VISIBLE;
+                    }
+                    else if (dX > buttonWidth){
+                        buttonShowState = ButtonState.LEFT_VISIBLE;
                     }
                     if (buttonShowState != ButtonState.GONE) {
                         setTouchDownListener(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -138,6 +154,9 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
                         if (buttonShowState == ButtonState.RIGHT_VISIBLE) {
                             swipeToDeleteAction.onRightClicked(viewHolder.getAdapterPosition());
                         }
+                        else if (buttonShowState == ButtonState.LEFT_VISIBLE){
+                            swipeToDeleteAction.onLeftClicked(viewHolder.getAdapterPosition());
+                        }
                     }
 
                     buttonShowState = ButtonState.GONE;
@@ -166,9 +185,17 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
         c.drawRoundRect(rightBtn,corner,corner,p);
         drawBitmap(c,rightBtn,p);
 
+        RectF leftBtn = new RectF(itemView.getLeft()+20, itemView.getTop()+20, itemView.getLeft() + buttonWidthWithoutPadding,itemView.getBottom()-25);
+        p.setColor(Color.parseColor("#5897A6"));
+        c.drawRoundRect(leftBtn,corner,corner,p);
+        drawBitmap(c,leftBtn,p);
+
         buttonInstance = null;
         if(buttonShowState == ButtonState.RIGHT_VISIBLE){
             buttonInstance = rightBtn;
+        }
+        else if(buttonShowState == ButtonState.LEFT_VISIBLE){
+            buttonInstance = leftBtn;
         }
     }
 
