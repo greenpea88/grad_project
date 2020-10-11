@@ -183,12 +183,12 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
         RectF rightBtn = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop()+20, itemView.getRight()-20,itemView.getBottom()-25);
         p.setColor(Color.parseColor("#F23E2E"));
         c.drawRoundRect(rightBtn,corner,corner,p);
-        drawBitmap(c,rightBtn,p);
+        drawBitmap(c,rightBtn,p,R.drawable.icon_delete);
 
         RectF leftBtn = new RectF(itemView.getLeft()+20, itemView.getTop()+20, itemView.getLeft() + buttonWidthWithoutPadding,itemView.getBottom()-25);
         p.setColor(Color.parseColor("#5897A6"));
         c.drawRoundRect(leftBtn,corner,corner,p);
-        drawBitmap(c,leftBtn,p);
+        drawBitmap(c,leftBtn,p,R.drawable.icon_edit);
 
         buttonInstance = null;
         if(buttonShowState == ButtonState.RIGHT_VISIBLE){
@@ -199,9 +199,9 @@ public class SwipeToDelete extends ItemTouchHelper.Callback {
         }
     }
 
-    private void drawBitmap(Canvas c, RectF button, Paint p){
+    private void drawBitmap(Canvas c, RectF button, Paint p, int drawableId){
 
-        Drawable drawable = ContextCompat.getDrawable(context,R.drawable.icon_delete);
+        Drawable drawable = ContextCompat.getDrawable(context,drawableId);
         Bitmap bitmap = drawableToBitmap(drawable);
 
         c.drawBitmap(bitmap,button.centerX()-((int)(bitmap.getWidth()/2)),button.centerY()-((int)(bitmap.getHeight()/2)),p);
