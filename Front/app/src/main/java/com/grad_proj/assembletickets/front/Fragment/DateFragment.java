@@ -88,6 +88,12 @@ public class DateFragment extends Fragment {
                 dateEventAdapter.notifyItemRangeChanged(position,dateEventAdapter.getItemCount());
                 //자체 db에 알릴 것
             }
+
+            @Override
+            public void onLeftClicked(int position) {
+                super.onLeftClicked(position);
+                //TODO: 편집 이벤트 뷰 보이도록 추가하기
+            }
         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDelete);
