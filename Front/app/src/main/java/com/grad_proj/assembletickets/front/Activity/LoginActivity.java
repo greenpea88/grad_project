@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,10 +21,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.grad_proj.assembletickets.front.DatabaseHelper;
 import com.grad_proj.assembletickets.front.R;
 
 //TODO: 비밀번호 잊엇는지에 대한 문구를 언제 띄울 것인가?
-//TODO: 키보드 올라가면 가리는만큼 올리기
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -103,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
 
             startActivity(intent);
+            this.finish();
         }
     }
 
@@ -127,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             Toast.makeText(this, account.getDisplayName()+"("+account.getEmail()+")님, 안녕하세요!", Toast.LENGTH_LONG).show();
+            this.finish();
         } catch (ApiException e) {
             Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());
             Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
@@ -140,4 +143,5 @@ public class LoginActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
+
 }
