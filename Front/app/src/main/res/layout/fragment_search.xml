@@ -24,7 +24,7 @@
                 android:layout_toLeftOf="@+id/searchButton"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Name" />
+                android:hint="Search" />
 
             <ImageButton
                 android:id="@+id/searchButton"
