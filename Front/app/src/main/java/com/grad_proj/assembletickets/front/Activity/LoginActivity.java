@@ -21,8 +21,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.grad_proj.assembletickets.front.DatabaseHelper;
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
 
 //TODO: 비밀번호 잊엇는지에 대한 문구를 언제 띄울 것인가?
 
@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginBtnClicked(View v){
 
-        Toast inputToast = Toast.makeText(this.getApplicationContext(),"Email,Password를 모두 입력해주세요",Toast.LENGTH_SHORT);
+        Toast inputToast = Toast.makeText(this.getApplicationContext(),"Email, Password를 모두 입력해주세요", Toast.LENGTH_SHORT);
 
         inputToast.setGravity(Gravity.CENTER,0,0);
 //        inputToast.show();
@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
 
             startActivity(intent);
+            UserSharedPreference.setIdToken(LoginActivity.this, "testid" + inputID);
             this.finish();
         }
     }
@@ -126,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+//            UserSharedPreference.setIdToken(LoginActivity.this, account.getIdToken());
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             Toast.makeText(this, account.getDisplayName()+"("+account.getEmail()+")님, 안녕하세요!", Toast.LENGTH_LONG).show();
