@@ -45,6 +45,14 @@ public class DateEventAdapter extends RecyclerView.Adapter<DateEventAdapter.Item
         eventItems.remove(position);
     }
 
+    public Event getItem(int position){
+        return eventItems.get(position);
+    }
+
+    public void changeItem(int position,Event event){
+        eventItems.set(position,event);
+    }
+
     //subView(item setting)
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView eventName, eventTime;

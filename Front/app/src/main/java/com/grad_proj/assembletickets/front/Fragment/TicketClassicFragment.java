@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.ShowAdapter;
@@ -19,6 +20,7 @@ public class TicketClassicFragment extends Fragment {
     public View view;
     private ShowAdapter classicShowAdapter;
     RecyclerView classicTicketList;
+    SwipeRefreshLayout classicShowRefresh;
 
     @Nullable
     @Override
@@ -31,6 +33,8 @@ public class TicketClassicFragment extends Fragment {
 
         classicShowAdapter = new ShowAdapter();
         classicTicketList.setAdapter(classicShowAdapter);
+
+        classicShowRefresh = (SwipeRefreshLayout)view.findViewById(R.id.classicShowRefresh);
 
         return view;
     }

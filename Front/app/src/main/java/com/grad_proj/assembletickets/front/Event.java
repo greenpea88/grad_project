@@ -4,6 +4,7 @@ public class Event {
     private String date;
     private String time;
     private String eventName;
+    private String eventContent;
 
 //    public Event(String date, String time, String eventName){
 //        this.date = date;
@@ -23,6 +24,10 @@ public class Event {
         return this.eventName;
     }
 
+    public String getEventContent() {
+        return eventContent;
+    }
+
     public void setDate(String date) {
         this.date = date;
     }
@@ -33,5 +38,9 @@ public class Event {
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
+    }
+
+    public void setEventContent(String eventContent) {
+        this.eventContent = eventContent;
     }
 }

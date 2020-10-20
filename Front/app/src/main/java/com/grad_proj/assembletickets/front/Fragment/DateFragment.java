@@ -2,10 +2,12 @@ package com.grad_proj.assembletickets.front.Fragment;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -15,11 +17,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
+import com.grad_proj.assembletickets.front.CalendarEditDialog;
 import com.grad_proj.assembletickets.front.DateEventAdapter;
 import com.grad_proj.assembletickets.front.Event;
+import com.grad_proj.assembletickets.front.OnDialogListener;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SwipeToDelete;
 import com.grad_proj.assembletickets.front.SwipeToDeleteAction;
@@ -28,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class DateFragment extends Fragment {
+public class DateFragment extends Fragment implements OnDialogListener {
 
     private static final String DATE = "";
     private String date;
@@ -38,13 +41,13 @@ public class DateFragment extends Fragment {
     private DateEventAdapter dateEventAdapter;
 
     private SwipeToDelete swipeToDelete = null;
+    private OnDialogListener listener;
 
 //    public List<Event> events;
 
 
     TextView dateTextView;
     Button eventAddBtn;
-    SwipeRefreshLayout eventRefresh;
 
     public static DateFragment newInstance(String date) {
         //fragment 전환 시 이전 fragment로부터 데이터 넘겨받기
@@ -66,13 +69,12 @@ public class DateFragment extends Fragment {
 
         Log.d("DataFragment","onCreateView()");
         view = inflater.inflate(R.layout.fragment_date,container, false);
+        listener = this;
 
         //getActivity()를 통해 불러올 경우 null pointer error가 발생함
         dateTextView = (TextView)view.findViewById(R.id.dateTextView);
         eventAddBtn = (Button)view.findViewById(R.id.eventAddBtn);
         eventRecyclerView = (RecyclerView)view.findViewById(R.id.dateEventList);
-        //당겨서 새로고침
-        eventRefresh = (SwipeRefreshLayout)view.findViewById(R.id.eventRefresh);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         eventRecyclerView.setLayoutManager(linearLayoutManager);
@@ -92,7 +94,23 @@ public class DateFragment extends Fragment {
             @Override
             public void onLeftClicked(int position) {
                 super.onLeftClicked(position);
-                //TODO: 편집 이벤트 뷰 보이도록 추가하기
+                //수정할 dialog 띄우기
+
+                CalendarEditDialog calendarEditDialog = new CalendarEditDialog(view.getContext(),position,dateEventAdapter.getItem(position));
+
+                DisplayMetrics displayMetrics = view.getContext().getApplicationContext().getResources().getDisplayMetrics();
+
+                int width = displayMetrics.widthPixels;
+                int height = displayMetrics.heightPixels;
+
+                WindowManager.LayoutParams windowManger = calendarEditDialog.getWindow().getAttributes();
+                windowManger.copyFrom(calendarEditDialog.getWindow().getAttributes());
+                windowManger.width=(int)(width*0.7);
+                windowManger.height=(height/3)*2;
+
+                calendarEditDialog.setDialogListener(listener);
+
+                calendarEditDialog.show();
             }
         });
 
@@ -155,6 +173,12 @@ public class DateFragment extends Fragment {
 
         //adapter값 변경을 알림
         //호출하지 않을 경우 추가된 data가 보여지지 않
+        dateEventAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onFinish(int position, Event event) {
+        dateEventAdapter.changeItem(position,event);
         dateEventAdapter.notifyDataSetChanged();
     }
 }
