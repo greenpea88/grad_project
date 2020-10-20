@@ -4,30 +4,43 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TimePicker;
+
+import androidx.annotation.RequiresApi;
 
 public class CalendarEditDialog extends Dialog {
 
-    private String alarmTime;
+    private int alarmHour;
+    private int alarmMin;
     private String title;
     private String eventContent;
 
+    private TimePicker eventEditTime;
     private EditText eventEditTitle,eventEditContent;
     private Button eventEditBtn;
 
     private OnDialogListener listener;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public CalendarEditDialog(Context context, final int position, Event event){
         super(context);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(R.layout.dialog_calendar_edit);
 
+        alarmHour=event.getTimeHour();
+        alarmMin=event.getTimeMin();
         title = event.getEventName();
         eventContent=event.getEventContent();
+
+        eventEditTime =findViewById(R.id.eventEditTimePicker);
+        eventEditTime.setHour(alarmHour);
+        eventEditTime.setMinute(alarmMin);
 
         eventEditTitle = findViewById(R.id.eventEditTitle);
         eventEditTitle.setText(title);
@@ -41,10 +54,14 @@ public class CalendarEditDialog extends Dialog {
             public void onClick(View view) {
                 if(listener!=null){
                     //수정된 값 가져오기
+                    int newHour=eventEditTime.getHour();
+                    int newMin=eventEditTime.getMinute();
                     String newTitle=eventEditTitle.getText().toString();
                     String newContent=eventEditContent.getText().toString();
 
                     Event newEvent = new Event();
+                    newEvent.setTimeHour(newHour);
+                    newEvent.setTimeMin(newMin);
                     newEvent.setEventName(newTitle);
                     newEvent.setEventContent(newContent);
 

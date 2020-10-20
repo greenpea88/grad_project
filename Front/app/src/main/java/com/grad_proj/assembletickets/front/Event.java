@@ -2,7 +2,8 @@ package com.grad_proj.assembletickets.front;
 
 public class Event {
     private String date;
-    private String time;
+    private int timeHour;
+    private int timeMin;
     private String eventName;
     private String eventContent;
 
@@ -16,8 +17,12 @@ public class Event {
         return this.date;
     }
 
-    public String getTime(){
-        return this.time;
+    public int getTimeHour() {
+        return timeHour;
+    }
+
+    public int getTimeMin() {
+        return timeMin;
     }
 
     public String getEventName() {
@@ -32,8 +37,12 @@ public class Event {
         this.date = date;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTimeHour(int timeHour) {
+        this.timeHour = timeHour;
+    }
+
+    public void setTimeMin(int timeMin) {
+        this.timeMin = timeMin;
     }
 
     public void setEventName(String eventName) {

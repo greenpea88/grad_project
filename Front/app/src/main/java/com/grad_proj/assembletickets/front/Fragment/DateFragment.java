@@ -160,12 +160,14 @@ public class DateFragment extends Fragment implements OnDialogListener {
     private void getData(){
         //서버로부터 데이터를 받아오도록 할 것
         List<String> eventName = Arrays.asList("test1","test2","test3","test4","test5","test6","test7");
-        List<String> eventTime = Arrays.asList("time1","time2","time2","time4","time5","time6","time7");
+        List<Integer> eventHour = Arrays.asList(1,2,3,4,5,6,7);
+        List<Integer> eventMin  = Arrays.asList(1,2,3,4,5,6,7);
 
         for(int i=0; i<eventName.size(); i++){
             Event event = new Event();
             event.setEventName(eventName.get(i));
-            event.setTime(eventTime.get(i));
+            event.setTimeHour(eventHour.get(i));
+            event.setTimeMin(eventMin.get(i));
 
             //data를 adpater에 추가하
             dateEventAdapter.addItem(event);
