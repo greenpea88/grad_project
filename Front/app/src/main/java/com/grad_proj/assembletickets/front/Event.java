@@ -1,5 +1,7 @@
 package com.grad_proj.assembletickets.front;
 
+import java.util.Date;
+
 public class Event {
     private String date;
     private int timeHour;

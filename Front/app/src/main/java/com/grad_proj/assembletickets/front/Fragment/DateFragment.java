@@ -1,6 +1,8 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
+import android.database.Cursor;
 import android.graphics.Canvas;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.CalendarEditDialog;
+import com.grad_proj.assembletickets.front.Database.CalendarDatabase;
 import com.grad_proj.assembletickets.front.DateEventAdapter;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.OnDialogListener;
@@ -91,6 +95,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
                 //자체 db에 알릴 것
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onLeftClicked(int position) {
                 super.onLeftClicked(position);
@@ -158,23 +163,41 @@ public class DateFragment extends Fragment implements OnDialogListener {
 //    }
 
     private void getData(){
-        //서버로부터 데이터를 받아오도록 할 것
-        List<String> eventName = Arrays.asList("test1","test2","test3","test4","test5","test6","test7");
-        List<Integer> eventHour = Arrays.asList(1,2,3,4,5,6,7);
-        List<Integer> eventMin  = Arrays.asList(1,2,3,4,5,6,7);
+        //내부 디비에서 데이터 가져오기
+//        List<String> eventName = Arrays.asList("test1","test2","test3","test4","test5","test6","test7");
+//        List<Integer> eventHour = Arrays.asList(1,2,3,4,5,6,7);
+//        List<Integer> eventMin  = Arrays.asList(1,2,3,4,5,6,7);
+//
+//        for(int i=0; i<eventName.size(); i++){
+//            Event event = new Event();
+//            event.setEventName(eventName.get(i));
+//            event.setTimeHour(eventHour.get(i));
+//            event.setTimeMin(eventMin.get(i));
+//
+//            //data를 adpater에 추가하
+//            dateEventAdapter.addItem(event);
+//        }
+//
+//        //adapter값 변경을 알림
+//        //호출하지 않을 경우 추가된 data가 보여지지 않
+//        dateEventAdapter.notifyDataSetChanged();
+        Log.d("DateFragement",date);
+        Cursor cursor=((HomeActivity)getActivity()).getDateEvents(date);
 
-        for(int i=0; i<eventName.size(); i++){
+        while(cursor.moveToNext()){
+            String eventName = cursor.getString(cursor.getColumnIndex(CalendarDatabase.CalendarDB.EVENTNAME));
+            int hour = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.HOUR));
+            int min = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.MINUTE));
+            Log.d("DateFragement",eventName);
+
             Event event = new Event();
-            event.setEventName(eventName.get(i));
-            event.setTimeHour(eventHour.get(i));
-            event.setTimeMin(eventMin.get(i));
+            event.setEventName(eventName);
+            event.setTimeHour(hour);
+            event.setTimeMin(min);
 
-            //data를 adpater에 추가하
             dateEventAdapter.addItem(event);
         }
-
-        //adapter값 변경을 알림
-        //호출하지 않을 경우 추가된 data가 보여지지 않
+        ((HomeActivity)getActivity()).closeDB();
         dateEventAdapter.notifyDataSetChanged();
     }
 

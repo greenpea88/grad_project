@@ -1,5 +1,6 @@
 package com.grad_proj.assembletickets.front.Activity;
 
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.grad_proj.assembletickets.front.Database.DatabaseOpen;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.Fragment.DateFragment;
 import com.grad_proj.assembletickets.front.Fragment.SearchFragment;
@@ -38,6 +40,8 @@ public class HomeActivity extends AppCompatActivity {
 
     public Stack<Fragment> fragmentStack = new Stack<>();
     private static final String TAG_PARENT = "TAG_PARENT";
+
+    public DatabaseOpen databaseOpen;
 
     public FragmentManager fragmentManager = getSupportFragmentManager();
     private CalendarFragment calendarFragment = new CalendarFragment();
@@ -62,6 +66,8 @@ public class HomeActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+
+        databaseOpen = new DatabaseOpen(this);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -213,6 +219,16 @@ public class HomeActivity extends AppCompatActivity {
                 super.onBackPressed();
             }
         }
+    }
+
+    public Cursor getDateEvents(String date){
+        databaseOpen.open();
+
+        return databaseOpen.selectDataEvent(date);
+    }
+
+    public void closeDB(){
+        databaseOpen.close();
     }
 
 }

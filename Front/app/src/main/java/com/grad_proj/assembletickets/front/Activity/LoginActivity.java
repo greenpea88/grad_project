@@ -21,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.grad_proj.assembletickets.front.Database.DatabaseOpen;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
 
@@ -35,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
 
     String inputID = "";
     String inputPW = "";
+
+    private DatabaseOpen databaseOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,8 @@ public class LoginActivity extends AppCompatActivity {
         else{
             Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
 
+            getCalendarData();
+
             startActivity(intent);
             UserSharedPreference.setIdToken(LoginActivity.this, "testid" + inputID);
             this.finish();
@@ -144,6 +149,21 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, JoinActivity.class);
 
         startActivity(intent);
+    }
+
+    public void getCalendarData(){
+        //서버로부터 캘린더 데이터 가져오기 + db 생성하고 집어넣기
+        databaseOpen = new DatabaseOpen(this);
+        databaseOpen.open();
+        databaseOpen.create();
+
+        databaseOpen.insertColumn("2020-10-21","test1",1,1);
+        databaseOpen.insertColumn("2020-10-22","test2",1,2);
+        databaseOpen.insertColumn("2020-10-21","test3",2,2);
+        databaseOpen.insertColumn("2020-10-22","test4",4,3);
+        databaseOpen.insertColumn("2020-10-21","test5",2,1);
+
+        databaseOpen.close();
     }
 
 }
