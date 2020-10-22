@@ -218,13 +218,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void insertEvent(String date,String eventName,int hour, int minute){
-        databaseOpen.open();
-
-        databaseOpen.insertColumn(date,eventName,hour,minute);
-        databaseOpen.close();
-    }
-
     public void insertEvent(String date,String eventName, String eventContent,int hour, int minute){
         databaseOpen.open();
 

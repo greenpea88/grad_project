@@ -75,12 +75,7 @@ public class AddEventFragment extends Fragment {
                     String eventContent = eventContentEditText.getText().toString();
 
                     //db에 새로 추가된 정보 넣기
-                    if(eventContent.isEmpty()){
-                        ((HomeActivity)getActivity()).insertEvent(date,eventTitle,eventHour,eventMin);
-                    }
-                    else{
-                        ((HomeActivity)getActivity()).insertEvent(date,eventContent,eventHour,eventMin);
-                    }
+                    ((HomeActivity)getActivity()).insertEvent(date,eventTitle,eventContent,eventHour,eventMin);
                     ((HomeActivity)getActivity()).submitBtnAction();
                 }
             }

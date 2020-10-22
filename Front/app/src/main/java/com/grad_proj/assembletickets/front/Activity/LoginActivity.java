@@ -157,11 +157,11 @@ public class LoginActivity extends AppCompatActivity {
         databaseOpen.open();
         databaseOpen.create();
 
-        databaseOpen.insertColumn("2020-10-21","test1",1,1);
-        databaseOpen.insertColumn("2020-10-22","test2",1,2);
-        databaseOpen.insertColumn("2020-10-21","test3",2,2);
-        databaseOpen.insertColumn("2020-10-22","test4",4,3);
-        databaseOpen.insertColumn("2020-10-21","test5",2,1);
+        databaseOpen.insertColumn("2020-10-21","test1","test",1,1);
+        databaseOpen.insertColumn("2020-10-22","test2","dafsf",1,2);
+        databaseOpen.insertColumn("2020-10-21","test3",null,2,2);
+        databaseOpen.insertColumn("2020-10-22","test4",null,4,3);
+        databaseOpen.insertColumn("2020-10-21","test5","tttt",2,1);
 
         databaseOpen.close();
     }

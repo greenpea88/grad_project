@@ -171,13 +171,14 @@ public class DateFragment extends Fragment implements OnDialogListener {
         while(cursor.moveToNext()){
             int id = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB._ID));
             String eventName = cursor.getString(cursor.getColumnIndex(CalendarDatabase.CalendarDB.EVENTNAME));
+            String eventContent = cursor.getString(cursor.getColumnIndex(CalendarDatabase.CalendarDB.EVENTCONTENT));
             int hour = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.HOUR));
             int min = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.MINUTE));
-            Log.d("DateFragement",eventName);
 
             Event event = new Event();
             event.setId(id);
             event.setEventName(eventName);
+            event.setEventContent(eventContent);
             event.setTimeHour(hour);
             event.setTimeMin(min);
 
@@ -189,6 +190,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
 
     @Override
     public void onFinish(int position, Event event) {
+        Log.d("DateFragment","Dialog finish");
         ((HomeActivity)getActivity()).updateEvent(event);
 
         dateEventAdapter.changeItem(position,event);

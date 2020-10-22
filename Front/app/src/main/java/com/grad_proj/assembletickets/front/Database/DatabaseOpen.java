@@ -71,20 +71,8 @@ public class DatabaseOpen{
         return mDB.insert(CalendarDatabase.CalendarDB._TABLENAME,null,values);
     }
 
-    public long insertColumn(String eventDate, String eventName,int hour,int min) {
-        //insert DB- without content
-        ContentValues values = new ContentValues();
-        values.put(CalendarDatabase.CalendarDB.EVENTDATE,eventDate);
-        values.put(CalendarDatabase.CalendarDB.EVENTNAME, eventName);
-        values.put(CalendarDatabase.CalendarDB.HOUR, hour);
-        values.put(CalendarDatabase.CalendarDB.MINUTE, min);
-
-        return mDB.insert(CalendarDatabase.CalendarDB._TABLENAME, null, values);
-    }
-
     public Cursor selectDataEvent(String date){
-        String sql = "SELECT "+ CalendarDatabase.CalendarDB._ID +" , " +CalendarDatabase.CalendarDB.EVENTNAME+" , "+ CalendarDatabase.CalendarDB.HOUR+" , "+ CalendarDatabase.CalendarDB.MINUTE
-                + " FROM "+ CalendarDatabase.CalendarDB._TABLENAME
+        String sql = "SELECT * FROM "+ CalendarDatabase.CalendarDB._TABLENAME
                 +" WHERE "+ CalendarDatabase.CalendarDB.EVENTDATE+"='"+date+"'"
                 +" ORDER BY "+ CalendarDatabase.CalendarDB.HOUR;
 
