@@ -27,7 +27,7 @@ public class CalendarEditDialog extends Dialog {
     private OnDialogListener listener;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public CalendarEditDialog(Context context, final int position, Event event){
+    public CalendarEditDialog(Context context, final int position, final Event event){
         super(context);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -60,6 +60,7 @@ public class CalendarEditDialog extends Dialog {
                     String newContent=eventEditContent.getText().toString();
 
                     Event newEvent = new Event();
+                    newEvent.setId(event.getId());
                     newEvent.setTimeHour(newHour);
                     newEvent.setTimeMin(newMin);
                     newEvent.setEventName(newTitle);

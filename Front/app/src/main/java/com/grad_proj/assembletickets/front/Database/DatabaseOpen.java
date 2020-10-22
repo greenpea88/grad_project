@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.grad_proj.assembletickets.front.Database.CalendarDatabase;
+import com.grad_proj.assembletickets.front.Event;
 
 public class DatabaseOpen{
 
@@ -95,5 +96,15 @@ public class DatabaseOpen{
                 + " WHERE "+ CalendarDatabase.CalendarDB._ID+"="+id;
 
         mDB.execSQL(sql);
+    }
+
+    public boolean updateColumn(Event event){
+        ContentValues values = new ContentValues();
+        values.put(CalendarDatabase.CalendarDB.EVENTNAME,event.getEventName());
+        values.put(CalendarDatabase.CalendarDB.EVENTCONTENT,event.getEventContent());
+        values.put(CalendarDatabase.CalendarDB.HOUR,event.getTimeHour());
+        values.put(CalendarDatabase.CalendarDB.MINUTE,event.getTimeMin());
+
+        return mDB.update(CalendarDatabase.CalendarDB._TABLENAME,values, CalendarDatabase.CalendarDB._ID+"="+event.getId(),null) > 0;
     }
 }

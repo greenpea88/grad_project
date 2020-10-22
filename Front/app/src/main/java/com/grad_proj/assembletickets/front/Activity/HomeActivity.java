@@ -245,6 +245,13 @@ public class HomeActivity extends AppCompatActivity {
         databaseOpen.close();
     }
 
+    public void updateEvent(Event event){
+        databaseOpen.open();
+
+        databaseOpen.updateColumn(event);
+        databaseOpen.close();
+    }
+
     public void closeDB(){
         databaseOpen.close();
     }

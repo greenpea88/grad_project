@@ -189,6 +189,8 @@ public class DateFragment extends Fragment implements OnDialogListener {
 
     @Override
     public void onFinish(int position, Event event) {
+        ((HomeActivity)getActivity()).updateEvent(event);
+
         dateEventAdapter.changeItem(position,event);
         dateEventAdapter.notifyDataSetChanged();
     }
