@@ -82,11 +82,18 @@ public class DatabaseOpen{
     }
 
     public Cursor selectDataEvent(String date){
-        String sql = "SELECT "+ CalendarDatabase.CalendarDB.EVENTNAME+" , "+ CalendarDatabase.CalendarDB.HOUR+" , "+ CalendarDatabase.CalendarDB.MINUTE
+        String sql = "SELECT "+ CalendarDatabase.CalendarDB._ID +" , " +CalendarDatabase.CalendarDB.EVENTNAME+" , "+ CalendarDatabase.CalendarDB.HOUR+" , "+ CalendarDatabase.CalendarDB.MINUTE
                 + " FROM "+ CalendarDatabase.CalendarDB._TABLENAME
                 +" WHERE "+ CalendarDatabase.CalendarDB.EVENTDATE+"='"+date+"'"
                 +" ORDER BY "+ CalendarDatabase.CalendarDB.HOUR;
 
         return mDB.rawQuery(sql,null);
+    }
+
+    public void deleteColumn(int id){
+        String sql = "DELETE FROM " + CalendarDatabase.CalendarDB._TABLENAME
+                + " WHERE "+ CalendarDatabase.CalendarDB._ID+"="+id;
+
+        mDB.execSQL(sql);
     }
 }

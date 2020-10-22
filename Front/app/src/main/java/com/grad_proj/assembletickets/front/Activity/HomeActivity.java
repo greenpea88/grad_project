@@ -238,6 +238,13 @@ public class HomeActivity extends AppCompatActivity {
         return databaseOpen.selectDataEvent(date);
     }
 
+    public void deleteEvent(int id){
+        databaseOpen.open();
+
+        databaseOpen.deleteColumn(id);
+        databaseOpen.close();
+    }
+
     public void closeDB(){
         databaseOpen.close();
     }

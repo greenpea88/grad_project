@@ -41,8 +41,11 @@ public class DateEventAdapter extends RecyclerView.Adapter<DateEventAdapter.Item
          eventItems.add(event);
     }
 
-    public void removeItem(int position){
+    public int removeItem(int position){
+        int removeId = eventItems.get(position).getId();
         eventItems.remove(position);
+
+        return removeId;
     }
 
     public Event getItem(int position){

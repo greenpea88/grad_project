@@ -3,6 +3,7 @@ package com.grad_proj.assembletickets.front;
 import java.util.Date;
 
 public class Event {
+    private int id;
     private String date;
     private int timeHour;
     private int timeMin;
@@ -14,6 +15,10 @@ public class Event {
 //        this.time = time;
 //        this.eventName = eventName;
 //    }
+
+    public int getId(){
+        return this.id;
+    }
 
     public String getDate() {
         return this.date;
@@ -37,6 +42,10 @@ public class Event {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public void setTimeHour(int timeHour) {

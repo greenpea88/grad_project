@@ -89,10 +89,11 @@ public class DateFragment extends Fragment implements OnDialogListener {
         swipeToDelete = new SwipeToDelete(view.getContext(), "event",new SwipeToDeleteAction() {
             @Override
             public void onRightClicked(int position) {
-                dateEventAdapter.removeItem(position);
+                int removeId = dateEventAdapter.removeItem(position);
                 dateEventAdapter.notifyItemRemoved(position);
                 dateEventAdapter.notifyItemRangeChanged(position,dateEventAdapter.getItemCount());
                 //자체 db에 알릴 것
+                ((HomeActivity)getActivity()).deleteEvent(removeId);
             }
 
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -168,12 +169,14 @@ public class DateFragment extends Fragment implements OnDialogListener {
         Cursor cursor=((HomeActivity)getActivity()).getDateEvents(date);
 
         while(cursor.moveToNext()){
+            int id = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB._ID));
             String eventName = cursor.getString(cursor.getColumnIndex(CalendarDatabase.CalendarDB.EVENTNAME));
             int hour = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.HOUR));
             int min = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.MINUTE));
             Log.d("DateFragement",eventName);
 
             Event event = new Event();
+            event.setId(id);
             event.setEventName(eventName);
             event.setTimeHour(hour);
             event.setTimeMin(min);
