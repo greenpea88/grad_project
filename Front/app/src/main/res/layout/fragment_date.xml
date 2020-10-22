@@ -21,6 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/emptyEventTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/eventEmpty"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:visibility="invisible"/>
     
     <Button
         android:id="@+id/eventAddBtn"

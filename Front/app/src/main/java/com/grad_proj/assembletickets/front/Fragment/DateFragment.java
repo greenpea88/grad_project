@@ -50,7 +50,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
 //    public List<Event> events;
 
 
-    TextView dateTextView;
+    TextView dateTextView,emptyEventTextView;
     Button eventAddBtn;
 
     public static DateFragment newInstance(String date) {
@@ -77,6 +77,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
 
         //getActivity()를 통해 불러올 경우 null pointer error가 발생함
         dateTextView = (TextView)view.findViewById(R.id.dateTextView);
+        emptyEventTextView=(TextView)view.findViewById(R.id.emptyEventTextView);
         eventAddBtn = (Button)view.findViewById(R.id.eventAddBtn);
         eventRecyclerView = (RecyclerView)view.findViewById(R.id.dateEventList);
 
@@ -94,6 +95,9 @@ public class DateFragment extends Fragment implements OnDialogListener {
                 dateEventAdapter.notifyItemRangeChanged(position,dateEventAdapter.getItemCount());
                 //자체 db에 알릴 것
                 ((HomeActivity)getActivity()).deleteEvent(removeId);
+                if(dateEventAdapter.getItemCount()==0){
+                    emptyEventTextView.setVisibility(View.VISIBLE);
+                }
             }
 
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -136,6 +140,9 @@ public class DateFragment extends Fragment implements OnDialogListener {
         }
 
         getData();
+        if(dateEventAdapter.getItemCount()==0){
+            emptyEventTextView.setVisibility(View.VISIBLE);
+        }
 
         eventAddBtn.setOnClickListener(new View.OnClickListener(){
             @Override
