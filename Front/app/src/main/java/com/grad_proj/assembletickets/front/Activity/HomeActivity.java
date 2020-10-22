@@ -172,15 +172,12 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void submitBtnAction(String eventTitle,String eventTime){
+    public void submitBtnAction(){
         Log.i("submit button","pressed");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Event event = new Event();
         if(!fragmentStack.isEmpty()){
-//            event.setEventName(eventTitle);
-//            event.setTime(eventTime);
             DateFragment lastFragment = (DateFragment)fragmentStack.pop();
-//            lastFragment.addEvent(event);
             fragmentTransaction.replace(R.id.frameLayout, lastFragment).commitAllowingStateLoss();
         }
     }
@@ -219,6 +216,20 @@ public class HomeActivity extends AppCompatActivity {
                 super.onBackPressed();
             }
         }
+    }
+
+    public void insertEvent(String date,String eventName,int hour, int minute){
+        databaseOpen.open();
+
+        databaseOpen.insertColumn(date,eventName,hour,minute);
+        databaseOpen.close();
+    }
+
+    public void insertEvent(String date,String eventName, String eventContent,int hour, int minute){
+        databaseOpen.open();
+
+        databaseOpen.insertColumn(date,eventName,eventContent,hour,minute);
+        databaseOpen.close();
     }
 
     public Cursor getDateEvents(String date){

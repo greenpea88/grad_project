@@ -18,8 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:hint="제목"/>
-    <MultiAutoCompleteTextView
-        android:id="@+id/eventMultiText"
+    <EditText
+        android:id="@+id/eventContentEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"

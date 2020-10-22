@@ -82,23 +82,11 @@ public class DatabaseOpen{
     }
 
     public Cursor selectDataEvent(String date){
-//        SQLiteDatabase db  = mDBHelper.getReadableDatabase();
-
-//        String [] projection ={
-//                CalendarDatabase.CalendarDB._ID,
-//                CalendarDatabase.CalendarDB.EVENTNAME,
-//                CalendarDatabase.CalendarDB.HOUR,
-//                CalendarDatabase.CalendarDB.MINUTE
-//        };
-
         String sql = "SELECT "+ CalendarDatabase.CalendarDB.EVENTNAME+" , "+ CalendarDatabase.CalendarDB.HOUR+" , "+ CalendarDatabase.CalendarDB.MINUTE
                 + " FROM "+ CalendarDatabase.CalendarDB._TABLENAME
                 +" WHERE "+ CalendarDatabase.CalendarDB.EVENTDATE+"='"+date+"'"
                 +" ORDER BY "+ CalendarDatabase.CalendarDB.HOUR;
 
         return mDB.rawQuery(sql,null);
-//        String sortOrder = CalendarDatabase.CalendarDB.HOUR + " DESC";
-//
-//        return db.query(CalendarDatabase.CalendarDB._TABLENAME,projection,null,null,null,null,sortOrder);
     }
 }

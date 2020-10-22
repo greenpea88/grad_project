@@ -143,7 +143,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
                 Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
                 ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-                ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance());
+                ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance(date));
             }
         });
 
@@ -164,23 +164,6 @@ public class DateFragment extends Fragment implements OnDialogListener {
 
     private void getData(){
         //내부 디비에서 데이터 가져오기
-//        List<String> eventName = Arrays.asList("test1","test2","test3","test4","test5","test6","test7");
-//        List<Integer> eventHour = Arrays.asList(1,2,3,4,5,6,7);
-//        List<Integer> eventMin  = Arrays.asList(1,2,3,4,5,6,7);
-//
-//        for(int i=0; i<eventName.size(); i++){
-//            Event event = new Event();
-//            event.setEventName(eventName.get(i));
-//            event.setTimeHour(eventHour.get(i));
-//            event.setTimeMin(eventMin.get(i));
-//
-//            //data를 adpater에 추가하
-//            dateEventAdapter.addItem(event);
-//        }
-//
-//        //adapter값 변경을 알림
-//        //호출하지 않을 경우 추가된 data가 보여지지 않
-//        dateEventAdapter.notifyDataSetChanged();
         Log.d("DateFragement",date);
         Cursor cursor=((HomeActivity)getActivity()).getDateEvents(date);
 
