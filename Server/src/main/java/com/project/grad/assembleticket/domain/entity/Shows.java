@@ -61,6 +61,10 @@ public class Shows {
     @Column(length = 30)
     private String venue;
 
+    // Show Table에 등록된 시간
+    @Column(columnDefinition = "DATETIME")
+    private LocalDateTime registeredTime = LocalDateTime.now();
+
     @Builder
     public Shows(String title, int type, LocalDate startDate, LocalDate endDate, LocalDateTime ticketOpen,
                 String time, int runningTime, String price, String buyTicket, String posterSrc, String venue){
