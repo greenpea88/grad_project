@@ -55,7 +55,7 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
         public ItemViewHolder(View itemView){
             super(itemView);
 
-            subscribeEditProfile = itemView.findViewById(R.id.subscribeDetailProfile);
+            subscribeEditProfile = itemView.findViewById(R.id.subscribeEditProfile);
             subscribeEditName = itemView.findViewById(R.id.subscribeEditName);
 //            subscribeEditAlarm = itemView.findViewById(R.id.subscribeEditAlarm);
 //            subscribeEditAlarm.setColorFilter(Color.parseColor("#F25E3D"), PorterDuff.Mode.SRC_IN);

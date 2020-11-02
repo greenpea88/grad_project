@@ -191,9 +191,8 @@ public class HomeActivity extends AppCompatActivity {
     public void submitBtnAction(){
         Log.i("submit button","pressed");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Event event = new Event();
         if(!fragmentStack.isEmpty()){
-            DateFragment lastFragment = (DateFragment)fragmentStack.pop();
+            Fragment lastFragment = fragmentStack.pop();
             fragmentTransaction.replace(R.id.frameLayout, lastFragment).commitAllowingStateLoss();
         }
     }

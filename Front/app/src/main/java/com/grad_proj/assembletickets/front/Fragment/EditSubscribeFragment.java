@@ -80,7 +80,8 @@ public class EditSubscribeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //현재 setting 값 서버로 보내고
-                ((HomeActivity)getActivity()).replaceFragment(TotalSubscribeFragment.newInstance());
+//                ((HomeActivity)getActivity()).replaceFragment(TotalSubscribeFragment.newInstance());
+                ((HomeActivity)getActivity()).submitBtnAction();
             }
         });
         return view;
