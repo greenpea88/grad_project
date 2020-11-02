@@ -22,7 +22,6 @@ public class TicketFragment extends Fragment {
     private TabLayout topMenuTab;
     private ViewPager viewPager;
     private TopMenuBarAdapter topMenuBarAdapter;
-//    private FragmentActivity mContext;
 
     View view;
 
@@ -39,7 +38,6 @@ public class TicketFragment extends Fragment {
         setMenu();
 
         viewPager = (ViewPager)view.findViewById(R.id.pagerView);
-//        FragmentManager childFragmentManager = getChildFragmentManager();
 
         topMenuBarAdapter = new TopMenuBarAdapter(
                 getChildFragmentManager(),topMenuTab.getTabCount()
@@ -48,6 +46,7 @@ public class TicketFragment extends Fragment {
         viewPager.addOnPageChangeListener(
                 new TabLayout.TabLayoutOnPageChangeListener(topMenuTab)
         );
+
         topMenuTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

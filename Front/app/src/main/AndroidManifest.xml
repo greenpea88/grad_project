@@ -26,6 +26,7 @@
             android:name=".Activity.JoinActivity"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".Activity.HomeActivity"></activity>
+        <receiver android:name=".Alarm.AlarmReceiver"/>
     </application>
 
 </manifest>

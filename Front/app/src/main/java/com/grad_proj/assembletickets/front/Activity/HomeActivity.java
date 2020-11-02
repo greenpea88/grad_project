@@ -1,5 +1,11 @@
 package com.grad_proj.assembletickets.front.Activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,6 +29,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.grad_proj.assembletickets.front.Alarm.AlarmReceiver;
+import com.grad_proj.assembletickets.front.Alarm.DeviceBootReceiver;
 import com.grad_proj.assembletickets.front.Database.DatabaseOpen;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.Fragment.DateFragment;
@@ -34,6 +42,7 @@ import com.grad_proj.assembletickets.front.Fragment.SubscribeFragment;
 import com.grad_proj.assembletickets.front.Fragment.TicketFragment;
 import com.grad_proj.assembletickets.front.Fragment.UserFragment;
 
+import java.util.Calendar;
 import java.util.Stack;
 
 public class HomeActivity extends AppCompatActivity {
@@ -103,7 +112,14 @@ public class HomeActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentStack.push(fragmentManager.findFragmentById(R.id.frameLayout));
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.frameLayout);
+//                if(currentFragment instanceof TicketFragment){
+//                    fragmentStack.push(fragmentManager.findFragmentByTag(TAG_PARENT));
+//                }
+//                else{
+//                    fragmentStack.push(currentFragment);
+//                }
+                fragmentStack.push(currentFragment);
                 replaceFragment(searchFragment);
                 ActionBar actionBar = getSupportActionBar();
                 actionBar.hide();
@@ -135,7 +151,7 @@ public class HomeActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch(menuItem.getItemId()){
             case R.id.navigation_calendar:{
-                fragmentStack.push(calendarFragment);
+//                fragmentStack.push(calendarFragment);
                 fragmentTransaction.replace(R.id.frameLayout,calendarFragment).commitAllowingStateLoss();
                 titleText.setText("캘린더");
                 break;
@@ -203,14 +219,25 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (isPageOpen) {
+            //알림 사이드 바
             notiPage.setVisibility(View.INVISIBLE);
             isPageOpen = false;
         } else {
-            Log.i("Back button","pressed");
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             if(!fragmentStack.isEmpty()){
                 Fragment lastFragment = fragmentStack.pop();
-                fragmentTransaction.replace(R.id.frameLayout,lastFragment).commit();
+                if(lastFragment instanceof TicketFragment){
+                    Log.d("HomeActivity","ticket back pressed");
+                    //이전 fragment가 ticket탭 일 경우에는 중첩 fragment를 사용하므로 check를 필요로 함
+                    ticketFragment = fragmentManager.findFragmentByTag(TAG_PARENT);
+                    if(ticketFragment == null){
+                        ticketFragment = TicketFragment.getInstance();
+                    }
+                    fragmentTransaction.replace(R.id.frameLayout,ticketFragment,TAG_PARENT).commit();
+                }
+                else{
+                    fragmentTransaction.replace(R.id.frameLayout,lastFragment).commit();
+                }
             }
             else{
                 super.onBackPressed();
@@ -249,4 +276,27 @@ public class HomeActivity extends AppCompatActivity {
         databaseOpen.close();
     }
 
+
+    //alarm notification
+    public void setAlarm(String date, int hour, int min){
+        String[] dateSet = date.split("-"); //YYYY-MM-DD
+
+        Calendar calendar= Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.YEAR,Integer.parseInt(dateSet[0]));
+        calendar.set(Calendar.MONTH,Integer.parseInt(dateSet[1])-1); //JAN이 0부터 시작함
+        calendar.set(Calendar.DATE,Integer.parseInt(dateSet[2]));
+        calendar.set(Calendar.HOUR_OF_DAY,hour);
+        calendar.set(Calendar.MINUTE,min);
+
+        PackageManager packageManager = this.getPackageManager();
+        ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,alarmIntent,0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+        if(alarmManager!=null){
+            
+        }
+    }
 }
