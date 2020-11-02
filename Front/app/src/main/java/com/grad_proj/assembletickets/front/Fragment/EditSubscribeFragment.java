@@ -88,13 +88,13 @@ public class EditSubscribeFragment extends Fragment {
 
     public void getEditData(){
         List<String> performerName = Arrays.asList("test1","test2","test3","test4");
-        List<Boolean> setAlarm = Arrays.asList(true,false,true,false);
+//        List<Boolean> setAlarm = Arrays.asList(true,false,true,false);
 
         for(int i=0;i<performerName.size();i++){
             Performer performer = new Performer();
 
             performer.setpName(performerName.get(i));
-            performer.setSetAlarm(setAlarm.get(i));
+//            performer.setSetAlarm(setAlarm.get(i));
 
             subscribeEditAdapter.addItem(performer);
         }

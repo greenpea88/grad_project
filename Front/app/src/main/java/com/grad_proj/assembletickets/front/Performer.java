@@ -4,7 +4,7 @@ public class Performer {
     int pId;
     String pName;
     String picSrc;
-    Boolean setAlarm;
+//    Boolean setAlarm;
 
     public int getpId() {
         return pId;
@@ -18,9 +18,9 @@ public class Performer {
         return picSrc;
     }
 
-    public Boolean getSetAlarm() {
-        return setAlarm;
-    }
+//    public Boolean getSetAlarm() {
+//        return setAlarm;
+//    }
 
     public void setpId(int pId) {
         this.pId = pId;
@@ -34,7 +34,7 @@ public class Performer {
         this.picSrc = picSrc;
     }
 
-    public void setSetAlarm(Boolean setAlarm) {
-        this.setAlarm = setAlarm;
-    }
+//    public void setSetAlarm(Boolean setAlarm) {
+//        this.setAlarm = setAlarm;
+//    }
 }
