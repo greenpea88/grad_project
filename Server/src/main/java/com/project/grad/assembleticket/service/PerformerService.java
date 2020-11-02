@@ -13,8 +13,8 @@ public class PerformerService {
     private final PerformerRepository performerRepository;
 
     @Transactional
-    public Performer getPerformerDetail(String name){
-        return performerRepository.findByName(name);
+    public Performer getPerformerDetail(Long id){
+        return performerRepository.findById(id).orElse(null);
     }
 
 }

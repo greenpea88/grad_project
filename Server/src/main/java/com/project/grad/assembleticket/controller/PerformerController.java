@@ -16,9 +16,8 @@ public class PerformerController {
     private PerformerService performerService;
 
     @GetMapping("/performer")
-    public Performer getPerformerDetail(@RequestParam String name){
-        // TODO: 동명이인에 대한 처리 필요
-        return performerService.getPerformerDetail(name);
+    public Performer getPerformerDetail(@RequestParam Long id){
+        return performerService.getPerformerDetail(id);
     }
 
 }
