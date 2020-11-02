@@ -1,6 +1,6 @@
 package com.project.grad.assembleticket.controller;
 
-import com.project.grad.assembleticket.domain.entity.Performer;
+import com.project.grad.assembleticket.dto.PerformerDetailResponseDto;
 import com.project.grad.assembleticket.service.PerformerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ public class PerformerController {
     private PerformerService performerService;
 
     @GetMapping("/performer")
-    public Performer getPerformerDetail(@RequestParam Long id){
+    public PerformerDetailResponseDto getPerformerDetail(@RequestParam Long id){
         return performerService.getPerformerDetail(id);
     }
 

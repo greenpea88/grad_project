@@ -10,5 +10,6 @@ import java.util.List;
 public interface ShowPerformerRepository extends JpaRepository<ShowPerformer, Long> {
 
     List<ShowPerformer> findAllByShowsId(Long id);
+    List<ShowPerformer> findAllByPerformerId(Long id);
 
 }
