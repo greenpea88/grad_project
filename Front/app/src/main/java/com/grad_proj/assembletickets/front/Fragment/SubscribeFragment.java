@@ -74,6 +74,17 @@ public class SubscribeFragment extends Fragment {
         showAdapter = new ShowAdapter();
         subscribeShowRecyclerView.setAdapter(showAdapter);
 
+        showAdapter.setOnItemClickListener(new ShowAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(View v, int position) {
+                Log.d("SubscribeFragment","show item clicked");
+
+                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
+                ((HomeActivity)getActivity()).replaceFragment(ShowDetailFragment.newInstance());
+            }
+        });
+
         totalBtn = (Button)view.findViewById(R.id.totalBtn);
         totalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +154,6 @@ public class SubscribeFragment extends Fragment {
         for(int i=0; i<subscribeShowList.size(); i++){
             Show show = new Show();
             show.setsName(subscribeShowList.get(i));
-            System.out.println(subscribeShowList.get(i));
             //data를 adpater에 추가하기
             showAdapter.addItem(show);
         }

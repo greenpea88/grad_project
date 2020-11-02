@@ -13,7 +13,13 @@ import java.util.ArrayList;
 
 public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
 
+    public interface OnItemClickListener{
+        void onItemClicked(View v, int position);
+    }
+
     ArrayList<Show> items = new ArrayList<Show>();
+
+    private ShowAdapter.OnItemClickListener onItemClickListener = null;
 
     @NonNull
     @Override
@@ -50,7 +56,11 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
         return items.get(position);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public void setOnItemClickListener(ShowAdapter.OnItemClickListener listener){
+        this.onItemClickListener = listener;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView poster;
         TextView titleText;
@@ -66,6 +76,16 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
             performersText = itemView.findViewById(R.id.performersText);
             dateText = itemView.findViewById(R.id.dateText);
             priceText = itemView.findViewById(R.id.priceText);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=getAdapterPosition();
+
+                    if(onItemClickListener!= null){
+                        onItemClickListener.onItemClicked(view,position);
+                    }
+                }
+            });
         }
 
         public void setItem(Show item) {
