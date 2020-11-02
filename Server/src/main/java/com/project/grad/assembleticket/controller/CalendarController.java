@@ -1,12 +1,11 @@
 package com.project.grad.assembleticket.controller;
 
 import com.project.grad.assembleticket.domain.entity.Calendar;
+import com.project.grad.assembleticket.dto.CalendarSaveRequestDto;
+import com.project.grad.assembleticket.dto.CalendarUpdateRequestDto;
 import com.project.grad.assembleticket.service.CalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +21,18 @@ public class CalendarController {
     @GetMapping("/calendar")
     public List<Calendar> getCalendar(@RequestParam Long userId, @RequestParam String date) {
         return calendarService.getCalendar(userId, LocalDate.parse(date));
+    }
+
+    // 일정 등록하기
+    @PostMapping("/calendar")
+    public Calendar saveCalendar(@RequestBody CalendarSaveRequestDto requestDto){
+        return calendarService.saveCalendar(requestDto);
+    }
+
+    // 일정 수정하기
+    @PutMapping("/calendar")
+    public Calendar updateCalendar(@RequestParam Long calId, @RequestBody CalendarUpdateRequestDto requestDto){
+        return calendarService.updateCalendar(calId, requestDto);
     }
 
 }

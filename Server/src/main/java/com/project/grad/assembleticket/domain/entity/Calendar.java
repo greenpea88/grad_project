@@ -47,4 +47,11 @@ public class Calendar {
         this.calMemo = cMemo;
     }
 
+    public void update(LocalDate date, LocalTime time, String title, String memo){
+        this.calDate = date;
+        this.calTime = time;
+        this.calTitle = title;
+        this.calMemo = memo;
+    }
+
 }
