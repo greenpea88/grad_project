@@ -39,6 +39,7 @@ public class SubscribeFragment extends Fragment {
     private List<List<String>> totalSubscribeShowList = new ArrayList<>();
     private List<String> subscribeShowList = new ArrayList<>();
     private List<String> subscribeName;
+    private List<String> totalShows;
 
     @Nullable
     @Override
@@ -113,7 +114,7 @@ public class SubscribeFragment extends Fragment {
         //처음에는 total을 보여줌
 
 
-        List<String> totalShows = Arrays.asList("total1","total2","total3","total4","total5","total6","total7");
+        totalShows = Arrays.asList("total1","total2","total3","total4","total5","total6","total7");
         subscribeShowList = totalShows;
 
         for(int i=0; i<subscribeName.size(); i++){
@@ -127,7 +128,13 @@ public class SubscribeFragment extends Fragment {
     private void changeSubscribeCategory(int position) {
         //선택되는 구독 공연자에 따라서 recycler view의 구성 값을 바꾸도록 함
         Log.d("SubscribeFragment","changeSubscribeCategory()");
-        subscribeShowList = totalSubscribeShowList.get(position);
+        if(!subscribeAdapter.selectedList.get(position,false)){
+            Log.d("Subscribe","clicked again");
+            subscribeShowList=totalShows;
+        }
+        else{
+            subscribeShowList = totalSubscribeShowList.get(position);
+        }
         showAdapter.resetItem();
         setSubscribeShowList();
     }
@@ -136,7 +143,7 @@ public class SubscribeFragment extends Fragment {
         for(int i=0; i<subscribeShowList.size(); i++){
             Show show = new Show();
             show.setsName(subscribeShowList.get(i));
-
+            System.out.println(subscribeShowList.get(i));
             //data를 adpater에 추가하기
             showAdapter.addItem(show);
         }

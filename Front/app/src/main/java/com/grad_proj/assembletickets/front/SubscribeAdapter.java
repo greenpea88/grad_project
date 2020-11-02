@@ -25,7 +25,8 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
     private OnItemClickListener onItemClickListener = null;
 
     ArrayList<Subscribe> subscribeList = new ArrayList<>();
-    private SparseBooleanArray selectedList = new SparseBooleanArray(0);
+    public SparseBooleanArray selectedList = new SparseBooleanArray(0);
+    private int currentPosition = -1;
 
     @NonNull
     @Override
@@ -74,12 +75,20 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     if(position!=RecyclerView.NO_POSITION){
-                        selectedList.clear();
+                        if(position!=currentPosition){
+                            selectedList.clear();
+                        }
                         Subscribe subscribe = subscribeList.get(position);
                         Log.d("SubscribeAdapter","itemClicked");
                         if(!selectedList.get(position,false)){
                             selectedList.put(position,true);
+                            currentPosition=position;
                             view.setBackgroundColor(Color.parseColor("#B3F28379"));
+                        }
+                        else{
+                            Log.d("SubscribeAdapter","clickedAgain");
+                            selectedList.put(position,false);
+                            view.setBackgroundColor(Color.parseColor("#00FF0000"));
                         }
                         if(onItemClickListener != null){
                             onItemClickListener.onItemClicked(view,position);
