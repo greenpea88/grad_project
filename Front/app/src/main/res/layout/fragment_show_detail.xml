@@ -6,49 +6,55 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
 
-    <Button
-        android:id="@+id/addEventBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="+"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorFastWithUs3"
-        android:background="#000FF000"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="16dp">
         <ImageView
             android:layout_width="150dp"
             android:layout_height="200dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/img_poster"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:layout_gravity="center">
-            <TextView
-                android:id="@+id/showDetailTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="제목"
-                android:textSize="28sp"
-                android:textStyle="bold"/>
-            <TextView
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/addEventBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="장소"
-                android:textSize="18sp"
-                android:paddingTop="5dp"/>
-            <TextView
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="+"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorFastWithUs3"
+                android:background="#000FF000"/>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="기간"
-                android:textSize="18sp"
-                android:paddingTop="5dp"/>
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:layout_gravity="center">
+                <TextView
+                    android:id="@+id/showDetailTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="제목"
+                    android:textSize="28sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="장소"
+                    android:textSize="18sp"
+                    android:paddingTop="5dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="기간"
+                    android:textSize="18sp"
+                    android:paddingTop="5dp"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <TextView

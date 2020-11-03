@@ -51,7 +51,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
 
 
     TextView dateTextView,emptyEventTextView;
-    Button eventAddBtn;
+//    Button eventAddBtn;
 
     public static DateFragment newInstance(String date) {
         //fragment 전환 시 이전 fragment로부터 데이터 넘겨받기
@@ -78,7 +78,6 @@ public class DateFragment extends Fragment implements OnDialogListener {
         //getActivity()를 통해 불러올 경우 null pointer error가 발생함
         dateTextView = (TextView)view.findViewById(R.id.dateTextView);
         emptyEventTextView=(TextView)view.findViewById(R.id.emptyEventTextView);
-        eventAddBtn = (Button)view.findViewById(R.id.eventAddBtn);
         eventRecyclerView = (RecyclerView)view.findViewById(R.id.dateEventList);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
@@ -144,16 +143,17 @@ public class DateFragment extends Fragment implements OnDialogListener {
             emptyEventTextView.setVisibility(View.VISIBLE);
         }
 
-        eventAddBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                //fragment 전환
-                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
-
-                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-                ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance(date));
-            }
-        });
+//        eventAddBtn = (Button)view.findViewById(R.id.eventAddBtn);
+//        eventAddBtn.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                //fragment 전환
+//                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+//
+//                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
+//                ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance(date));
+//            }
+//        });
 
         return view;
     }
