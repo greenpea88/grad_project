@@ -27,8 +27,8 @@ public class ShowDetailFragment extends Fragment {
 
     private Button addEventBtn;
     private RecyclerView showPerformerList;
-    private SubscribeAdapter subscribeAdapter;
-    private SubscribeListDeco subscribeListDeco;
+    private PerformerAdapter performerAdapter;
+    private SubscribeListDeco performerDeco;
 
     private List<String> performerList;
 
@@ -58,18 +58,18 @@ public class ShowDetailFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext(),LinearLayoutManager.HORIZONTAL,false);
         showPerformerList.setLayoutManager(linearLayoutManager);
 
-        subscribeAdapter = new SubscribeAdapter();
-        showPerformerList.setAdapter(subscribeAdapter);
+        performerAdapter = new PerformerAdapter();
+        showPerformerList.setAdapter(performerAdapter);
 
-        subscribeAdapter.setOnItemClickListener(new SubscribeAdapter.OnItemClickListener() {
+        performerAdapter.setOnItemClickListener(new PerformerAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View v, int position) {
-                Log.d("ShowDetail","performerItemClicked()");
+                Log.d("ShowDetailFragment","performerItemClicked");
             }
         });
 
-        subscribeListDeco = new SubscribeListDeco();
-        showPerformerList.addItemDecoration(subscribeListDeco);
+        performerDeco = new SubscribeListDeco();
+        showPerformerList.addItemDecoration(performerDeco);
 
         getPerformerList();
 
@@ -84,11 +84,11 @@ public class ShowDetailFragment extends Fragment {
             performer.setpName(performerList.get(i));
 
             //data를 adpater에 추가하
-            subscribeAdapter.addItem(performer);
+            performerAdapter.addItem(performer);
         }
 
         //adapter값 변경을 알림
         //호출하지 않을 경우 추가된 data가 보여지지 않
-        subscribeAdapter.notifyDataSetChanged();
+        performerAdapter.notifyDataSetChanged();
     }
 }
