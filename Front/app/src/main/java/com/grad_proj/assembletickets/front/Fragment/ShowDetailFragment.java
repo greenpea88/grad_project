@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.SubscribeAdapter;
 import com.grad_proj.assembletickets.front.SubscribeListDeco;
 
@@ -26,15 +28,20 @@ public class ShowDetailFragment extends Fragment {
     View view;
 
     private Button addEventBtn;
+    private TextView showDetailTitle;
     private RecyclerView showPerformerList;
     private PerformerAdapter performerAdapter;
     private SubscribeListDeco performerDeco;
 
     private List<String> performerList;
+    private Show show;
 
-    public static ShowDetailFragment newInstance() {
+    public static ShowDetailFragment newInstance(Show show) {
         //fragment 전환 시 이전 fragment로부터 데이터 넘겨받기
         ShowDetailFragment showDetailFragment = new ShowDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("show",show);
+        showDetailFragment.setArguments(bundle);
 
         return showDetailFragment;
     }
@@ -43,6 +50,13 @@ public class ShowDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_show_detail,container,false);
+
+        if(getArguments()!=null){
+            this.show=(Show)getArguments().getSerializable("show");
+        }
+
+        showDetailTitle = (TextView)view.findViewById(R.id.showDetailTitle);
+        showDetailTitle.setText(show.getsName());
 
         addEventBtn = (Button)view.findViewById(R.id.addEventBtn);
         addEventBtn.setOnClickListener(new View.OnClickListener() {

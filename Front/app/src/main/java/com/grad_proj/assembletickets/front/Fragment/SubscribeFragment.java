@@ -80,7 +80,7 @@ public class SubscribeFragment extends Fragment {
 
                 Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
                 ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-                ((HomeActivity)getActivity()).replaceFragment(ShowDetailFragment.newInstance());
+                ((HomeActivity)getActivity()).replaceFragment(ShowDetailFragment.newInstance(showAdapter.getItem(position)));
             }
         });
 
