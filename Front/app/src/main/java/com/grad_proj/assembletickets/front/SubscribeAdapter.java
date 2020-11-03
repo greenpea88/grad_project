@@ -24,7 +24,7 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
 
     private OnItemClickListener onItemClickListener = null;
 
-    ArrayList<Subscribe> subscribeList = new ArrayList<>();
+    ArrayList<Performer> subscribeList = new ArrayList<>();
     public SparseBooleanArray selectedList = new SparseBooleanArray(0);
     private int currentPosition = -1;
 
@@ -51,9 +51,9 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
         return subscribeList.size();
     }
 
-    public void addItem(Subscribe subscribe){
+    public void addItem(Performer performer){
         //외부에서 item을 추가할 경우
-        subscribeList.add(subscribe);
+        subscribeList.add(performer);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){
@@ -78,7 +78,7 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
                         if(position!=currentPosition){
                             selectedList.clear();
                         }
-                        Subscribe subscribe = subscribeList.get(position);
+                        Performer performer = subscribeList.get(position);
                         Log.d("SubscribeAdapter","itemClicked");
                         if(!selectedList.get(position,false)){
                             selectedList.put(position,true);
@@ -101,8 +101,8 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
 
         }
 
-        void setData(Subscribe subscribe){
-            subscribeName.setText(subscribe.getSubscribeName());
+        void setData(Performer performer){
+            subscribeName.setText(performer.getpName());
             //사진 설정도 추가하기
         }
     }

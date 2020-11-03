@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
-import com.grad_proj.assembletickets.front.Event;
+import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.ShowAdapter;
-import com.grad_proj.assembletickets.front.Subscribe;
 import com.grad_proj.assembletickets.front.SubscribeAdapter;
 import com.grad_proj.assembletickets.front.SubscribeListDeco;
 
@@ -78,6 +76,7 @@ public class SubscribeFragment extends Fragment {
             @Override
             public void onItemClicked(View v, int position) {
                 Log.d("SubscribeFragment","show item clicked");
+                //해당 item에 맞는 show에 대한 정보를 서버에 요청해서 받은 뒤 이동하는 page에 정보로 띄울 것
 
                 Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
                 ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
@@ -108,11 +107,11 @@ public class SubscribeFragment extends Fragment {
         subscribeName = Arrays.asList("test1","test2","test3","test4","test5","test6","test7","test8","test9","test10","test11");
 
         for(int i=0; i<subscribeName.size(); i++){
-            Subscribe subscribe = new Subscribe();
-            subscribe.setSubscribeName(subscribeName.get(i));
+            Performer performer = new Performer();
+            performer.setpName(subscribeName.get(i));
 
             //data를 adpater에 추가하
-            subscribeAdapter.addItem(subscribe);
+            subscribeAdapter.addItem(performer);
         }
 
         //adapter값 변경을 알림

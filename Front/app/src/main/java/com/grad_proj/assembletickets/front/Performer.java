@@ -22,10 +22,6 @@ public class Performer {
 //        return setAlarm;
 //    }
 
-    public void setpId(int pId) {
-        this.pId = pId;
-    }
-
     public void setpName(String pName) {
         this.pName = pName;
     }
