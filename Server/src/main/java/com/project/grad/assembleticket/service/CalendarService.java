@@ -26,7 +26,7 @@ public class CalendarService {
 
     // 해당 User 해당 Date의 일정 가져오기
     public List<Calendar> getCalendar(Long id, LocalDate date){
-        return calendarRepository.findAllByUserIdAndCalDate(id, date);
+        return calendarRepository.findAllByUserIdAndCalDateAndCalDeletedFalse(id, date);
     }
 
     // 일정 등록하기
@@ -46,6 +46,14 @@ public class CalendarService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 없습니다. id=" + id));
         calendar.update(requestDto.getCalDate(), requestDto.getCalTime(), requestDto.getCalTitle(), requestDto.getCalMemo());
         return calendar;
+    }
+
+    // 일정 삭제하기
+    public Long deleteCalendar(Long id){
+        Calendar calendar = calendarRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 일정이 없습니다. id=" + id));
+        calendar.delete();
+        return calendar.getId();
     }
 
 }

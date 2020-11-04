@@ -35,4 +35,10 @@ public class CalendarController {
         return calendarService.updateCalendar(calId, requestDto);
     }
 
+    // 일정 삭제하기
+    @DeleteMapping("/calendar")
+    public Long deleteCalendar(@RequestParam Long calId){
+        return calendarService.deleteCalendar(calId);
+    }
+
 }
