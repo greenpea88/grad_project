@@ -31,6 +31,13 @@ public class SubscribeService {
         return subscribeRepository.save(Subscribe.builder().user(user).performer(performer).build());
     }
 
+    // 구독 해제
+    public Long deleteSubscribe(Long userId, Long performerId){
+        Subscribe subscribe = subscribeRepository.findByUserIdAndPerformerId(userId, performerId);
+        subscribeRepository.delete(subscribe);
+        return subscribe.getId();
+    }
+
     // 구독한 공연자 리스트
     public List<Performer> getSubscribedPerformers(Long id){
         List<Subscribe> subscribes = subscribeRepository.findAllByUserId(id);

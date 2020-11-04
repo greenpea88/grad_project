@@ -20,6 +20,12 @@ public class SubscribeController {
     public Subscribe saveSubscribe(@RequestParam Long userId, @RequestParam Long performerId){
         return subscribeService.saveSubscribe(userId, performerId);
     }
+    
+    // 구독 해제
+    @DeleteMapping("/subscribe")
+    public Long deleteSubscribe(@RequestParam Long userId, @RequestParam Long performerId){
+        return subscribeService.deleteSubscribe(userId, performerId);
+    }
 
     // 구독한 공연자 리스트
     @GetMapping("/subscribe/performers")

@@ -10,5 +10,6 @@ import java.util.List;
 public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
 
     List<Subscribe> findAllByUserId(Long id);
+    Subscribe findByUserIdAndPerformerId(Long userId, Long performerId);
 
 }
