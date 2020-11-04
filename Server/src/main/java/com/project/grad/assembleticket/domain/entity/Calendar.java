@@ -37,6 +37,9 @@ public class Calendar {
     @Column(length = 100)
     private String calMemo;
 
+    @Column
+    private boolean calDeleted;
+
     @Builder
     public Calendar(User user, Shows show, LocalDate cDate, LocalTime cTime, String cTitle, String cMemo){
         this.user = user;
@@ -45,6 +48,7 @@ public class Calendar {
         this.calTime = cTime;
         this.calTitle = cTitle;
         this.calMemo = cMemo;
+        this.calDeleted = false;
     }
 
     public void update(LocalDate date, LocalTime time, String title, String memo){
@@ -52,6 +56,10 @@ public class Calendar {
         this.calTime = time;
         this.calTitle = title;
         this.calMemo = memo;
+    }
+
+    public void delete(){
+        this.calDeleted = true;
     }
 
 }
