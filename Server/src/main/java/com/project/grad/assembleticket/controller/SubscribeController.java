@@ -1,9 +1,11 @@
 package com.project.grad.assembleticket.controller;
 
 import com.project.grad.assembleticket.domain.entity.Performer;
+import com.project.grad.assembleticket.domain.entity.Shows;
 import com.project.grad.assembleticket.domain.entity.Subscribe;
 import com.project.grad.assembleticket.service.SubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,10 +29,16 @@ public class SubscribeController {
         return subscribeService.deleteSubscribe(userId, performerId);
     }
 
-    // 구독한 공연자 리스트
+    // 공연자 리스트
     @GetMapping("/subscribe/performers")
     public List<Performer> getSubscribedPerformers(@RequestParam Long userId){
         return subscribeService.getSubscribedPerformers(userId);
+    }
+    
+    // 공연 리스트
+    @GetMapping("/subscribe/shows")
+    public List<Shows> getPerformerShows(@RequestParam Long userId, @Nullable Long performerId){
+        return subscribeService.getPerformerShows(userId, performerId);
     }
 
 }
