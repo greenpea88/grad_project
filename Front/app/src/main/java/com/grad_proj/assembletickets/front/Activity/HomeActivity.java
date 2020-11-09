@@ -126,20 +126,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // 알림 사이드바
-        notificationBtn = findViewById(R.id.notiButton);
-        notificationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isPageOpen) {
-                    notiPage.startAnimation(translateUp);
-                } else {
-                    notiPage.setVisibility(View.VISIBLE);
-                    notiPage.startAnimation(translateDown);
-                }
-            }
-        });
-
     }
 
     private void switchFragment(@NonNull MenuItem menuItem) {
