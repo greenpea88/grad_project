@@ -35,13 +35,14 @@ public class ShowService {
 
     // 공연 목록 페이지 - 전체
     public List<Shows> getAllShows(int page) {
-        PageRequest pageRequest = PageRequest.of(page, 20, Sort.by("title"));
+        // DB 저장 최신순, 공연 시작일 최근순
+        PageRequest pageRequest = PageRequest.of(page, 20, Sort.Direction.DESC, "registeredTime", "startDate");
         return showRepository.findAll(pageRequest).getContent();
     }
 
     // 공연 목록 페이지 - 타입별
     public List<Shows> getTypeShows(int page, int type) {
-        PageRequest pageRequest = PageRequest.of(page, 20, Sort.by("title"));
+        PageRequest pageRequest = PageRequest.of(page, 20, Sort.Direction.DESC, "registeredTime", "startDate");
         return showRepository.findAllByType(pageRequest, type);
     }
 
