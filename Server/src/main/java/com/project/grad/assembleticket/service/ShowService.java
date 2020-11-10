@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class ShowService {
     private final ShowRepository showRepository;
     private final ShowPerformerRepository showPerformerRepository;
 
+    // 공연 상세 페이지
     public ShowDetailResponseDto getShowDetail(Long id){
         Shows show = showRepository.findById(id).orElse(null);
         List<ShowPerformer> showPerformers = showPerformerRepository.findAllByShowsId(id);
@@ -44,6 +46,16 @@ public class ShowService {
     public List<Shows> getTypeShows(int page, int type) {
         PageRequest pageRequest = PageRequest.of(page, 20, Sort.Direction.DESC, "registeredTime", "startDate");
         return showRepository.findAllByType(pageRequest, type);
+    }
+
+    // 공연 목록 페이지 - 전체 - 아래로 당기기
+    public List<Shows> getNewAllShows(LocalDateTime dateTime){
+        return showRepository.findAllByRegisteredTimeAfterOrderByRegisteredTimeDesc(dateTime);
+    }
+
+    // 공연 목록 페이지 - 타입별 - 아래로 당기기
+    public List<Shows> getNewTypeShows(LocalDateTime dateTime, int type){
+        return showRepository.findAllByTypeAndRegisteredTimeAfterOrderByRegisteredTimeDesc(type, dateTime);
     }
 
 }
