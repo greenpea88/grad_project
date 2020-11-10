@@ -10,27 +10,31 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.ShowAdapter;
 
-public class ConcertFragment extends Fragment {
+public class TicketClassicFragment extends Fragment {
 
     public View view;
-    private ShowAdapter concertShowAdapter;
-    RecyclerView concertTicketList;
+    private ShowAdapter classicShowAdapter;
+    RecyclerView classicTicketList;
+    SwipeRefreshLayout classicShowRefresh;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_concert,container, false);
+        view = inflater.inflate(R.layout.fragment_ticket_classic,container, false);
 
-        concertTicketList = (RecyclerView)view.findViewById(R.id.concertTicketList);
+        classicTicketList = (RecyclerView)view.findViewById(R.id.classicTicketList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
-        concertTicketList.setLayoutManager(linearLayoutManager);
+        classicTicketList.setLayoutManager(linearLayoutManager);
 
-        concertShowAdapter = new ShowAdapter();
-        concertTicketList.setAdapter(concertShowAdapter);
+        classicShowAdapter = new ShowAdapter();
+        classicTicketList.setAdapter(classicShowAdapter);
+
+        classicShowRefresh = (SwipeRefreshLayout)view.findViewById(R.id.classicShowRefresh);
 
         return view;
     }

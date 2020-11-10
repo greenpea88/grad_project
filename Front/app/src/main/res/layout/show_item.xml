@@ -13,9 +13,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:padding="5dp"
-        app:cardBackgroundColor="#FFFFFFFF"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp" >
+        app:cardBackgroundColor="#FFFFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,15 +50,6 @@
                         android:text="제목"
                         android:textColor="@android:color/black"
                         android:textSize="26sp" />
-
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/icon_star" />
                 </LinearLayout>
 
                 <LinearLayout

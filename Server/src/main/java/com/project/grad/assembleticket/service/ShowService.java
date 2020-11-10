@@ -1,5 +1,6 @@
 package com.project.grad.assembleticket.service;
 
+import com.project.grad.assembleticket.domain.entity.Performer;
 import com.project.grad.assembleticket.domain.entity.ShowPerformer;
 import com.project.grad.assembleticket.domain.entity.Shows;
 import com.project.grad.assembleticket.domain.repository.ShowPerformerRepository;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class ShowService {
@@ -21,13 +23,12 @@ public class ShowService {
     private final ShowRepository showRepository;
     private final ShowPerformerRepository showPerformerRepository;
 
-    @Transactional
     public ShowDetailResponseDto getShowDetail(Long id){
         Shows show = showRepository.findById(id).orElse(null);
-        List<ShowPerformer> showPerformer = showPerformerRepository.findAllByShowsId(id);
-        List<String> performers = new ArrayList<>();
-        for (ShowPerformer performer : showPerformer) {
-            performers.add(performer.getPerformer().getName());
+        List<ShowPerformer> showPerformers = showPerformerRepository.findAllByShowsId(id);
+        List<Performer> performers = new ArrayList<>();
+        for (ShowPerformer showPerformer : showPerformers) {
+            performers.add(showPerformer.getPerformer());
         }
         return new ShowDetailResponseDto(show, performers);
     }

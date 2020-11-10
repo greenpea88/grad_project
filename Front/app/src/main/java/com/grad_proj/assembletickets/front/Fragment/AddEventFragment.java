@@ -1,5 +1,6 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
@@ -23,14 +25,22 @@ public class AddEventFragment extends Fragment {
 
     public View view;
 
+    private static final String DATE="";
+    private String date;
+
     Button submitBtn;
     TimePicker eventTimePicker;
-    EditText eventTitleEditText;
+    EditText eventTitleEditText, eventContentEditText;
 
     private String eventTitle="";
 
-    public static AddEventFragment newInstance() {
+    public static AddEventFragment newInstance(String date) {
+        //이전 fragment로부터 데이터 넘겨받기
         AddEventFragment addEventFragment = new AddEventFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(DATE, date);
+        addEventFragment.setArguments(bundle);
+
         return addEventFragment;
     }
 
@@ -40,12 +50,18 @@ public class AddEventFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_addevent,container, false);
 
+        if(getArguments() != null){
+            date = getArguments().getString(DATE);
+        }
+
         submitBtn = (Button)view.findViewById(R.id.submitBtn);
         eventTimePicker = (TimePicker)view.findViewById(R.id.eventTimePicker);
         eventTimePicker.setIs24HourView(true);
         eventTitleEditText = (EditText)view.findViewById(R.id.eventTitleEditText);
+        eventContentEditText = (EditText)view.findViewById(R.id.eventContentEditText);
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 if("".equals(eventTitle)){
@@ -54,9 +70,13 @@ public class AddEventFragment extends Fragment {
                     toast.show();
                 }
                 else{
-                    String eventHour =  eventTimePicker.getCurrentHour().toString();
-                    String eventMin = eventTimePicker.getCurrentMinute().toString();
-                    ((HomeActivity)getActivity()).submitBtnAction(eventTitle,eventHour+"/"+eventMin);
+                    int eventHour =  eventTimePicker.getHour();
+                    int eventMin = eventTimePicker.getMinute();
+                    String eventContent = eventContentEditText.getText().toString();
+
+                    //db에 새로 추가된 정보 넣기
+                    ((HomeActivity)getActivity()).insertEvent(date,eventTitle,eventContent,eventHour,eventMin);
+                    ((HomeActivity)getActivity()).submitBtnAction();
                 }
             }
         });

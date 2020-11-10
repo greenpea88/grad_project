@@ -1,5 +1,12 @@
 package com.grad_proj.assembletickets.front.Activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,14 +19,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.grad_proj.assembletickets.front.Alarm.AlarmReceiver;
+import com.grad_proj.assembletickets.front.Alarm.DeviceBootReceiver;
+import com.grad_proj.assembletickets.front.Database.DatabaseOpen;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.Fragment.DateFragment;
+import com.grad_proj.assembletickets.front.Fragment.SearchFragment;
 import com.grad_proj.assembletickets.front.R;
 
 import com.grad_proj.assembletickets.front.Fragment.CalendarFragment;
@@ -27,6 +42,7 @@ import com.grad_proj.assembletickets.front.Fragment.SubscribeFragment;
 import com.grad_proj.assembletickets.front.Fragment.TicketFragment;
 import com.grad_proj.assembletickets.front.Fragment.UserFragment;
 
+import java.util.Calendar;
 import java.util.Stack;
 
 public class HomeActivity extends AppCompatActivity {
@@ -34,19 +50,22 @@ public class HomeActivity extends AppCompatActivity {
     public Stack<Fragment> fragmentStack = new Stack<>();
     private static final String TAG_PARENT = "TAG_PARENT";
 
+    public DatabaseOpen databaseOpen;
+
     public FragmentManager fragmentManager = getSupportFragmentManager();
     private CalendarFragment calendarFragment = new CalendarFragment();
 //    private TicketFragment ticketFragment = new TicketFragment();
     private Fragment ticketFragment;
     private SubscribeFragment subscribeFragment = new SubscribeFragment();
     private UserFragment userFragment = new UserFragment();
+    private SearchFragment searchFragment = new SearchFragment();
 
     private TextView titleText;
     private ImageButton searchBtn;
     private ImageButton notificationBtn;
     private LinearLayout notiPage;
 
-    private boolean isPageOpen;
+    private boolean isPageOpen = false;
 
     private Animation translateDown;
     private Animation translateUp;
@@ -57,6 +76,11 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
 
+        databaseOpen = new DatabaseOpen(this);
+
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         titleText = findViewById(R.id.titleText);
         titleText.setText("캘린더");
         notiPage = findViewById(R.id.notiPage);
@@ -65,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
 
         //첫화면 지정
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frameLayout,calendarFragment).commitAllowingStateLoss();
+        transaction.replace(R.id.frameLayout, calendarFragment).commitAllowingStateLoss();
 
         //bottomNavigationView의 아이템이 선택될 때 호출될 리스너 등록
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -88,21 +112,17 @@ public class HomeActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-            }
-        });
-
-        // 알림 사이드바
-        notificationBtn = findViewById(R.id.notiButton);
-        notificationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isPageOpen) {
-                    notiPage.startAnimation(translateUp);
-                } else {
-                    notiPage.setVisibility(View.VISIBLE);
-                    notiPage.startAnimation(translateDown);
-                }
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.frameLayout);
+//                if(currentFragment instanceof TicketFragment){
+//                    fragmentStack.push(fragmentManager.findFragmentByTag(TAG_PARENT));
+//                }
+//                else{
+//                    fragmentStack.push(currentFragment);
+//                }
+                fragmentStack.push(currentFragment);
+                replaceFragment(searchFragment);
+                ActionBar actionBar = getSupportActionBar();
+                actionBar.hide();
             }
         });
 
@@ -117,7 +137,7 @@ public class HomeActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch(menuItem.getItemId()){
             case R.id.navigation_calendar:{
-                fragmentStack.push(calendarFragment);
+//                fragmentStack.push(calendarFragment);
                 fragmentTransaction.replace(R.id.frameLayout,calendarFragment).commitAllowingStateLoss();
                 titleText.setText("캘린더");
                 break;
@@ -154,15 +174,11 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void submitBtnAction(String eventTitle,String eventTime){
+    public void submitBtnAction(){
         Log.i("submit button","pressed");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Event event = new Event();
         if(!fragmentStack.isEmpty()){
-//            event.setEventName(eventTitle);
-//            event.setTime(eventTime);
-            DateFragment lastFragment = (DateFragment)fragmentStack.pop();
-//            lastFragment.addEvent(event);
+            Fragment lastFragment = fragmentStack.pop();
             fragmentTransaction.replace(R.id.frameLayout, lastFragment).commitAllowingStateLoss();
         }
     }
@@ -185,25 +201,87 @@ public class HomeActivity extends AppCompatActivity {
         public void onAnimationRepeat(Animation animation) { }
     }
 
-
-
     @Override
     public void onBackPressed() {
-//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-        Log.i("Back button","pressed");
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if(!fragmentStack.isEmpty()){
-            Fragment lastFragment = fragmentStack.pop();
-            fragmentTransaction.replace(R.id.frameLayout,lastFragment).commit();
-        }
-        else{
-            super.onBackPressed();
+        if (isPageOpen) {
+            //알림 사이드 바
+            notiPage.setVisibility(View.INVISIBLE);
+            isPageOpen = false;
+        } else {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            if(!fragmentStack.isEmpty()){
+                Fragment lastFragment = fragmentStack.pop();
+                if(lastFragment instanceof TicketFragment){
+                    Log.d("HomeActivity","ticket back pressed");
+                    //이전 fragment가 ticket탭 일 경우에는 중첩 fragment를 사용하므로 check를 필요로 함
+                    ticketFragment = fragmentManager.findFragmentByTag(TAG_PARENT);
+                    if(ticketFragment == null){
+                        ticketFragment = TicketFragment.getInstance();
+                    }
+                    fragmentTransaction.replace(R.id.frameLayout,ticketFragment,TAG_PARENT).commit();
+                }
+                else{
+                    fragmentTransaction.replace(R.id.frameLayout,lastFragment).commit();
+                }
+            }
+            else{
+                super.onBackPressed();
+            }
         }
     }
 
+    public void insertEvent(String date,String eventName, String eventContent,int hour, int minute){
+        databaseOpen.open();
+
+        databaseOpen.insertColumn(date,eventName,eventContent,hour,minute);
+        databaseOpen.close();
+    }
+
+    public Cursor getDateEvents(String date){
+        databaseOpen.open();
+
+        return databaseOpen.selectDataEvent(date);
+    }
+
+    public void deleteEvent(int id){
+        databaseOpen.open();
+
+        databaseOpen.deleteColumn(id);
+        databaseOpen.close();
+    }
+
+    public void updateEvent(Event event){
+        databaseOpen.open();
+
+        databaseOpen.updateColumn(event);
+        databaseOpen.close();
+    }
+
+    public void closeDB(){
+        databaseOpen.close();
+    }
+
+
+    //alarm notification
+    public void setAlarm(String date, int hour, int min){
+        String[] dateSet = date.split("-"); //YYYY-MM-DD
+
+        Calendar calendar= Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.YEAR,Integer.parseInt(dateSet[0]));
+        calendar.set(Calendar.MONTH,Integer.parseInt(dateSet[1])-1); //JAN이 0부터 시작함
+        calendar.set(Calendar.DATE,Integer.parseInt(dateSet[2]));
+        calendar.set(Calendar.HOUR_OF_DAY,hour);
+        calendar.set(Calendar.MINUTE,min);
+
+        PackageManager packageManager = this.getPackageManager();
+        ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,alarmIntent,0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+        if(alarmManager!=null){
+            
+        }
+    }
 }

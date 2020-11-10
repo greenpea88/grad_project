@@ -18,7 +18,7 @@ import com.grad_proj.assembletickets.front.ShowAdapter;
 import java.util.Arrays;
 import java.util.List;
 
-public class TotalFragment extends Fragment {
+public class TicketTotalFragment extends Fragment {
 
     public View view;
     private ShowAdapter totalShowAdapter;
@@ -28,7 +28,7 @@ public class TotalFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_total,container, false);
+        view = inflater.inflate(R.layout.fragment_ticket_total,container, false);
 
         totalTicketList = (RecyclerView)view.findViewById(R.id.totalTicketList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());

@@ -46,7 +46,7 @@ public class Shows {
     private int runningTime;
 
     // 티켓 가격 관련 정보
-    @Column(length = 200)
+    @Column(columnDefinition = "TEXT")
     private String price;
 
     // 티켓 구매처
@@ -58,13 +58,16 @@ public class Shows {
     private String posterSrc;
 
     // 공연장
-    @ManyToOne
-    @JoinColumn(name = "venue_id")
-    private Venue venue;
+    @Column(length = 30)
+    private String venue;
+
+    // Show Table에 등록된 시간
+    @Column(columnDefinition = "DATETIME")
+    private LocalDateTime registeredTime = LocalDateTime.now();
 
     @Builder
     public Shows(String title, int type, LocalDate startDate, LocalDate endDate, LocalDateTime ticketOpen,
-                String time, int runningTime, String price, String buyTicket, String posterSrc, Venue venue){
+                String time, int runningTime, String price, String buyTicket, String posterSrc, String venue){
         this.title = title;
         this.type = type;
         this.startDate = startDate;

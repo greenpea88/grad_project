@@ -6,11 +6,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.grad_proj.assembletickets.front.Fragment.ClassicFragment;
-import com.grad_proj.assembletickets.front.Fragment.ConcertFragment;
-import com.grad_proj.assembletickets.front.Fragment.MusicalFragment;
-import com.grad_proj.assembletickets.front.Fragment.PlayFragment;
-import com.grad_proj.assembletickets.front.Fragment.TotalFragment;
+import com.grad_proj.assembletickets.front.Fragment.TicketClassicFragment;
+import com.grad_proj.assembletickets.front.Fragment.TicketConcertFragment;
+import com.grad_proj.assembletickets.front.Fragment.TicketMusicalFragment;
+import com.grad_proj.assembletickets.front.Fragment.TicketPlayFragment;
+import com.grad_proj.assembletickets.front.Fragment.TicketTotalFragment;
 
 public class TopMenuBarAdapter extends FragmentStatePagerAdapter {
 
@@ -26,19 +26,19 @@ public class TopMenuBarAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                TotalFragment totalFragment = new TotalFragment();
+                TicketTotalFragment totalFragment = new TicketTotalFragment();
                 return totalFragment;
             case 1:
-                MusicalFragment musicalFragment = new MusicalFragment();
+                TicketMusicalFragment musicalFragment = new TicketMusicalFragment();
                 return musicalFragment;
             case 2:
-                ConcertFragment concertFragment = new ConcertFragment();
+                TicketConcertFragment concertFragment = new TicketConcertFragment();
                 return concertFragment;
             case 3:
-                PlayFragment playFragment = new PlayFragment();
+                TicketPlayFragment playFragment = new TicketPlayFragment();
                 return playFragment;
             case 4:
-                ClassicFragment classicFragment = new ClassicFragment();
+                TicketClassicFragment classicFragment = new TicketClassicFragment();
                 return classicFragment;
             default:
                 return null;

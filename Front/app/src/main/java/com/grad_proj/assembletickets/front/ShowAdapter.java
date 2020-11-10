@@ -13,7 +13,13 @@ import java.util.ArrayList;
 
 public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
 
+    public interface OnItemClickListener{
+        void onItemClicked(View v, int position);
+    }
+
     ArrayList<Show> items = new ArrayList<Show>();
+
+    private ShowAdapter.OnItemClickListener onItemClickListener = null;
 
     @NonNull
     @Override
@@ -38,6 +44,10 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
         items.add(item);
     }
 
+    public void resetItem(){
+        items.clear();
+    }
+
     public void setItems(ArrayList<Show> items) {
         this.items = items;
     }
@@ -46,7 +56,11 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
         return items.get(position);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public void setOnItemClickListener(ShowAdapter.OnItemClickListener listener){
+        this.onItemClickListener = listener;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView poster;
         TextView titleText;
@@ -62,14 +76,24 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
             performersText = itemView.findViewById(R.id.performersText);
             dateText = itemView.findViewById(R.id.dateText);
             priceText = itemView.findViewById(R.id.priceText);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=getAdapterPosition();
+
+                    if(onItemClickListener!= null){
+                        onItemClickListener.onItemClicked(view,position);
+                    }
+                }
+            });
         }
 
         public void setItem(Show item) {
             // poster.setImageDrawable(); URL로부터 이미지를 로드해오는 함수 필요
             titleText.setText(item.sName);
-            performersText.setText(item.performerList.get(0).pName); // 추후 수정해야함 리스트의 이름을 나열해 문자열로 정렬하는 함수 필요
-            dateText.setText(item.startDate + " ~ " + item.endDate); // 추후 수정해야함 경우의 수에 따라 조건함수 필요
-            priceText.setText(item.price);
+//            performersText.setText(item.performerList.get(0).pName); // 추후 수정해야함 리스트의 이름을 나열해 문자열로 정렬하는 함수 필요
+//            dateText.setText(item.startDate + " ~ " + item.endDate); // 추후 수정해야함 경우의 수에 따라 조건함수 필요
+//            priceText.setText(item.price);
         }
     }
 }

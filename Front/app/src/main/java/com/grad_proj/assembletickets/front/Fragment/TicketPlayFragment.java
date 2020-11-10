@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.ShowAdapter;
 
-public class PlayFragment extends Fragment {
+public class TicketPlayFragment extends Fragment {
 
     public View view;
     private ShowAdapter playShowAdapter;
@@ -23,7 +23,7 @@ public class PlayFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_play,container, false);
+        view = inflater.inflate(R.layout.fragment_ticket_play,container, false);
 
         playTicketList = (RecyclerView)view.findViewById(R.id.playTicketList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());

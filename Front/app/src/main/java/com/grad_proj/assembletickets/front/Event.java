@@ -1,9 +1,14 @@
 package com.grad_proj.assembletickets.front;
 
+import java.util.Date;
+
 public class Event {
+    private int id;
     private String date;
-    private String time;
+    private int timeHour;
+    private int timeMin;
     private String eventName;
+    private String eventContent;
 
 //    public Event(String date, String time, String eventName){
 //        this.date = date;
@@ -11,27 +16,51 @@ public class Event {
 //        this.eventName = eventName;
 //    }
 
+    public int getId(){
+        return this.id;
+    }
+
     public String getDate() {
         return this.date;
     }
 
-    public String getTime(){
-        return this.time;
+    public int getTimeHour() {
+        return timeHour;
+    }
+
+    public int getTimeMin() {
+        return timeMin;
     }
 
     public String getEventName() {
         return this.eventName;
     }
 
+    public String getEventContent() {
+        return eventContent;
+    }
+
     public void setDate(String date) {
         this.date = date;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public void setTimeHour(int timeHour) {
+        this.timeHour = timeHour;
+    }
+
+    public void setTimeMin(int timeMin) {
+        this.timeMin = timeMin;
     }
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
+    }
+
+    public void setEventContent(String eventContent) {
+        this.eventContent = eventContent;
     }
 }

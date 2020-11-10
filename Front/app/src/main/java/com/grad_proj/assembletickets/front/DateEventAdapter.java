@@ -41,6 +41,21 @@ public class DateEventAdapter extends RecyclerView.Adapter<DateEventAdapter.Item
          eventItems.add(event);
     }
 
+    public int removeItem(int position){
+        int removeId = eventItems.get(position).getId();
+        eventItems.remove(position);
+
+        return removeId;
+    }
+
+    public Event getItem(int position){
+        return eventItems.get(position);
+    }
+
+    public void changeItem(int position,Event event){
+        eventItems.set(position,event);
+    }
+
     //subView(item setting)
     class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView eventName, eventTime;
@@ -54,7 +69,22 @@ public class DateEventAdapter extends RecyclerView.Adapter<DateEventAdapter.Item
 
         void setData(Event event){
             eventName.setText(event.getEventName());
-            eventTime.setText(event.getTime());
+            int hour = event.getTimeHour();
+            int min = event.getTimeMin();
+            String time;
+            if(hour>12){
+                time = String.valueOf(hour-12) + " : "  + String.valueOf(min) + " PM";
+            }
+            else if(hour==12){
+                time=String.valueOf(hour) + " : "  + String.valueOf(min) + " PM";
+            }
+            else if(hour==0){
+                time=String.valueOf(hour+12) + " : " + String.valueOf(min) + " AM";
+            }
+            else{
+                time=time = String.valueOf(hour) + " : "  + String.valueOf(min) + " AM";
+            }
+            eventTime.setText(time);
         }
     }
 }

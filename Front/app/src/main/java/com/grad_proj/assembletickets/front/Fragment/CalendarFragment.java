@@ -51,7 +51,7 @@ public class CalendarFragment extends Fragment {
                 Log.i("Month test", Month + "");
                 Log.i("Day test", Day + "");
 
-                String shot_Day = Year + "," + Month + "," + Day;
+                String shot_Day = Year + "-" + Month + "-" + Day;
 
                 Log.i("shot_Day test", shot_Day + "");
                 materialCalendarView.clearSelection();
