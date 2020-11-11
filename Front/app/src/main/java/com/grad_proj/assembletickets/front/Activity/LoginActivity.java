@@ -4,7 +4,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,7 +20,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.grad_proj.assembletickets.front.Database.DatabaseOpen;
+import com.grad_proj.assembletickets.front.Database.CDatabaseOpen;
+import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
 
@@ -37,7 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     String inputID = "";
     String inputPW = "";
 
-    private DatabaseOpen databaseOpen;
+    private CDatabaseOpen cDatabaseOpen;
+    private SDatabaseOpen sDatabaseOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,17 +154,24 @@ public class LoginActivity extends AppCompatActivity {
 
     public void getCalendarData(){
         //서버로부터 캘린더 데이터 가져오기 + db 생성하고 집어넣기
-        databaseOpen = new DatabaseOpen(this);
-        databaseOpen.open();
-        databaseOpen.create();
+        cDatabaseOpen = new CDatabaseOpen(this);
+        cDatabaseOpen.open();
+        cDatabaseOpen.create();
 
-        databaseOpen.insertColumn("2020-10-21","test1","test",1,1);
-        databaseOpen.insertColumn("2020-10-22","test2","dafsf",1,2);
-        databaseOpen.insertColumn("2020-10-21","test3",null,2,2);
-        databaseOpen.insertColumn("2020-10-22","test4",null,4,3);
-        databaseOpen.insertColumn("2020-10-21","test5","tttt",2,1);
+        cDatabaseOpen.insertColumn("2020-10-21","test1","test",1,1);
+        cDatabaseOpen.insertColumn("2020-10-22","test2","dafsf",1,2);
+        cDatabaseOpen.insertColumn("2020-10-21","test3",null,2,2);
+        cDatabaseOpen.insertColumn("2020-10-22","test4",null,4,3);
+        cDatabaseOpen.insertColumn("2020-10-21","test5","tttt",2,1);
 
-        databaseOpen.close();
+        cDatabaseOpen.close();
+    }
+
+    public void getSearchData(){
+        sDatabaseOpen = new SDatabaseOpen(this);
+        sDatabaseOpen.open();
+        sDatabaseOpen.create();
+        sDatabaseOpen.close();
     }
 
 }

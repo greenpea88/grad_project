@@ -7,10 +7,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.grad_proj.assembletickets.front.Database.CalendarDatabase;
 import com.grad_proj.assembletickets.front.Event;
 
-public class DatabaseOpen{
+public class CDatabaseOpen {
 
     public static String DATABASE_NAME = "userdataManager.db";
     public static int VERSION = 1;
@@ -40,11 +39,11 @@ public class DatabaseOpen{
         }
     }
 
-    public DatabaseOpen(Context context){
+    public CDatabaseOpen(Context context){
         this.context=context;
     }
 
-    public DatabaseOpen open() throws SQLException{
+    public CDatabaseOpen open() throws SQLException{
         //해당 데이터베이스를 열어서 사용 가능하도록 함
         mDBHelper = new DatabaseHelper(context);
         mDB = mDBHelper.getWritableDatabase();

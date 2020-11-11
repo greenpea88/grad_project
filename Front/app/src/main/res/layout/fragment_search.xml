@@ -20,10 +20,12 @@
                 android:id="@+id/searchText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
                 android:layout_centerInParent="true"
                 android:layout_toLeftOf="@+id/searchButton"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:imeOptions="actionSearch"
                 android:hint="Search" />
 
             <ImageButton
@@ -43,4 +45,10 @@
 
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/historyRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="12dp"/>
 </LinearLayout>

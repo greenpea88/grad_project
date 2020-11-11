@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -22,8 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -31,9 +28,10 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grad_proj.assembletickets.front.Alarm.AlarmReceiver;
 import com.grad_proj.assembletickets.front.Alarm.DeviceBootReceiver;
-import com.grad_proj.assembletickets.front.Database.DatabaseOpen;
+import com.grad_proj.assembletickets.front.Database.CDatabaseOpen;
+import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
+import com.grad_proj.assembletickets.front.Database.SearchDatabase;
 import com.grad_proj.assembletickets.front.Event;
-import com.grad_proj.assembletickets.front.Fragment.DateFragment;
 import com.grad_proj.assembletickets.front.Fragment.SearchFragment;
 import com.grad_proj.assembletickets.front.R;
 
@@ -50,7 +48,8 @@ public class HomeActivity extends AppCompatActivity {
     public Stack<Fragment> fragmentStack = new Stack<>();
     private static final String TAG_PARENT = "TAG_PARENT";
 
-    public DatabaseOpen databaseOpen;
+    public CDatabaseOpen cDatabaseOpen;
+    public SDatabaseOpen sDatabaseOpen;
 
     public FragmentManager fragmentManager = getSupportFragmentManager();
     private CalendarFragment calendarFragment = new CalendarFragment();
@@ -76,7 +75,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
 
-        databaseOpen = new DatabaseOpen(this);
+        cDatabaseOpen = new CDatabaseOpen(this);
+        sDatabaseOpen = new SDatabaseOpen(this);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,16 +113,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Fragment currentFragment = fragmentManager.findFragmentById(R.id.frameLayout);
-//                if(currentFragment instanceof TicketFragment){
-//                    fragmentStack.push(fragmentManager.findFragmentByTag(TAG_PARENT));
-//                }
-//                else{
-//                    fragmentStack.push(currentFragment);
-//                }
                 fragmentStack.push(currentFragment);
                 replaceFragment(searchFragment);
-                ActionBar actionBar = getSupportActionBar();
-                actionBar.hide();
             }
         });
 
@@ -231,36 +223,74 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void insertEvent(String date,String eventName, String eventContent,int hour, int minute){
-        databaseOpen.open();
+        cDatabaseOpen.open();
 
-        databaseOpen.insertColumn(date,eventName,eventContent,hour,minute);
-        databaseOpen.close();
+        cDatabaseOpen.insertColumn(date,eventName,eventContent,hour,minute);
+        cDatabaseOpen.close();
     }
 
     public Cursor getDateEvents(String date){
-        databaseOpen.open();
+        cDatabaseOpen.open();
 
-        return databaseOpen.selectDataEvent(date);
+        return cDatabaseOpen.selectDataEvent(date);
     }
 
     public void deleteEvent(int id){
-        databaseOpen.open();
+        cDatabaseOpen.open();
 
-        databaseOpen.deleteColumn(id);
-        databaseOpen.close();
+        cDatabaseOpen.deleteColumn(id);
+        cDatabaseOpen.close();
     }
 
     public void updateEvent(Event event){
-        databaseOpen.open();
+        cDatabaseOpen.open();
 
-        databaseOpen.updateColumn(event);
-        databaseOpen.close();
+        cDatabaseOpen.updateColumn(event);
+        cDatabaseOpen.close();
     }
 
-    public void closeDB(){
-        databaseOpen.close();
+    public void closeCalendarDB(){
+        cDatabaseOpen.close();
     }
 
+    public void insertHistory(String context){
+        sDatabaseOpen.open();
+        sDatabaseOpen.insertColumn(context);
+        sDatabaseOpen.close();
+    }
+
+    public Cursor getHistory(String context){
+        sDatabaseOpen.open();
+        return sDatabaseOpen.selectHistory(context);
+    }
+
+    public Cursor getHistoryAll(){
+        sDatabaseOpen.open();
+        return sDatabaseOpen.selectHistoryAll();
+    }
+
+    public void deleteDupAndInsertHistory(String context){
+        sDatabaseOpen.open();
+        sDatabaseOpen.deleteDuplicateColumn(context);
+        sDatabaseOpen.insertColumn(context);
+        sDatabaseOpen.close();
+    }
+
+    public void deleteHistory(int id){
+        sDatabaseOpen.open();
+        sDatabaseOpen.deleteColumn(id);
+        sDatabaseOpen.close();
+    }
+
+    public void deleteHistoryAll(){
+        sDatabaseOpen.open();
+        sDatabaseOpen.deleteAll();
+        sDatabaseOpen.close();
+    }
+
+    public void closeHistoryDB(){
+        sDatabaseOpen.close();
+    }
 
     //alarm notification
     public void setAlarm(String date, int hour, int min){
