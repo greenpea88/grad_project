@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -30,7 +29,6 @@ import com.grad_proj.assembletickets.front.Alarm.AlarmReceiver;
 import com.grad_proj.assembletickets.front.Alarm.DeviceBootReceiver;
 import com.grad_proj.assembletickets.front.Database.CDatabaseOpen;
 import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
-import com.grad_proj.assembletickets.front.Database.SearchDatabase;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.Fragment.SearchFragment;
 import com.grad_proj.assembletickets.front.R;
@@ -73,7 +71,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home);
+        setContentView(R.layout.activity_home);
 
         cDatabaseOpen = new CDatabaseOpen(this);
         sDatabaseOpen = new SDatabaseOpen(this);

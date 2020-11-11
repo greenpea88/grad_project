@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.activity_login);
 
         loginIDEditText = findViewById(R.id.loginIDEditText);
         loginPWEditText = findViewById(R.id.loginPWEditText);
@@ -106,11 +106,11 @@ public class LoginActivity extends AppCompatActivity {
         //TODO: 로그인 토큰 받도록 서버 설정해서 받도록 하기
         else{
             Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
-
             getCalendarData();
-
             startActivity(intent);
+            // 자동 로그인 토큰
             UserSharedPreference.setIdToken(LoginActivity.this, "testid" + inputID);
+            Toast.makeText(this, inputID + "님, 안녕하세요!", Toast.LENGTH_LONG).show();
             this.finish();
         }
     }
@@ -133,9 +133,10 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-//            UserSharedPreference.setIdToken(LoginActivity.this, account.getIdToken());
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
+            // 자동 로그인 토큰
+            UserSharedPreference.setIdToken(LoginActivity.this, account.getIdToken());
             Toast.makeText(this, account.getDisplayName()+"("+account.getEmail()+")님, 안녕하세요!", Toast.LENGTH_LONG).show();
             this.finish();
         } catch (ApiException e) {

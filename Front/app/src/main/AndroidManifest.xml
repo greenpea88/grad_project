@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.grad_proj.assembletickets.front">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,7 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.AutoLoginActivity">
+        <activity android:name=".Activity.AutoLoginActivity"
+            android:allowBackup="false"
+            android:fullBackupOnly="false"
+            android:fullBackupContent="false"
+            tools:replace="android:allowBackup,android:fullBackupOnly,android:fullBackupContent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

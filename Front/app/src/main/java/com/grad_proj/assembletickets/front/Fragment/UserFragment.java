@@ -1,5 +1,8 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +16,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
+import com.grad_proj.assembletickets.front.Activity.LoginActivity;
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
 
 public class UserFragment extends Fragment {
 
@@ -59,6 +64,39 @@ public class UserFragment extends Fragment {
             }
         });
 
+        Button logout = view.findViewById(R.id.btn_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLogout();
+            }
+        });
+
         return view;
+    }
+
+    private void showLogout() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("로그아웃 하시겠습니까?");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+
+        builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 로그아웃
+                UserSharedPreference.clearIdToken(getContext());
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        builder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // 아무 동작도 하지 않고 dialog 종료
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
