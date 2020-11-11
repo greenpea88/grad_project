@@ -12,7 +12,8 @@ import java.util.List;
 public interface ShowRepository extends JpaRepository<Shows, Long> {
 
     List<Shows> findAllByTitleContaining(String keyword);
-    List<Shows> findAllByType(Pageable pageable, int type);
+    List<Shows> findAllByRegisteredTimeLessThanEqual(Pageable pageable, LocalDateTime dateTime);
+    List<Shows> findAllByTypeAndRegisteredTimeLessThanEqual(Pageable pageable, int type, LocalDateTime dateTime);
     List<Shows> findAllByRegisteredTimeAfterOrderByRegisteredTimeDesc(LocalDateTime dateTime);
     List<Shows> findAllByTypeAndRegisteredTimeAfterOrderByRegisteredTimeDesc(int type, LocalDateTime dateTime);
 

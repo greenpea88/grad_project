@@ -36,16 +36,16 @@ public class ShowService {
     }
 
     // 공연 목록 페이지 - 전체
-    public List<Shows> getAllShows(int page) {
+    public List<Shows> getAllShows(int page, LocalDateTime dateTime) {
         // DB 저장 최신순, 공연 시작일 최근순
         PageRequest pageRequest = PageRequest.of(page, 20, Sort.Direction.DESC, "registeredTime", "startDate");
-        return showRepository.findAll(pageRequest).getContent();
+        return showRepository.findAllByRegisteredTimeLessThanEqual(pageRequest, dateTime);
     }
 
     // 공연 목록 페이지 - 타입별
-    public List<Shows> getTypeShows(int page, int type) {
+    public List<Shows> getTypeShows(int page, LocalDateTime dateTime, int type) {
         PageRequest pageRequest = PageRequest.of(page, 20, Sort.Direction.DESC, "registeredTime", "startDate");
-        return showRepository.findAllByType(pageRequest, type);
+        return showRepository.findAllByTypeAndRegisteredTimeLessThanEqual(pageRequest, type, dateTime);
     }
 
     // 공연 목록 페이지 - 전체 - 아래로 당기기
