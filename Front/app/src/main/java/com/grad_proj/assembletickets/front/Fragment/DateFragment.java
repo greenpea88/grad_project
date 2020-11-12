@@ -111,7 +111,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
                 WindowManager.LayoutParams windowManger = calendarEditDialog.getWindow().getAttributes();
                 windowManger.copyFrom(calendarEditDialog.getWindow().getAttributes());
                 windowManger.width=(int)(width*0.7);
-                windowManger.height=(height/3)*2;
+                windowManger.height=(height/4)*3;
 
                 calendarEditDialog.setDialogListener(listener);
 

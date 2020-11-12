@@ -23,27 +23,35 @@ public class ShowController {
     }
 
     // 공연 목록 페이지 - 전체
+    // time: 처음 0 page 요청할 때 현재 시간, 한 번 정해지면 매 요청마다 동일
+    // page: 0부터 시작, 매 요청마다 1씩 증가
     @GetMapping("/shows/all")
-    public List<Shows> getAllShows(@RequestParam int page){
-        return showService.getAllShows(page);
+    public List<Shows> getAllShows(@RequestParam int page, @RequestParam String time){
+        return showService.getAllShows(page, LocalDateTime.parse(time));
     }
 
     // 공연 목록 페이지 - 타입별
+    // time: 처음 0 page 요청할 때 현재 시간, 한 번 정해지면 매 요청마다 동일
+    // page: 0부터 시작, 매 요청마다 1씩 증가
+    // type: 뮤지컬 1, 연극 2, 콘서트 3
     @GetMapping("/shows/type")
-    public List<Shows> getTypeShows(@RequestParam int page, @RequestParam int type){
-        return showService.getTypeShows(page, type);
+    public List<Shows> getTypeShows(@RequestParam int page, @RequestParam String time, @RequestParam int type){
+        return showService.getTypeShows(page, LocalDateTime.parse(time), type);
     }
 
     // 공연 목록 페이지 - 전체 - 아래로 당기기
+    // time: 처음 0 page 요청할 때 정해진 그 시간
     @GetMapping("/shows/all/new")
-    public List<Shows> getNewAllShows(@RequestParam String date){
-        return showService.getNewAllShows(LocalDateTime.parse(date));
+    public List<Shows> getNewAllShows(@RequestParam String time){
+        return showService.getNewAllShows(LocalDateTime.parse(time));
     }
 
     // 공연 목록 페이지 - 타입별 - 아래로 당기기
+    // time: 처음 0 page 요청할 때 정해진 그 시간
+    // type: 뮤지컬 1, 연극 2, 콘서트 3
     @GetMapping("/shows/type/new")
-    public List<Shows> getNewTypeShows(@RequestParam String date, @RequestParam int type){
-        return showService.getNewTypeShows(LocalDateTime.parse(date), type);
+    public List<Shows> getNewTypeShows(@RequestParam String time, @RequestParam int type){
+        return showService.getNewTypeShows(LocalDateTime.parse(time), type);
     }
 
 }
