@@ -57,11 +57,16 @@ public class SelectEventDateFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d("SelectEventDateFragment","onNextBtnClicked");
+                int year = eventDatePicker.getYear();
+                int month = eventDatePicker.getMonth()+1;
+                int date = eventDatePicker.getDayOfMonth();
+                String selectDate = year+"-"+month+"-"+date;
+                System.out.println(selectDate);
 
                 Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
                 ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-                ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance("2020-11-12",title));
+                ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance(selectDate,title));
             }
         });
 
