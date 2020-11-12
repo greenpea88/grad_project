@@ -25,8 +25,9 @@ public class AddEventFragment extends Fragment {
 
     public View view;
 
-    private static final String DATE="";
+    private static final String DATE="date";
     private String date;
+    private String title;
 
     Button submitBtn;
     TimePicker eventTimePicker;
@@ -34,11 +35,12 @@ public class AddEventFragment extends Fragment {
 
     private String eventTitle="";
 
-    public static AddEventFragment newInstance(String date) {
+    public static AddEventFragment newInstance(String date,String title) {
         //이전 fragment로부터 데이터 넘겨받기
         AddEventFragment addEventFragment = new AddEventFragment();
         Bundle bundle = new Bundle();
         bundle.putString(DATE, date);
+        bundle.putString("title",title);
         addEventFragment.setArguments(bundle);
 
         return addEventFragment;
@@ -52,12 +54,14 @@ public class AddEventFragment extends Fragment {
 
         if(getArguments() != null){
             date = getArguments().getString(DATE);
+            title = getArguments().getString("title");
         }
 
         submitBtn = (Button)view.findViewById(R.id.submitBtn);
         eventTimePicker = (TimePicker)view.findViewById(R.id.eventTimePicker);
         eventTimePicker.setIs24HourView(true);
         eventTitleEditText = (EditText)view.findViewById(R.id.eventTitleEditText);
+        eventTitleEditText.setText(title);
         eventContentEditText = (EditText)view.findViewById(R.id.eventContentEditText);
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
