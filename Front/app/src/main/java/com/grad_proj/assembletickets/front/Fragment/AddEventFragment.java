@@ -92,9 +92,9 @@ public class AddEventFragment extends Fragment {
 
                 //db에 새로 추가된 정보 넣기
                 ((HomeActivity)getActivity()).insertEvent(date,title,eventContent,eventHour,eventMin);
-                ((HomeActivity)getActivity()).submitBtnAction();
 
                 //다시 원래 페이지로 돌아오기 -> pop 두 번 필요
+                ((HomeActivity)getActivity()).submitBtnAction();
             }
         });
         return view;

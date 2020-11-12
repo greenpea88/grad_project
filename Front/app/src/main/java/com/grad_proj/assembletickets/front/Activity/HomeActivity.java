@@ -182,6 +182,8 @@ public class HomeActivity extends AppCompatActivity {
         Log.i("submit button","pressed");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if(!fragmentStack.isEmpty()){
+            //date 선택 fragment -> 시간 및 세부사항 선택 fragment 총 두가지를 거치므로 두번의 pop을 필요로 함.
+            fragmentStack.pop();
             Fragment lastFragment = fragmentStack.pop();
             fragmentTransaction.replace(R.id.frameLayout, lastFragment).commitAllowingStateLoss();
         }
