@@ -137,11 +137,16 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-        ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance("2020-11-12",show.getsName()));
+        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("티켓팅 날짜",show.getsName()));
+//        ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance("2020-11-12",show.getsName()));
     }
 
     @Override
     public void onWatchSelect() {
         //공연 시작 날짜 / 공연 마지막 날짜 / 공연 이름 넘겨주기
+        Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+
+        ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
+        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간",show.getsName()));
     }
 }
