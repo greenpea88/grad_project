@@ -138,6 +138,17 @@
                         android:gravity="start|center_vertical"
                         android:text="개발자 연락처"
                         android:textSize="16dp" />
+
+                    <Button
+                        android:id="@+id/btn_logout"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="10dp"
+                        android:background="@drawable/btn_transparent"
+                        android:gravity="start|center_vertical"
+                        android:text="로그아웃"
+                        android:textSize="16dp" />
                 </LinearLayout>
 
             </FrameLayout>

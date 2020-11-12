@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,9 +29,6 @@ import com.grad_proj.assembletickets.front.OnDialogListener;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SwipeToDelete;
 import com.grad_proj.assembletickets.front.SwipeToDeleteAction;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 public class DateFragment extends Fragment implements OnDialogListener {
@@ -191,7 +187,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
 
             dateEventAdapter.addItem(event);
         }
-        ((HomeActivity)getActivity()).closeDB();
+        ((HomeActivity)getActivity()).closeCalendarDB();
         dateEventAdapter.notifyDataSetChanged();
     }
 
