@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -31,9 +32,10 @@ public class AddEventFragment extends Fragment {
 
     Button submitBtn;
     TimePicker eventTimePicker;
-    EditText eventTitleEditText, eventContentEditText;
+    TextView eventTitleText;
+    EditText eventContentEditText;
 
-    private String eventTitle="";
+//    private String eventTitle="";
 
     public static AddEventFragment newInstance(String date,String title) {
         //이전 fragment로부터 데이터 넘겨받기
@@ -60,47 +62,37 @@ public class AddEventFragment extends Fragment {
         submitBtn = (Button)view.findViewById(R.id.submitBtn);
         eventTimePicker = (TimePicker)view.findViewById(R.id.eventTimePicker);
         eventTimePicker.setIs24HourView(true);
-        eventTitleEditText = (EditText)view.findViewById(R.id.eventTitleEditText);
-        eventTitleEditText.setText(title);
+        eventTitleText = (TextView)view.findViewById(R.id.eventTitleText);
+        eventTitleText.setText(title);
+//        eventTitleEditText = (EditText)view.findViewById(R.id.eventTitleEditText);
+//        eventTitleEditText.setText(title);
         eventContentEditText = (EditText)view.findViewById(R.id.eventContentEditText);
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                if("".equals(eventTitle)){
-                    Toast toast=Toast.makeText(view.getContext(),"이벤트 제목을 입력해주세요",Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER,0,0);
-                    toast.show();
-                }
-                else{
-                    int eventHour =  eventTimePicker.getHour();
-                    int eventMin = eventTimePicker.getMinute();
-                    String eventContent = eventContentEditText.getText().toString();
+//                if("".equals(eventTitle)){
+//                    Toast toast=Toast.makeText(view.getContext(),"이벤트 제목을 입력해주세요",Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.CENTER,0,0);
+//                    toast.show();
+//                }
+//                else{
+//                    int eventHour =  eventTimePicker.getHour();
+//                    int eventMin = eventTimePicker.getMinute();
+//                    String eventContent = eventContentEditText.getText().toString();
+//
+//                    //db에 새로 추가된 정보 넣기
+//                    ((HomeActivity)getActivity()).insertEvent(date,eventTitle,eventContent,eventHour,eventMin);
+//                    ((HomeActivity)getActivity()).submitBtnAction();
+//                }
+                int eventHour =  eventTimePicker.getHour();
+                int eventMin = eventTimePicker.getMinute();
+                String eventContent = eventContentEditText.getText().toString();
 
-                    //db에 새로 추가된 정보 넣기
-                    ((HomeActivity)getActivity()).insertEvent(date,eventTitle,eventContent,eventHour,eventMin);
-                    ((HomeActivity)getActivity()).submitBtnAction();
-                }
-            }
-        });
-
-        eventTitleEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence!=null){
-                    eventTitle=charSequence.toString();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
+                //db에 새로 추가된 정보 넣기
+                ((HomeActivity)getActivity()).insertEvent(date,title,eventContent,eventHour,eventMin);
+                ((HomeActivity)getActivity()).submitBtnAction();
             }
         });
         return view;
