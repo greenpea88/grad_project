@@ -36,6 +36,8 @@ public class SearchFragment extends Fragment {
     View view;
     RecyclerView historyRecyclerView;
     EditText searchText;
+    TextView searchClear;
+    TextView removeAll;
     ImageButton search;
 
     @Nullable
@@ -57,9 +59,12 @@ public class SearchFragment extends Fragment {
             public void onClick(View view) {
                 if (searchText.length() > 1) {
                     ((HomeActivity)getActivity()).deleteDupAndInsertHistory(searchText.getText().toString());
+
                     Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
                     ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
                     ((HomeActivity)getActivity()).replaceFragment(SearchResultFragment.newInstance(searchText.getText().toString()));
+
+                    // 검색 후 키보드 숨김
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
                 }
@@ -94,11 +99,26 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        searchClear = view.findViewById(R.id.searchClear);
+        searchClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchText.setText("");
+            }
+        });
+
+        removeAll = view.findViewById(R.id.removeBtn);
+        removeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((HomeActivity)getActivity()).deleteHistoryAll();
+                searchHistoryAdapter.removeAll();
+            }
+        });
+
         historyRecyclerView.setAdapter(searchHistoryAdapter);
 
         getHistories();
-
-
 
         return view;
     }

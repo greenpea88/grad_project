@@ -95,7 +95,7 @@ public class SDatabaseOpen {
     public void deleteAll(){
         String sql = "DELETE FROM " + SearchDatabase.SearchHistoryDB._TABLENAME;
 
-        mDB.execSQL(sql, null);
+        mDB.execSQL(sql);
     }
 
 }

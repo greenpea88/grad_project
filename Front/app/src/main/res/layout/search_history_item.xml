@@ -14,13 +14,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="8dp">
+            android:layout_marginHorizontal="12dp">
 
-            <Button
+            <TextView
                 android:id="@+id/historyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:layout_marginLeft="8dp"
                 android:background="@drawable/btn_transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -30,9 +33,9 @@
                 android:id="@+id/delBtn"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
                 android:text="x"
                 android:textSize="16sp"
+                android:textColor="@android:color/darker_gray"
                 android:background="@drawable/btn_transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,8 +43,7 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
             @Override
             public void onClick(View view) {
                 deleteOnItemClicked(view, position);
-                histories.remove(position);
-                notifyDataSetChanged();
+                removeItem(position);
             }
         });
     }
@@ -62,8 +62,14 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
     public int removeItem(int position){
         int removeId = histories.get(position).getId();
         histories.remove(position);
+        notifyDataSetChanged();
 
         return removeId;
+    }
+
+    public void removeAll(){
+        histories.clear();
+        notifyDataSetChanged();
     }
 
     public SearchHistory getItem(int position){
@@ -77,7 +83,7 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
 //subView(item setting)
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private Button context;
+        private TextView context;
         private Button delBtn;
 
         public ItemViewHolder(View itemView){
