@@ -78,6 +78,13 @@ public class CDatabaseOpen {
         return mDB.rawQuery(sql,null);
     }
 
+    public Cursor selectDate(){
+        String sql = "SELECT DISTINCT "+ CalendarDatabase.CalendarDB.EVENTDATE
+                +" FROM "+ CalendarDatabase.CalendarDB._TABLENAME;
+
+        return mDB.rawQuery(sql,null);
+    }
+
     public void deleteColumn(int id){
         String sql = "DELETE FROM " + CalendarDatabase.CalendarDB._TABLENAME
                 + " WHERE "+ CalendarDatabase.CalendarDB._ID+"="+id;

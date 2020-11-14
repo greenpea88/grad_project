@@ -258,6 +258,12 @@ public class HomeActivity extends AppCompatActivity {
         return cDatabaseOpen.selectDataEvent(date);
     }
 
+    public Cursor getEventDates(){
+        cDatabaseOpen.open();
+
+        return cDatabaseOpen.selectDate();
+    }
+
     public void deleteEvent(int id){
         cDatabaseOpen.open();
 

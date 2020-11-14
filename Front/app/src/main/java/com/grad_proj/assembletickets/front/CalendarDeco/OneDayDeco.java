@@ -1,6 +1,7 @@
 package com.grad_proj.assembletickets.front.CalendarDeco;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -23,7 +24,7 @@ public class OneDayDeco implements DayViewDecorator {
     private CalendarDay date;
     private final Drawable drawable;
 
-    public OneDayDeco(ViewGroup context){
+    public OneDayDeco(Context context){
         date = CalendarDay.today();
         drawable = ResourcesCompat.getDrawable(context.getResources(),R.drawable.today_calendar,null);
     }
