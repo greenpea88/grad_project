@@ -12,6 +12,7 @@
         android:orientation="horizontal"
         android:paddingTop="16dp">
         <ImageView
+            android:id="@+id/detailImgPoster"
             android:layout_width="150dp"
             android:layout_height="200dp"
             android:src="@drawable/img_poster"/>

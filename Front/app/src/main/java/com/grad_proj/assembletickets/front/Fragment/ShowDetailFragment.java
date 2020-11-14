@@ -1,5 +1,8 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -8,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +30,9 @@ import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.SubscribeAdapter;
 import com.grad_proj.assembletickets.front.SubscribeListDeco;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +40,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
 
     View view;
 
+    private ImageView detailImgPoster;
     private Button addEventBtn;
     private TextView showDetailTitle;
     private RecyclerView showPerformerList;
@@ -63,6 +71,9 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         if(getArguments()!=null){
             this.show=(Show)getArguments().getSerializable("show");
         }
+
+        detailImgPoster = (ImageView)view.findViewById(R.id.detailImgPoster);
+        new ImgDownloadTask().execute("http://ticketimage.interpark.com/Play/image/large/20/20008287_p.gif");
 
         showDetailTitle = (TextView)view.findViewById(R.id.showDetailTitle);
         showDetailTitle.setText(show.getsName());
@@ -148,5 +159,34 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
         ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간",show.getsName()));
+    }
+
+    private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            Bitmap bitmap = null;
+
+            try {
+                String imgUrl = strings[0];
+                URL url = new URL(imgUrl);
+                bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            }catch (MalformedURLException e){
+                e.printStackTrace();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            detailImgPoster.setImageBitmap(bitmap);
+        }
     }
 }
