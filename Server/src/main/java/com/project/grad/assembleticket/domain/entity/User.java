@@ -22,6 +22,7 @@ public class User {
     @Column(columnDefinition = "DATE")
     private LocalDate birthday;
 
+    // 초기값: 0, 남자: 1, 여자: 2
     @Column(columnDefinition = "TINYINT")
     private int gender;
 
