@@ -15,6 +15,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.Activity.LoginActivity;
 import com.grad_proj.assembletickets.front.R;
@@ -24,6 +29,7 @@ public class UserFragment extends Fragment {
 
     View view;
     FragmentManager fragmentManager = getFragmentManager();
+    private GoogleSignInClient mGoogleSignInClient;
 
     private UserVersionFragment userVersionFragment = new UserVersionFragment();
     private UserNoticeFragement userNoticeFragement = new UserNoticeFragement();
@@ -99,4 +105,13 @@ public class UserFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    private void signOut() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+        mGoogleSignInClient.signOut();
+    }
+
 }
