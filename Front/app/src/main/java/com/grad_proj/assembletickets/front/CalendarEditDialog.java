@@ -79,9 +79,16 @@ public class CalendarEditDialog extends Dialog {
                     int newMin=eventEditTime.getMinute();
                     String newTitle=eventEditTitle.getText().toString();
                     String newContent=eventEditContent.getText().toString();
+                    int editAlarmSet;
+                    if(alarmEditSwitch.isChecked()){
+                        editAlarmSet=1;
+                    }
+                    else{
+                        editAlarmSet=0;
+                    }
                     Log.d("Dialog",newContent);
 
-                    if(newHour==alarmHour && newMin==alarmMin && title.equals(newTitle) && eventContent.equals(newContent)){
+                    if(newHour==alarmHour && newMin==alarmMin && title.equals(newTitle) && eventContent.equals(newContent) && alarmSet==editAlarmSet){
                         //값의 변화가 없을 경우
                         Toast toast=Toast.makeText(view.getContext(),"수정 사항이 없습니다",Toast.LENGTH_SHORT);
                         toast.setGravity(Gravity.CENTER,0,0);
@@ -100,6 +107,7 @@ public class CalendarEditDialog extends Dialog {
                             newEvent.setTimeMin(newMin);
                             newEvent.setEventName(newTitle);
                             newEvent.setEventContent(newContent);
+                            newEvent.setAlarmSet(editAlarmSet);
 
                             listener.onFinish(position,newEvent);
 

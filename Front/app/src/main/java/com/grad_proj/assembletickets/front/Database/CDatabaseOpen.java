@@ -99,6 +99,7 @@ public class CDatabaseOpen {
         values.put(CalendarDatabase.CalendarDB.EVENTCONTENT,event.getEventContent());
         values.put(CalendarDatabase.CalendarDB.HOUR,event.getTimeHour());
         values.put(CalendarDatabase.CalendarDB.MINUTE,event.getTimeMin());
+        values.put(CalendarDatabase.CalendarDB.ALARMSET,event.getAlarmSet());
 
         return mDB.update(CalendarDatabase.CalendarDB._TABLENAME,values, CalendarDatabase.CalendarDB._ID+"="+event.getId(),null) > 0;
     }
