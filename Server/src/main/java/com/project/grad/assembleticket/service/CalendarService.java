@@ -41,9 +41,9 @@ public class CalendarService {
     }
 
     // 일정 수정하기
-    public Calendar updateCalendar(Long id, CalendarUpdateRequestDto requestDto){
-        Calendar calendar = calendarRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 일정이 없습니다. id=" + id));
+    public Calendar updateCalendar( CalendarUpdateRequestDto requestDto){
+        Calendar calendar = calendarRepository.findById(requestDto.getCalId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 일정이 없습니다. id=" + requestDto.getCalId()));
         calendar.update(requestDto.getCalDate(), requestDto.getCalTime(), requestDto.getCalTitle(),
                 requestDto.getCalMemo(), requestDto.getAlarmSet());
         return calendar;

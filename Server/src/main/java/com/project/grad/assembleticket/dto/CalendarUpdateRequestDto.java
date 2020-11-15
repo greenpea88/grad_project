@@ -11,6 +11,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class CalendarUpdateRequestDto {
 
+    private Long calId;
     private LocalDate calDate;
     private LocalTime calTime;
     private String calTitle;
@@ -18,7 +19,8 @@ public class CalendarUpdateRequestDto {
     private int alarmSet;
 
     @Builder
-    public CalendarUpdateRequestDto(LocalDate date, LocalTime time, String title, String memo, int alarmSet){
+    public CalendarUpdateRequestDto(Long calId, LocalDate date, LocalTime time, String title, String memo, int alarmSet){
+        this.calId = calId;
         this.calDate = date;
         this.calTime = time;
         this.calTitle = title;

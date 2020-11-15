@@ -31,8 +31,8 @@ public class CalendarController {
 
     // 일정 수정하기
     @PutMapping("/calendar")
-    public Calendar updateCalendar(@RequestParam Long calId, @RequestBody CalendarUpdateRequestDto requestDto){
-        return calendarService.updateCalendar(calId, requestDto);
+    public Calendar updateCalendar(@RequestBody CalendarUpdateRequestDto requestDto){
+        return calendarService.updateCalendar(requestDto);
     }
 
     // 일정 삭제하기
