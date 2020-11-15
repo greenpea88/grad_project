@@ -23,24 +23,23 @@ public class SubscribeService {
     private final ShowPerformerRepository showPerformerRepository;
 
     // 구독 등록
-    public Subscribe saveSubscribe(Long userId, Long performerId){
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + userId));
+    public Subscribe saveSubscribe(String email, Long performerId){
+        User user = userRepository.findByEmail(email);
         Performer performer = performerRepository.findById(performerId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 공연자가 없습니다. id=" + performerId));
         return subscribeRepository.save(Subscribe.builder().user(user).performer(performer).build());
     }
 
     // 구독 해제
-    public Long deleteSubscribe(Long userId, Long performerId){
-        Subscribe subscribe = subscribeRepository.findByUserIdAndPerformerId(userId, performerId);
+    public Long deleteSubscribe(String email, Long performerId){
+        Subscribe subscribe = subscribeRepository.findByUserEmailAndPerformerId(email, performerId);
         subscribeRepository.delete(subscribe);
         return subscribe.getId();
     }
 
     // 공연자 리스트
-    public List<Performer> getSubscribedPerformers(Long id){
-        List<Subscribe> subscribes = subscribeRepository.findAllByUserId(id);
+    public List<Performer> getSubscribedPerformers(String email){
+        List<Subscribe> subscribes = subscribeRepository.findAllByUserEmail(email);
         List<Performer> performers = new ArrayList<>();
         for (Subscribe subscribe : subscribes) {
             performers.add(subscribe.getPerformer());
@@ -49,8 +48,8 @@ public class SubscribeService {
     }
 
     // 공연 리스트
-    public List<Shows> getPerformerShows(Long userId, Long performerId){
-        List<Performer> performers = getSubscribedPerformers(userId);
+    public List<Shows> getPerformerShows(String email, Long performerId){
+        List<Performer> performers = getSubscribedPerformers(email);
         List<Shows> shows = new ArrayList<>();
 
         if(performerId != null){     // 특정 공연자의 공연만
