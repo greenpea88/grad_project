@@ -1,6 +1,7 @@
 package com.project.grad.assembleticket.controller;
 
 import com.project.grad.assembleticket.domain.entity.User;
+import com.project.grad.assembleticket.dto.UserSaveRequestDto;
 import com.project.grad.assembleticket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public void registerUser(@RequestParam String idToken){
-        userService.registerUser(idToken);
+    public void registerUser(@RequestBody UserSaveRequestDto requestDto){
+        userService.registerUser(requestDto);
     }
 
     @GetMapping("/profile")
