@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+//            getCalendarData();
             startActivity(intent);
             // 자동 로그인 토큰
             UserSharedPreference.setIdToken(LoginActivity.this, account.getIdToken());
@@ -142,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
         } catch (ApiException e) {
             Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());
             Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
+//            getCalendarData();
             startActivity(intent);
         }
     }
