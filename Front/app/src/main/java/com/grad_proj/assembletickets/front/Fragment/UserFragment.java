@@ -91,8 +91,12 @@ public class UserFragment extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
                 // 로그아웃
                 UserSharedPreference.clearIdToken(getContext());
+                if (UserSharedPreference.getIdToken(getContext()).startsWith("google")) {
+                    signOut();
+                }
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
 
