@@ -9,6 +9,7 @@ public class Event {
     private int timeMin;
     private String eventName;
     private String eventContent;
+    private Boolean alarmSet;
 
 //    public Event(String date, String time, String eventName){
 //        this.date = date;
@@ -40,6 +41,10 @@ public class Event {
         return eventContent;
     }
 
+    public Boolean getAlarmSet() {
+        return alarmSet;
+    }
+
     public void setDate(String date) {
         this.date = date;
     }
@@ -62,5 +67,9 @@ public class Event {
 
     public void setEventContent(String eventContent) {
         this.eventContent = eventContent;
+    }
+
+    public void setAlarmSet(Boolean alarmSet){
+        this.alarmSet = alarmSet;
     }
 }

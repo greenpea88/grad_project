@@ -14,6 +14,8 @@ public class Show implements Serializable {
     Date ticketOpen;
     String buyTicket;
     int runningTime;
+    String picSrc;
+    ArrayList<Performer> performerList = new ArrayList<Performer>();
 
     public int getEndDate() {
         return endDate;
@@ -50,9 +52,6 @@ public class Show implements Serializable {
     public ArrayList<Performer> getPerformerList() {
         return performerList;
     }
-
-    String picSrc;
-    ArrayList<Performer> performerList = new ArrayList<Performer>();
 
     public String getsName() {
         return sName;
