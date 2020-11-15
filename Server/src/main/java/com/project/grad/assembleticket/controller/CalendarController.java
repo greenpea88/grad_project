@@ -19,8 +19,8 @@ public class CalendarController {
 
     // 해당 User 해당 Date의 일정 가져오기
     @GetMapping("/calendar")
-    public List<Calendar> getCalendar(@RequestParam Long userId, @RequestParam String date) {
-        return calendarService.getCalendar(userId, LocalDate.parse(date));
+    public List<Calendar> getCalendar(@RequestParam String email, @RequestParam String date) {
+        return calendarService.getCalendar(email, LocalDate.parse(date));
     }
 
     // 일정 등록하기

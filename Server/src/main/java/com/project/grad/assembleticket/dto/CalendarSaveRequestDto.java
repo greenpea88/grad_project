@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 public class CalendarSaveRequestDto {
 
-    private Long userId;
+    private String email;
     private Long showId;
     private LocalDate calDate;
     private LocalTime calTime;
@@ -20,8 +20,8 @@ public class CalendarSaveRequestDto {
     private int alarmSet;
 
     @Builder
-    public CalendarSaveRequestDto(Long user, Long show, String date, String time, String title, String memo, int alarmSet){
-        this.userId = user;
+    public CalendarSaveRequestDto(String email, Long show, String date, String time, String title, String memo, int alarmSet){
+        this.email = email;
         this.showId = show;
         this.calDate = LocalDate.parse(date);
         this.calTime = LocalTime.parse(time);

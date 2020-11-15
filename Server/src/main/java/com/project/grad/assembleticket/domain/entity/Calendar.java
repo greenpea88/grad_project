@@ -18,7 +18,7 @@ public class Calendar {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_email")
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)

@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
-    List<Calendar> findAllByUserIdAndCalDateAndCalDeletedFalse(Long id, LocalDate date);
+    List<Calendar> findAllByUserEmailAndCalDateAndCalDeletedFalse(String email, LocalDate date);
 
 }

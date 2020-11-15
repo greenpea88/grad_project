@@ -25,14 +25,13 @@ public class CalendarService {
     private final ShowRepository showRepository;
 
     // 해당 User 해당 Date의 일정 가져오기
-    public List<Calendar> getCalendar(Long id, LocalDate date){
-        return calendarRepository.findAllByUserIdAndCalDateAndCalDeletedFalse(id, date);
+    public List<Calendar> getCalendar(String email, LocalDate date){
+        return calendarRepository.findAllByUserEmailAndCalDateAndCalDeletedFalse(email, date);
     }
 
     // 일정 등록하기
     public Calendar saveCalendar(CalendarSaveRequestDto requestDto){
-        User user = userRepository.findById(requestDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + requestDto.getUserId()));
+        User user = userRepository.findByEmail(requestDto.getEmail());
         Shows show = showRepository.findById(requestDto.getShowId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 공연이 없습니다. id=" + requestDto.getShowId()));
         return calendarRepository.save(Calendar.builder().user(user).show(show)
