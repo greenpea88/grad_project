@@ -9,7 +9,8 @@ public class Event {
     private int timeMin;
     private String eventName;
     private String eventContent;
-    private Boolean alarmSet;
+    //sqlite는 boolean 타입이 없음
+    private int alarmSet;
 
 //    public Event(String date, String time, String eventName){
 //        this.date = date;
@@ -41,7 +42,7 @@ public class Event {
         return eventContent;
     }
 
-    public Boolean getAlarmSet() {
+    public int getAlarmSet() {
         return alarmSet;
     }
 
@@ -69,7 +70,7 @@ public class Event {
         this.eventContent = eventContent;
     }
 
-    public void setAlarmSet(Boolean alarmSet){
+    public void setAlarmSet(int alarmSet) {
         this.alarmSet = alarmSet;
     }
 }

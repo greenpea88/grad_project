@@ -16,16 +16,20 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
 public class CalendarEditDialog extends Dialog {
 
     private int alarmHour;
     private int alarmMin;
     private String title;
     private String eventContent;
+    private int alarmSet;
 
     private TimePicker eventEditTime;
     private EditText eventEditTitle,eventEditContent;
     private Button eventEditBtn;
+    private SwitchMaterial alarmEditSwitch;
 
     private OnDialogListener listener;
 
@@ -44,6 +48,7 @@ public class CalendarEditDialog extends Dialog {
             System.out.println("empty");
             eventContent="";
         }
+        alarmSet=event.getAlarmSet();
 
         eventEditTime =findViewById(R.id.eventEditTimePicker);
         eventEditTime.setHour(alarmHour);
@@ -54,6 +59,14 @@ public class CalendarEditDialog extends Dialog {
 
         eventEditContent=findViewById(R.id.eventEditContent);
         eventEditContent.setText(eventContent);
+
+        alarmEditSwitch = findViewById(R.id.alarmEditSwitch);
+        if(alarmSet==0){
+            alarmEditSwitch.setChecked(false);
+        }
+        else{
+            alarmEditSwitch.setChecked(true);
+        }
 
         eventEditBtn=findViewById(R.id.eventEditBtn);
         eventEditBtn.setOnClickListener(new View.OnClickListener() {

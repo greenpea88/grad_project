@@ -247,10 +247,10 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void insertEvent(String date,String eventName, String eventContent,int hour, int minute){
+    public void insertEvent(String date,String eventName, String eventContent,int hour, int minute,int alarmSet){
         cDatabaseOpen.open();
 
-        cDatabaseOpen.insertColumn(date,eventName,eventContent,hour,minute);
+        cDatabaseOpen.insertColumn(date,eventName,eventContent,hour,minute,alarmSet);
         cDatabaseOpen.close();
     }
 

@@ -177,6 +177,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
             String eventContent = cursor.getString(cursor.getColumnIndex(CalendarDatabase.CalendarDB.EVENTCONTENT));
             int hour = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.HOUR));
             int min = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.MINUTE));
+            int alarmSet = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.ALARMSET));
 
             Event event = new Event();
             event.setId(id);
@@ -184,6 +185,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
             event.setEventContent(eventContent);
             event.setTimeHour(hour);
             event.setTimeMin(min);
+            event.setAlarmSet(alarmSet);
 
             dateEventAdapter.addItem(event);
         }

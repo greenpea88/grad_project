@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.R;
 
@@ -34,6 +35,7 @@ public class AddEventFragment extends Fragment {
     TimePicker eventTimePicker;
     TextView eventTitleText;
     EditText eventContentEditText;
+    SwitchMaterial alarmSwitch;
 
 //    private String eventTitle="";
 
@@ -67,6 +69,7 @@ public class AddEventFragment extends Fragment {
 //        eventTitleEditText = (EditText)view.findViewById(R.id.eventTitleEditText);
 //        eventTitleEditText.setText(title);
         eventContentEditText = (EditText)view.findViewById(R.id.eventContentEditText);
+        alarmSwitch = (SwitchMaterial)view.findViewById(R.id.alarmSwitch);
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -89,9 +92,17 @@ public class AddEventFragment extends Fragment {
                 int eventHour =  eventTimePicker.getHour();
                 int eventMin = eventTimePicker.getMinute();
                 String eventContent = eventContentEditText.getText().toString();
+                int alarmSet;
+                if(alarmSwitch.isChecked()){
+                    //true일 경우
+                    alarmSet=1;
+                }
+                else{
+                    alarmSet=0;
+                }
 
                 //db에 새로 추가된 정보 넣기
-                ((HomeActivity)getActivity()).insertEvent(date,title,eventContent,eventHour,eventMin);
+                ((HomeActivity)getActivity()).insertEvent(date,title,eventContent,eventHour,eventMin,alarmSet);
 
                 //다시 원래 페이지로 돌아오기 -> pop 두 번 필요
                 ((HomeActivity)getActivity()).submitBtnAction();
