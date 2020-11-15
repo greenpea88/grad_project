@@ -13,40 +13,40 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp">
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/loginIDEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/email"
-                android:singleLine="true" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/loginIDEditText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:hint="@string/email"-->
+<!--                android:singleLine="true" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="16dp">-->
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/loginPWEditText"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="@string/password"
-                android:singleLine="true" />
-        </com.google.android.material.textfield.TextInputLayout>
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/loginPWEditText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:hint="@string/password"-->
+<!--                android:singleLine="true" />-->
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
-        <Button
-            android:id="@+id/loginBtn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:background="@drawable/btn_pinktored"
-            android:onClick="onLoginBtnClicked"
-            android:text="@string/login"
-            android:textColor="@android:color/white" />
+<!--        <Button-->
+<!--            android:id="@+id/loginBtn"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginLeft="40dp"-->
+<!--            android:layout_marginRight="40dp"-->
+<!--            android:background="@drawable/btn_pinktored"-->
+<!--            android:onClick="onLoginBtnClicked"-->
+<!--            android:text="@string/login"-->
+<!--            android:textColor="@android:color/white" />-->
 
         <Button
             android:id="@+id/loginBtn2"
@@ -60,14 +60,14 @@
             android:text="구글 계정으로 로그인"
             android:textColor="@android:color/white" />
 
-        <TextView
-            android:id="@+id/lostPW"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lostPassword"
-            android:gravity="center"
-            android:paddingTop="16dp"
-            android:visibility="invisible"/>
+<!--        <TextView-->
+<!--            android:id="@+id/lostPW"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/lostPassword"-->
+<!--            android:gravity="center"-->
+<!--            android:paddingTop="16dp"-->
+<!--            android:visibility="invisible"/>-->
     </LinearLayout>
 
     <TextView

@@ -46,76 +46,76 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        loginIDEditText = findViewById(R.id.loginIDEditText);
-        loginPWEditText = findViewById(R.id.loginPWEditText);
-        lostPW = findViewById(R.id.lostPW);
+//
+//        loginIDEditText = findViewById(R.id.loginIDEditText);
+//        loginPWEditText = findViewById(R.id.loginPWEditText);
+//        lostPW = findViewById(R.id.lostPW);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        loginIDEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence!=null){
-                    inputID=charSequence.toString();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        loginPWEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence!=null){
-                    inputPW=charSequence.toString();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+//
+//        loginIDEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                if(charSequence!=null){
+//                    inputID=charSequence.toString();
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
+//
+//        loginPWEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                if(charSequence!=null){
+//                    inputPW=charSequence.toString();
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
     }
 
-    public void onLoginBtnClicked(View v){
-
-        Toast inputToast = Toast.makeText(this.getApplicationContext(),"Email, Password를 모두 입력해주세요", Toast.LENGTH_SHORT);
-
-        inputToast.setGravity(Gravity.CENTER,0,0);
-//        inputToast.show();
-        Log.d("Text",inputID+" / "+inputPW);
-        if("".equals(inputID) || "".equals(inputPW)){
-            inputToast.show();
-        }
-        //TODO: 로그인 토큰 받도록 서버 설정해서 받도록 하기
-        else{
-            Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
-            getCalendarData();
-            startActivity(intent);
-            // 자동 로그인 토큰
-            UserSharedPreference.setIdToken(LoginActivity.this, "testid" + inputID);
-            Toast.makeText(this, inputID + "님, 안녕하세요!", Toast.LENGTH_LONG).show();
-            this.finish();
-        }
-    }
+//    public void onLoginBtnClicked(View v){
+//
+//        Toast inputToast = Toast.makeText(this.getApplicationContext(),"Email, Password를 모두 입력해주세요", Toast.LENGTH_SHORT);
+//
+//        inputToast.setGravity(Gravity.CENTER,0,0);
+////        inputToast.show();
+//        Log.d("Text",inputID+" / "+inputPW);
+//        if("".equals(inputID) || "".equals(inputPW)){
+//            inputToast.show();
+//        }
+//        //TODO: 로그인 토큰 받도록 서버 설정해서 받도록 하기
+//        else{
+//            Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+//            getCalendarData();
+//            startActivity(intent);
+//            // 자동 로그인 토큰
+//            UserSharedPreference.setIdToken(LoginActivity.this, "testid" + inputID);
+//            Toast.makeText(this, inputID + "님, 안녕하세요!", Toast.LENGTH_LONG).show();
+//            this.finish();
+//        }
+//    }
 
     public void onGoogleLoginClicked(View v){
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -136,11 +136,12 @@ public class LoginActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            // 자동 로그인 토큰
+            intent.putExtra("id", account.getId());
+            intent.putExtra("email", account.getEmail());
             getCalendarData();
             startActivity(intent);
-            // 자동 로그인 토큰
-            UserSharedPreference.setIdToken(LoginActivity.this, "google" + account.getIdToken());
-            Toast.makeText(this, account.getDisplayName()+"("+account.getEmail()+")님, 안녕하세요!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, account.getDisplayName() + "님, 안녕하세요!", Toast.LENGTH_LONG).show();
             this.finish();
         } catch (ApiException e) {
             Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());

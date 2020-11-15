@@ -26,6 +26,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grad_proj.assembletickets.front.Alarm.AlarmReceiver;
 import com.grad_proj.assembletickets.front.Alarm.DeviceBootReceiver;
@@ -39,6 +42,7 @@ import com.grad_proj.assembletickets.front.Fragment.CalendarFragment;
 import com.grad_proj.assembletickets.front.Fragment.SubscribeFragment;
 import com.grad_proj.assembletickets.front.Fragment.TicketFragment;
 import com.grad_proj.assembletickets.front.Fragment.UserFragment;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
 
 import java.util.Calendar;
 import java.util.Stack;
@@ -69,13 +73,24 @@ public class HomeActivity extends AppCompatActivity {
     private Animation translateDown;
     private Animation translateUp;
 
+    GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        cDatabaseOpen = new CDatabaseOpen(this);
+        Intent intent = getIntent();
+
+        UserSharedPreference.setIdToken(this, "google" + intent.getStringExtra("id"));
+        UserSharedPreference.setUserEmail(this, intent.getStringExtra("email"));
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+                cDatabaseOpen = new CDatabaseOpen(this);
         sDatabaseOpen = new SDatabaseOpen(this);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -344,5 +359,9 @@ public class HomeActivity extends AppCompatActivity {
         if(alarmManager!=null){
             
         }
+    }
+
+    public void googleSignOut(){
+        mGoogleSignInClient.signOut();
     }
 }
