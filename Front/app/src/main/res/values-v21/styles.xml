@@ -3,5 +3,6 @@
 
     <style name="MyDatePicker" parent="@android:style/Widget.Material.Light.DatePicker">
         <item name="android:headerBackground">@color/colorFastWithUs5</item>
+        <item name='android:background'>@android:color/white</item>
     </style>
 </resources>
