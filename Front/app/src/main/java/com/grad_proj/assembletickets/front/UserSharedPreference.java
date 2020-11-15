@@ -15,7 +15,7 @@ public class UserSharedPreference {
     }
 
     public static void setIdToken(Context ctx, String userName) {
-        Log.d("text", "save id");
+        Log.d("sharedpref", "save id" + getIdToken(ctx));
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(PREF_ID_TOKEN, userName);
         editor.commit();
@@ -31,20 +31,19 @@ public class UserSharedPreference {
         editor.commit();
     }
 
-    public static void setEmailToken(Context ctx, String userEmail) {
+    public static void setUserEmail(Context ctx, String userEmail) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(PREF_EMAIL_TOKEN, userEmail);
         editor.commit();
     }
 
-    public static String getEmailToken(Context ctx) {
+    public static String getUserEmail(Context ctx) {
         return getSharedPreferences(ctx).getString(PREF_EMAIL_TOKEN, "");
     }
 
-    public static void clearEmailToken(Context ctx) {
+    public static void clearAll(Context ctx) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
-        editor.remove(PREF_EMAIL_TOKEN);
-        editor.commit();
+        editor.clear();
     }
 
 }

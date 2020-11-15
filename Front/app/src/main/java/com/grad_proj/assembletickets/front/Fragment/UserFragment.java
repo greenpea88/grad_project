@@ -4,10 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,10 +38,15 @@ public class UserFragment extends Fragment {
     private UserNoticeFragement userNoticeFragement = new UserNoticeFragement();
     private UserContactFragment userContactFragment = new UserContactFragment();
 
+    private TextView emailTxt;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user, container, false);
+
+        emailTxt = view.findViewById(R.id.text_email);
+        emailTxt.setText(UserSharedPreference.getUserEmail(getContext()));
 
         Button notice = view.findViewById(R.id.btn_notice);
         notice.setOnClickListener(new View.OnClickListener() {
@@ -90,9 +98,10 @@ public class UserFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // 로그아웃
-                UserSharedPreference.clearIdToken(getContext());
+                UserSharedPreference.clearAll(getContext());
                 if (UserSharedPreference.getIdToken(getContext()).startsWith("google")) {
-                    signOut();
+                    ((HomeActivity)getActivity()).googleSignOut();
+                    Log.d("login", "google logout");
                 }
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
@@ -108,14 +117,6 @@ public class UserFragment extends Fragment {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    private void signOut() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
-        mGoogleSignInClient.signOut();
     }
 
 }
