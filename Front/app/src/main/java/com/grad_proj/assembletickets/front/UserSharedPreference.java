@@ -8,7 +8,9 @@ import android.util.Log;
 public class UserSharedPreference {
 
     static final String PREF_ID_TOKEN = "userid";
-    static final String PREF_EMAIL_TOKEN = "email";
+    static final String PREF_EMAIL = "email";
+    static final String PREF_BIRTH = "birth";
+    static final String PREF_GENDER = "gender";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -25,25 +27,43 @@ public class UserSharedPreference {
         return getSharedPreferences(ctx).getString(PREF_ID_TOKEN, "");
     }
 
-    public static void clearIdToken(Context ctx) {
-        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
-        editor.remove(PREF_ID_TOKEN);
-        editor.commit();
-    }
-
     public static void setUserEmail(Context ctx, String userEmail) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
-        editor.putString(PREF_EMAIL_TOKEN, userEmail);
+        editor.putString(PREF_EMAIL, userEmail);
         editor.commit();
     }
 
     public static String getUserEmail(Context ctx) {
-        return getSharedPreferences(ctx).getString(PREF_EMAIL_TOKEN, "");
+        return getSharedPreferences(ctx).getString(PREF_EMAIL, "");
+    }
+
+    public static void setUserBirth(Context ctx, String userBirth) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_BIRTH, userBirth);
+        editor.commit();
+    }
+
+    public static String getUserBirth(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_BIRTH, "");
+    }
+
+    public static void setUserGender(Context ctx, String userGender) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_GENDER, userGender);
+        editor.commit();
+    }
+
+    public static String getUserGender(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_GENDER, "");
     }
 
     public static void clearAll(Context ctx) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
-        editor.clear();
+        editor.remove(PREF_ID_TOKEN);
+        editor.remove(PREF_EMAIL);
+        editor.remove(PREF_BIRTH);
+        editor.remove(PREF_GENDER);
+        editor.commit();
     }
 
 }

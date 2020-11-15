@@ -82,15 +82,19 @@ public class HomeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        UserSharedPreference.setIdToken(this, "google" + intent.getStringExtra("id"));
-        UserSharedPreference.setUserEmail(this, intent.getStringExtra("email"));
+        if(intent.hasExtra("id")) {
+            UserSharedPreference.setIdToken(this, "google" + intent.getStringExtra("id"));
+        }
+        if(intent.hasExtra("email")) {
+            UserSharedPreference.setUserEmail(this, intent.getStringExtra("email"));
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-                cDatabaseOpen = new CDatabaseOpen(this);
+        cDatabaseOpen = new CDatabaseOpen(this);
         sDatabaseOpen = new SDatabaseOpen(this);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
