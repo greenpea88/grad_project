@@ -17,15 +17,17 @@ public class CalendarSaveRequestDto {
     private LocalTime calTime;
     private String calTitle;
     private String calMemo;
+    private int alarmSet;
 
     @Builder
-    public CalendarSaveRequestDto(Long user, Long show, String date, String time, String title, String memo){
+    public CalendarSaveRequestDto(Long user, Long show, String date, String time, String title, String memo, int alarmSet){
         this.userId = user;
         this.showId = show;
         this.calDate = LocalDate.parse(date);
         this.calTime = LocalTime.parse(time);
         this.calTitle = title;
         this.calMemo = memo;
+        this.alarmSet = alarmSet;
     }
 
 }

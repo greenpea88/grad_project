@@ -37,11 +37,14 @@ public class Calendar {
     @Column(length = 100)
     private String calMemo;
 
+    @Column(columnDefinition = "TINYINT")
+    private int alarmSet;
+
     @Column
     private boolean calDeleted;
 
     @Builder
-    public Calendar(User user, Shows show, LocalDate cDate, LocalTime cTime, String cTitle, String cMemo){
+    public Calendar(User user, Shows show, LocalDate cDate, LocalTime cTime, String cTitle, String cMemo, int alarmSet){
         this.user = user;
         this.show = show;
         this.calDate = cDate;
@@ -49,13 +52,15 @@ public class Calendar {
         this.calTitle = cTitle;
         this.calMemo = cMemo;
         this.calDeleted = false;
+        this.alarmSet = alarmSet;
     }
 
-    public void update(LocalDate date, LocalTime time, String title, String memo){
+    public void update(LocalDate date, LocalTime time, String title, String memo, int alarm){
         this.calDate = date;
         this.calTime = time;
         this.calTitle = title;
         this.calMemo = memo;
+        this.alarmSet = alarm;
     }
 
     public void delete(){

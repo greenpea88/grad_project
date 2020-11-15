@@ -37,14 +37,16 @@ public class CalendarService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 공연이 없습니다. id=" + requestDto.getShowId()));
         return calendarRepository.save(Calendar.builder().user(user).show(show)
                 .cDate(requestDto.getCalDate()).cTime(requestDto.getCalTime())
-                .cTitle(requestDto.getCalTitle()).cMemo(requestDto.getCalMemo()).build());
+                .cTitle(requestDto.getCalTitle()).cMemo(requestDto.getCalMemo())
+                .alarmSet(requestDto.getAlarmSet()).build());
     }
 
     // 일정 수정하기
     public Calendar updateCalendar(Long id, CalendarUpdateRequestDto requestDto){
         Calendar calendar = calendarRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 일정이 없습니다. id=" + id));
-        calendar.update(requestDto.getCalDate(), requestDto.getCalTime(), requestDto.getCalTitle(), requestDto.getCalMemo());
+        calendar.update(requestDto.getCalDate(), requestDto.getCalTime(), requestDto.getCalTitle(),
+                requestDto.getCalMemo(), requestDto.getAlarmSet());
         return calendar;
     }
 
