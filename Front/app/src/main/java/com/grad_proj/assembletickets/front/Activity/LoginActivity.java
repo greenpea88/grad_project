@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
 //            getCalendarData();
             startActivity(intent);
             // 자동 로그인 토큰
-            UserSharedPreference.setIdToken(LoginActivity.this, account.getIdToken());
+            UserSharedPreference.setIdToken(LoginActivity.this, "google" + account.getIdToken());
             Toast.makeText(this, account.getDisplayName()+"("+account.getEmail()+")님, 안녕하세요!", Toast.LENGTH_LONG).show();
             this.finish();
         } catch (ApiException e) {
