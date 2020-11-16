@@ -11,12 +11,21 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.grad_proj.assembletickets.front.R;
 
 public class JoinActivity extends AppCompatActivity {
+
+    GoogleSignInClient mGoogleSignInClient;
+    private static final int RC_SIGN_IN = 9001;
 
     TextInputEditText joinUserEditText,joinIDEditText, joinPWEditText;
     TextView welcomeTextView;
@@ -113,4 +122,41 @@ public class JoinActivity extends AppCompatActivity {
             },1200);
         }
     }
+
+    public void onGoogleJoinClicked(View v){
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            // 로그인 인텐트가 꺼진 이후 로그인 결과 처리
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            // TODO: 서버에 유저 정보 없으면
+            Intent intent = new Intent(JoinActivity.this, HomeActivity.class);
+            // 자동 로그인 토큰
+            intent.putExtra("id", account.getId());
+            intent.putExtra("email", account.getEmail());
+            intent.putExtra("username", account.getDisplayName());
+            this.finish();
+            startActivity(intent);
+            // TODO: 서버에 유저 정보 있으면
+            // Toast.makeText(this, "이미 존재하는 이메일 입니다.", Toast.LENGTH_LONG).show();
+            // mGoogleSignInClient.signOut();
+        } catch (ApiException e) {
+            Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());
+            Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
 }
