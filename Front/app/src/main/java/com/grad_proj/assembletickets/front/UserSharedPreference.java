@@ -8,6 +8,7 @@ import android.util.Log;
 public class UserSharedPreference {
 
     static final String PREF_ID_TOKEN = "userid";
+    static final String PREF_USER_NAME = "username";
     static final String PREF_EMAIL = "email";
     static final String PREF_BIRTH = "birth";
     static final String PREF_GENDER = "gender";
@@ -25,6 +26,16 @@ public class UserSharedPreference {
 
     public static String getIdToken(Context ctx) {
         return getSharedPreferences(ctx).getString(PREF_ID_TOKEN, "");
+    }
+
+    public static void setUserName(Context ctx, String userName) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_USER_NAME, userName);
+        editor.commit();
+    }
+
+    public static String getUserName(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_USER_NAME, "");
     }
 
     public static void setUserEmail(Context ctx, String userEmail) {

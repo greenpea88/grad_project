@@ -139,9 +139,10 @@ public class LoginActivity extends AppCompatActivity {
             // 자동 로그인 토큰
             intent.putExtra("id", account.getId());
             intent.putExtra("email", account.getEmail());
+            intent.putExtra("username", account.getDisplayName());
             getCalendarData();
+            getSearchData();
             startActivity(intent);
-            Toast.makeText(this, account.getDisplayName() + "님, 안녕하세요!", Toast.LENGTH_LONG).show();
             this.finish();
         } catch (ApiException e) {
             Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());

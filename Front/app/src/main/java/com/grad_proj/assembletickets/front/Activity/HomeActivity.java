@@ -18,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -87,6 +88,10 @@ public class HomeActivity extends AppCompatActivity {
         }
         if(intent.hasExtra("email")) {
             UserSharedPreference.setUserEmail(this, intent.getStringExtra("email"));
+        }
+        if(intent.hasExtra("username")) {
+            UserSharedPreference.setUserEmail(this, intent.getStringExtra("username"));
+            Toast.makeText(this, UserSharedPreference.getUserName(this) + "님, 안녕하세요!", Toast.LENGTH_LONG).show();
         }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
