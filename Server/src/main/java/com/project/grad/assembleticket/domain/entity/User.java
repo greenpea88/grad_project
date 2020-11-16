@@ -22,9 +22,8 @@ public class User {
     @Column(columnDefinition = "DATE")
     private LocalDate birthday;
 
-    // 초기값: 0, 남자: 1, 여자: 2
-    @Column(columnDefinition = "TINYINT")
-    private int gender;
+    @Column(length = 10)
+    private String gender;
 
     @Builder
     public User(String email, String displayName){
@@ -32,7 +31,7 @@ public class User {
         this.displayName = displayName;
     }
 
-    public void update(LocalDate birthday, int gender){
+    public void update(LocalDate birthday, String gender){
         this.birthday = birthday;
         this.gender = gender;
     }

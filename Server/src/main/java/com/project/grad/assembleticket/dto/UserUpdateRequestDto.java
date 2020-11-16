@@ -12,10 +12,10 @@ public class UserUpdateRequestDto {
 
     private String email;
     private LocalDate birthday;
-    private int gender;
+    private String gender;
 
     @Builder
-    public UserUpdateRequestDto(String email, LocalDate birthday, int gender){
+    public UserUpdateRequestDto(String email, LocalDate birthday, String gender){
         this.email = email;
         this.birthday = birthday;
         this.gender = gender;
