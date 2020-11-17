@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
@@ -17,53 +18,45 @@ import java.util.Calendar;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
+    private static String CHANNEL_ID = "default";
+    private static String CHANNEL_NAME = "EventNotification";
+
+    NotificationManager notificationManager;
     Context context;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context=context;
+        this.context = context;
 
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent notificationIntent = new Intent(context, HomeActivity.class);
+        notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (notificationManager.getNotificationChannel(CHANNEL_ID) != null) {
+                notificationManager.createNotificationChannel(new NotificationChannel(
+                        CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
+                ));
+                builder = new NotificationCompat.Builder(this.context, CHANNEL_ID);
+            }
+        } else {
+            builder = new NotificationCompat.Builder(this.context);
+        }
 
+        Intent notificationIntent = new Intent(this.context, HomeActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this.context,0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notificationIntent,0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"default");
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-
-            builder.setSmallIcon(R.drawable.ic_launcher_foreground);
-
-            String channelName="event 알람 채널";
-            String description = "설정된 시간에 알람을 울립니다";
-            int important = NotificationManager.IMPORTANCE_HIGH; //소리와 알림 메세지를 같이 보여줌
-
-            NotificationChannel channel = new NotificationChannel("default",channelName,important);
-            channel.setDescription(description);
-
-            if(notificationManager!=null){
-                //notification channel을 시스템에 등록
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-        else{
-            builder.setSmallIcon(R.mipmap.ic_launcher);
-        }
-
         builder.setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_launcher_background)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setTicker("{Time to watch~~")
-                .setContentTitle("상태바 드래그시 보이는 타이틀")
-                .setContentText("상태바 드래그시 보이는 서브 타이틀")
-                .setContentInfo("INFO")
+                .setWhen(System.currentTimeMillis()).setShowWhen(true)
+                .setTicker("공연 알림을 확인하세요")
+                .setContentTitle("Show Title")
+                .setContentText("티켓팅 / 공연 관람 시간이 곧 시작됩니다.")
                 .setContentIntent(pendingIntent);
 
         if(notificationManager!=null){
             //notification 작동
-            notificationManager.notify(1234,builder.build());
+            notificationManager.notify(1234, builder.build());
         }
 
     }
