@@ -96,6 +96,7 @@ public class AddEventFragment extends Fragment {
                 if(alarmSwitch.isChecked()){
                     //true일 경우
                     alarmSet=1;
+                    ((HomeActivity)getActivity()).setAlarm(date, eventHour, eventMin);
                 }
                 else{
                     alarmSet=0;

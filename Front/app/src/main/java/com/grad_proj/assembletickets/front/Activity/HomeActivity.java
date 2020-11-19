@@ -362,11 +362,11 @@ public class HomeActivity extends AppCompatActivity {
         PackageManager packageManager = this.getPackageManager();
         ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,alarmIntent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0, alarmIntent,0);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
         if(alarmManager!=null){
-            
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
     }
 
