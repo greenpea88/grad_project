@@ -33,7 +33,7 @@ public class ShowController {
     // 공연 목록 페이지 - 타입별
     // time: 처음 0 page 요청할 때 현재 시간, 한 번 정해지면 매 요청마다 동일
     // page: 0부터 시작, 매 요청마다 1씩 증가
-    // type: 뮤지컬 1, 연극 2, 콘서트 3
+    // type: 뮤지컬 1, 콘서트 2, 연극 3, 클래식 4
     @GetMapping("/shows/type")
     public List<Shows> getTypeShows(@RequestParam int page, @RequestParam String time, @RequestParam int type){
         return showService.getTypeShows(page, LocalDateTime.parse(time), type);
@@ -48,7 +48,7 @@ public class ShowController {
 
     // 공연 목록 페이지 - 타입별 - 아래로 당기기
     // time: 처음 0 page 요청할 때 정해진 그 시간
-    // type: 뮤지컬 1, 연극 2, 콘서트 3
+    // type: 뮤지컬 1, 콘서트 2, 연극 3, 클래식 4
     @GetMapping("/shows/type/new")
     public List<Shows> getNewTypeShows(@RequestParam String time, @RequestParam int type){
         return showService.getNewTypeShows(LocalDateTime.parse(time), type);
