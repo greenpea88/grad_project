@@ -90,7 +90,7 @@ public class HomeActivity extends AppCompatActivity {
             UserSharedPreference.setUserEmail(this, intent.getStringExtra("email"));
         }
         if(intent.hasExtra("username")) {
-            UserSharedPreference.setUserEmail(this, intent.getStringExtra("username"));
+            UserSharedPreference.setUserName(this, intent.getStringExtra("username"));
             Toast.makeText(this, UserSharedPreference.getUserName(this) + "님, 안녕하세요!", Toast.LENGTH_LONG).show();
         }
 
