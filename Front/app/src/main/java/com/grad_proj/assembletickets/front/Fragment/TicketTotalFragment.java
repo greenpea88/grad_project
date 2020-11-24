@@ -18,7 +18,9 @@ import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.ShowAdapter;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -45,6 +47,11 @@ public class TicketTotalFragment extends Fragment {
         totalShowAdapter = new ShowAdapter();
         totalTicketList.setAdapter(totalShowAdapter);
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date date = new Date();
+        String now = simpleDateFormat.format(date);
+
+        System.out.println(now);
 
         new GetTotalShows().execute("http://10.0.2.2:8080/assemble-ticket/search?keyword=팬텀");
 //        setTotalList();
