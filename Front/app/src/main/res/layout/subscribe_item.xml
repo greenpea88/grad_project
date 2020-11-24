@@ -27,7 +27,9 @@
             android:layout_width="72dp"
             android:layout_height="wrap_content"
             android:text="구독 배우 이름"
+            android:textAlignment="center"
             android:singleLine="true"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:gravity="center_horizontal" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
