@@ -1,6 +1,8 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,14 @@ import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.ShowAdapter;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class TicketTotalFragment extends Fragment {
 
@@ -37,8 +45,9 @@ public class TicketTotalFragment extends Fragment {
         totalShowAdapter = new ShowAdapter();
         totalTicketList.setAdapter(totalShowAdapter);
 
-//        setTotalList();
 
+        new GetTotalShows().execute("http://10.0.2.2:8080/assemble-ticket/search?keyword=팬텀");
+//        setTotalList();
         return view;
     }
 
@@ -51,5 +60,50 @@ public class TicketTotalFragment extends Fragment {
             //data를 adpater에 추가하
             totalShowAdapter.addItem(show);
         }
+    }
+
+    private static class GetTotalShows extends AsyncTask<String, Void ,String>{
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = null;
+            String strUrl = strings[0];
+
+//            HttpUrl httpUrl = new HttpUrl.Builder()
+//                    .scheme("http")
+//                    .host(strUrl)
+//                    .addPathSegment("/assemble-ticket/search")
+//                    .addQueryParameter("keyword","팬텀")
+//                    .build();
+
+//            System.out.println(httpUrl);
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+//                result = response.body().string();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+
     }
 }
