@@ -20,7 +20,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Log.d("alarm", "onReceive");
 
+        String title = intent.getExtras().getString("title");
         Intent serviceIntent = new Intent(context, NotificationService.class);
+        serviceIntent.putExtra("title", title);
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
             this.context.startForegroundService(serviceIntent);
         }else{

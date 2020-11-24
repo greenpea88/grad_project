@@ -34,7 +34,7 @@ public class CalendarEditDialog extends Dialog {
     private OnDialogListener listener;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public CalendarEditDialog(Context context, final int position, final Event event){
+    public CalendarEditDialog(final Context context, final int position, final Event event){
         super(context);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -108,6 +108,14 @@ public class CalendarEditDialog extends Dialog {
                             newEvent.setEventName(newTitle);
                             newEvent.setEventContent(newContent);
                             newEvent.setAlarmSet(editAlarmSet);
+
+//                            if (editAlarmSet == 1){
+//                                ((HomeActivity)getOwnerActivity()).unsetAlarm(event.getId());
+//                                ((HomeActivity)getOwnerActivity()).setAlarm(event.getDate(), newHour, newMin, title);
+//                            }
+//                            else{
+//                                ((HomeActivity)getOwnerActivity()).unsetAlarm(event.getId());
+//                            }
 
                             listener.onFinish(position,newEvent);
 

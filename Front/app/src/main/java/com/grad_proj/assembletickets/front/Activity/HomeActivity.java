@@ -70,6 +70,10 @@ public class HomeActivity extends AppCompatActivity {
 
     GoogleSignInClient mGoogleSignInClient;
 
+    AlarmManager alarmManager;
+    Intent alarmIntent;
+    PendingIntent pendingIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,7 +153,6 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void switchFragment(@NonNull MenuItem menuItem) {
@@ -272,6 +275,12 @@ public class HomeActivity extends AppCompatActivity {
         cDatabaseOpen.close();
     }
 
+    public Cursor getEventId(String eventName){
+        cDatabaseOpen.open();
+
+        return cDatabaseOpen.selectDateByTitle(eventName);
+    }
+
     public Cursor getDateEvents(String date){
         cDatabaseOpen.open();
 
@@ -342,7 +351,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     //alarm notification
-    public void setAlarm(String date, int hour, int min){
+    public void setAlarm(String date, int hour, int min, String title){
         String[] dateSet = date.split("-"); //YYYY-MM-DD
 
         Calendar calendar= Calendar.getInstance();
@@ -353,14 +362,28 @@ public class HomeActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY,hour);
         calendar.set(Calendar.MINUTE,min);
 
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0, alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        String dateString = dateSet[0] + dateSet[1] + dateSet[2];
+
+        int id = Integer.parseInt(dateString) * 100;
+        id += hour;
+        id *= 100;
+        id += min;
+
+        alarmIntent = new Intent(this, AlarmReceiver.class);
+        alarmIntent.putExtra("title", title);
+        pendingIntent = PendingIntent.getBroadcast(HomeActivity.this, id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
         if(alarmManager!=null){
             Log.d("alarm", "set");
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
+    }
+
+    public void unsetAlarm(int requestCode){
+        pendingIntent = PendingIntent.getBroadcast(HomeActivity.this, requestCode, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
+        sendBroadcast(alarmIntent);
     }
 
     public void googleSignOut(){

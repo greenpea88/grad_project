@@ -2,9 +2,6 @@ package com.grad_proj.assembletickets.front.Fragment;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -96,7 +92,7 @@ public class AddEventFragment extends Fragment {
                 if(alarmSwitch.isChecked()){
                     //true일 경우
                     alarmSet=1;
-                    ((HomeActivity)getActivity()).setAlarm(date, eventHour, eventMin);
+                    ((HomeActivity)getActivity()).setAlarm(date, eventHour, eventMin, title);
                 }
                 else{
                     alarmSet=0;

@@ -35,9 +35,22 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
         <activity android:name=".Activity.HomeActivity">
+            <intent-filter>
+                <action android:name = "android.intent.action.MAIN" />
+                <category android:name = "android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <receiver android:name=".Alarm.AlarmReceiver"/>
-        <service android:name=".Alarm.NotificationService" android:enabled="true" />
+        <service
+            android:name = ".Alarm.NotificationService"
+            android:enabled="true"
+            android:label = "@string/app_name" >
+            <intent-filter>
+                <action
+                    android:name = "app.tutorialspoint.com.notifyme.NotificationService" />
+                <category android:name= "android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
