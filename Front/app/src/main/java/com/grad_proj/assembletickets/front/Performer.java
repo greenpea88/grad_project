@@ -1,6 +1,8 @@
 package com.grad_proj.assembletickets.front;
 
-public class Performer {
+import java.io.Serializable;
+
+public class Performer implements Serializable {
     int pId;
     String pName;
     String picSrc;

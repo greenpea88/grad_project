@@ -1,4 +1,4 @@
-package com.grad_proj.assembletickets.front;
+package com.grad_proj.assembletickets.front.Fragment;
 
 import android.os.Bundle;
 
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
-import com.grad_proj.assembletickets.front.Fragment.DateFragment;
+import com.grad_proj.assembletickets.front.R;
 
 public class SearchResultFragment extends Fragment {
 

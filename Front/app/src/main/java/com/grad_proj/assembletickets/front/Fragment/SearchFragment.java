@@ -1,8 +1,6 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -27,7 +25,6 @@ import com.grad_proj.assembletickets.front.Database.SearchDatabase;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SearchHistory;
 import com.grad_proj.assembletickets.front.SearchHistoryAdapter;
-import com.grad_proj.assembletickets.front.SearchResultFragment;
 
 public class SearchFragment extends Fragment {
 

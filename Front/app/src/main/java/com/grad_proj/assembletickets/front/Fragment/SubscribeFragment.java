@@ -77,7 +77,6 @@ public class SubscribeFragment extends Fragment {
             public void onItemClicked(View v, int position) {
                 Log.d("SubscribeFragment","show item clicked");
                 //해당 item에 맞는 show에 대한 정보를 서버에 요청해서 받은 뒤 이동하는 page에 정보로 띄울 것
-
                 Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
                 ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
                 ((HomeActivity)getActivity()).replaceFragment(ShowDetailFragment.newInstance(showAdapter.getItem(position)));

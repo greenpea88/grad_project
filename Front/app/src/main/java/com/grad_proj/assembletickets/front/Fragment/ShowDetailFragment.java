@@ -56,7 +56,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         //fragment 전환 시 이전 fragment로부터 데이터 넘겨받기
         ShowDetailFragment showDetailFragment = new ShowDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("show",show);
+        bundle.putSerializable("show", show);
         showDetailFragment.setArguments(bundle);
 
         return showDetailFragment;
@@ -111,17 +111,20 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         performerAdapter = new PerformerAdapter();
         showPerformerList.setAdapter(performerAdapter);
 
+        getPerformerList();
+
         performerAdapter.setOnItemClickListener(new PerformerAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View v, int position) {
                 Log.d("ShowDetailFragment","performerItemClicked");
+                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
+                ((HomeActivity)getActivity()).replaceFragment(PerformerDetailFragment.newInstance(performerAdapter.getItem(position)));
             }
         });
 
         performerDeco = new SubscribeListDeco();
         showPerformerList.addItemDecoration(performerDeco);
-
-        getPerformerList();
 
         return view;
     }
@@ -133,7 +136,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
             Performer performer = new Performer();
             performer.setpName(performerList.get(i));
 
-            //data를 adpater에 추가하
+            //data를 adpater에 추가
             performerAdapter.addItem(performer);
         }
 
