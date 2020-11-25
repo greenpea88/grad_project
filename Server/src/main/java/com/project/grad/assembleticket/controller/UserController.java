@@ -14,6 +14,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/login")
+    public boolean login(@RequestParam String email){
+        return userService.login(email);
+    }
+
     @PostMapping("/register")
     public void registerUser(@RequestBody UserSaveRequestDto requestDto){
         userService.registerUser(requestDto);

@@ -15,6 +15,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    public boolean login(String email){
+        return userRepository.countByEmail(email) != 0;
+    }
+
     public void registerUser(UserSaveRequestDto requestDto){
         // DB에 이미 존재하는 User인지 확인 → DB에 없는 경우 User 정보 저장
         if(userRepository.countByEmail(requestDto.getEmail())==0){
