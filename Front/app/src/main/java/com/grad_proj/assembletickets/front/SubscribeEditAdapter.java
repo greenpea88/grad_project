@@ -20,6 +20,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdapter.ItemViewHolder> {
 
+    private SubscribeEditAdapter.OnItemClickListener onItemClickListener;
 
     ArrayList<Performer> subscribeEditList = new ArrayList<>();
 
@@ -32,8 +33,14 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, final int position) {
         holder.setData(subscribeEditList.get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectOnItemClicked(view,position);
+            }
+        });
     }
 
     @Override
@@ -49,8 +56,16 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
         subscribeEditList.add(performer);
     }
 
+    public Performer getItem(int position){
+        return subscribeEditList.get(position);
+    }
+
     public void removeItem(int position){
         subscribeEditList.remove(position);
+    }
+
+    public void setOnItemClickListener(SubscribeEditAdapter.OnItemClickListener listener){
+        this.onItemClickListener = listener;
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -116,5 +131,13 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
                 subscribeEditProfile.setImageBitmap(bitmap);
             }
         }
+    }
+
+    public interface OnItemClickListener{
+        void onItemClicked(View v, int position);
+    }
+
+    private void selectOnItemClicked(View v, int p) {
+        onItemClickListener.onItemClicked(v, p);
     }
 }

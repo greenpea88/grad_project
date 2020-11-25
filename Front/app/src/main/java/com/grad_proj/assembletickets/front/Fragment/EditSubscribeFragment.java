@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.Performer;
+import com.grad_proj.assembletickets.front.PerformerAdapter;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SubscribeEditAdapter;
 import com.grad_proj.assembletickets.front.SwipeToDelete;
@@ -66,6 +67,16 @@ public class EditSubscribeFragment extends Fragment {
 
         subscribeEditAdapter = new SubscribeEditAdapter();
         editDetailList.setAdapter(subscribeEditAdapter);
+
+        subscribeEditAdapter.setOnItemClickListener(new SubscribeEditAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(View v, int position) {
+                Log.d("EditSubscribeFragment","performerItemClicked");
+                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
+                ((HomeActivity)getActivity()).replaceFragment(PerformerDetailFragment.newInstance(subscribeEditAdapter.getItem(position)));
+            }
+        });
 
         swipeToDelete = new SwipeToDelete(view.getContext(),"subscribe",new SwipeToDeleteAction() {
             @Override
