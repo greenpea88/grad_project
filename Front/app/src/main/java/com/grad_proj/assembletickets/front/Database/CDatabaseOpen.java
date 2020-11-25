@@ -86,6 +86,14 @@ public class CDatabaseOpen {
         return mDB.rawQuery(sql,null);
     }
 
+    public Cursor selectEventsAfterDate(String date){
+        String sql = "SELECT * FROM "+ CalendarDatabase.CalendarDB._TABLENAME
+                +" WHERE "+ CalendarDatabase.CalendarDB.EVENTDATE+">='"+date+"'"
+                +" ORDER BY "+ CalendarDatabase.CalendarDB.HOUR;
+
+        return mDB.rawQuery(sql,null);
+    }
+
     public Cursor selectDateByTitle(String title){
         String sql = "SELECT DISTINCT "+ CalendarDatabase.CalendarDB.EVENTDATE
                 + " WHERE " + CalendarDatabase.CalendarDB.EVENTNAME + "='" + title + "'"

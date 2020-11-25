@@ -1,6 +1,7 @@
 package com.grad_proj.assembletickets.front.Activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -20,7 +21,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.Show;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class JoinActivity extends AppCompatActivity {
 
@@ -142,6 +156,7 @@ public class JoinActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             // TODO: 서버에 유저 정보 없으면
+
             Intent intent = new Intent(JoinActivity.this, HomeActivity.class);
             // 자동 로그인 토큰
             intent.putExtra("id", account.getId());
@@ -159,4 +174,35 @@ public class JoinActivity extends AppCompatActivity {
         }
     }
 
+    private class GetUserInfo extends AsyncTask<String, Void , Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            List<Show> loadedShows = new ArrayList<>();
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("page",Integer.toString(page))
+                    .addQueryParameter("time",now)
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                Gson gson = new Gson();
+
+                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
+                loadedShows = gson.fromJson(response.body().string(), listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return loadedShows;
+        }
 }
