@@ -1,6 +1,7 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
 import android.graphics.Canvas;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +15,26 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SubscribeEditAdapter;
 import com.grad_proj.assembletickets.front.SwipeToDelete;
 import com.grad_proj.assembletickets.front.SwipeToDeleteAction;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class EditSubscribeFragment extends Fragment {
 
@@ -64,6 +76,8 @@ public class EditSubscribeFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDelete);
         itemTouchHelper.attachToRecyclerView(editDetailList);
 
+        new GetSubscribeList().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/performers");
+
         //화면에 삭제 버튼 그리기
        editDetailList.addItemDecoration(new RecyclerView.ItemDecoration() {
            @Override
@@ -71,8 +85,6 @@ public class EditSubscribeFragment extends Fragment {
                swipeToDelete.onDraw(c);
            }
        });
-
-        getEditData();
 
         submitEditBtn = (Button)view.findViewById(R.id.submitEditBtn);
         submitEditBtn.setOnClickListener(new View.OnClickListener() {
@@ -86,19 +98,78 @@ public class EditSubscribeFragment extends Fragment {
         return view;
     }
 
-    public void getEditData(){
-        List<String> performerName = Arrays.asList("test1","test2","test3","test4");
-//        List<Boolean> setAlarm = Arrays.asList(true,false,true,false);
+    public void getEditData(List<Performer> performers){
 
-        for(int i=0;i<performerName.size();i++){
-            Performer performer = new Performer();
-
-            performer.setName(performerName.get(i));
+        for(int i=0;i<performers.size();i++){
+            Performer performer = performers.get(i);
 //            performer.setSetAlarm(setAlarm.get(i));
 
             subscribeEditAdapter.addItem(performer);
         }
 
         subscribeEditAdapter.notifyDataSetChanged();
+    }
+
+    private class GetSubscribeList extends AsyncTask<String, Void ,List<Performer>> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected List<Performer> doInBackground(String... strings) {
+            List<Performer> userSubscribe = new ArrayList<>();
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email", UserSharedPreference.getUserEmail(getContext()))
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+                Gson gson = new Gson();
+
+                Type listType = new TypeToken<ArrayList<Performer>>() {}.getType();
+                userSubscribe = gson.fromJson(response.body().string(), listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return userSubscribe;
+        }
+
+        @Override
+        protected void onPostExecute(List<Performer> performers) {
+            getEditData(performers);
+        }
+    }
+
+    private class DeleteSubscribe extends AsyncTask<String, Void ,Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email", UserSharedPreference.getUserEmail(getContext()))
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 }

@@ -1,5 +1,8 @@
 package com.grad_proj.assembletickets.front;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -81,12 +87,30 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
 
             //profile 설정 추가
             subscribeEditName.setText(performer.getName());
-//            if(performer.getSetAlarm()){
-//                subscribeEditAlarm.setImageResource(R.drawable.icon_alarmon);
-//            }
-//            else{
-//                subscribeEditAlarm.setImageResource(R.drawable.icon_alarmoff);
-//            }
+            new ImgDownloadTask().execute(performer.getImgSrc());
+        }
+        private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
+
+            @Override
+            protected Bitmap doInBackground(String... strings) {
+                Bitmap bitmap = null;
+
+                try {
+                    String imgUrl = strings[0];
+                    URL url = new URL(imgUrl);
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                }catch (MalformedURLException e){
+                    e.printStackTrace();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                return bitmap;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                subscribeEditProfile.setImageBitmap(bitmap);
+            }
         }
     }
 }
