@@ -174,35 +174,35 @@ public class JoinActivity extends AppCompatActivity {
         }
     }
 
-    private class GetUserInfo extends AsyncTask<String, Void , Void> {
-
-        OkHttpClient client = new OkHttpClient();
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            List<Show> loadedShows = new ArrayList<>();
-
-            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
-                    .addQueryParameter("page",Integer.toString(page))
-                    .addQueryParameter("time",now)
-                    .build().toString();
-
-            try {
-                Request request = new Request.Builder()
-                        .url(strUrl)
-                        .get()
-                        .build();
-
-                Response response = client.newCall(request).execute();
-
-                Gson gson = new Gson();
-
-                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
-                loadedShows = gson.fromJson(response.body().string(), listType);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return loadedShows;
-        }
+//    private class GetUserInfo extends AsyncTask<String, Void , Void> {
+//
+//        OkHttpClient client = new OkHttpClient();
+//
+//        @Override
+//        protected Void doInBackground(String... strings) {
+//            List<Show> loadedShows = new ArrayList<>();
+//
+//            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+//                    .addQueryParameter("page",Integer.toString(page))
+//                    .addQueryParameter("time",now)
+//                    .build().toString();
+//
+//            try {
+//                Request request = new Request.Builder()
+//                        .url(strUrl)
+//                        .get()
+//                        .build();
+//
+//                Response response = client.newCall(request).execute();
+//
+//                Gson gson = new Gson();
+//
+//                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
+//                loadedShows = gson.fromJson(response.body().string(), listType);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return loadedShows;
+//        }
 }

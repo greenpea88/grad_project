@@ -12,7 +12,13 @@ import java.util.ArrayList;
 
 public class DateEventAdapter extends RecyclerView.Adapter<DateEventAdapter.ItemViewHolder> {
 
+    public interface OnItemClickListener{
+        void onItemClicked(View v, int position);
+    }
+
     ArrayList<Event> eventItems = new ArrayList<>();
+
+    private DateEventAdapter.OnItemClickListener onItemClickListener = null;
 
     @NonNull
     @Override
@@ -54,6 +60,10 @@ public class DateEventAdapter extends RecyclerView.Adapter<DateEventAdapter.Item
 
     public void changeItem(int position,Event event){
         eventItems.set(position,event);
+    }
+
+    public void setOnItemClickListener(DateEventAdapter.OnItemClickListener listener){
+        this.onItemClickListener = listener;
     }
 
     //subView(item setting)

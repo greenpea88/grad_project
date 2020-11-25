@@ -28,6 +28,7 @@ import com.grad_proj.assembletickets.front.DateEventAdapter;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.OnDialogListener;
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.ShowAdapter;
 import com.grad_proj.assembletickets.front.SwipeToDelete;
 import com.grad_proj.assembletickets.front.SwipeToDeleteAction;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
@@ -215,6 +216,17 @@ public class DateFragment extends Fragment implements OnDialogListener {
 
         dateEventAdapter.changeItem(position,event);
         dateEventAdapter.notifyDataSetChanged();
+
+//        dateEventAdapter.setOnItemClickListener(new DateEventAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClicked(View v, int position) {
+//                Log.d("SubscribeFragment","show item clicked");
+//                //해당 item에 맞는 show에 대한 정보를 서버에 요청해서 받은 뒤 이동하는 page에 정보로 띄울 것
+//                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+//                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
+//                ((HomeActivity)getActivity()).replaceFragment(ShowDetailFragment.newInstance(dateEventAdapter.getItem(position)));
+//            }
+//        });
     }
 
     private class UpdateEvent extends AsyncTask<String, Void ,Void> {

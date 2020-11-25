@@ -207,7 +207,7 @@ public class AddEventFragment extends Fragment {
         protected void onPostExecute(Integer calId) {
             //db에 새로 추가된 정보 넣기
             ((HomeActivity)getActivity())
-                    .insertEvent(date,title,postEvent.getEventContent(),postEvent.getTimeHour(),postEvent.getTimeMin(),postEvent.getAlarmSet(),showId);
+                    .insertEvent(calId,date,title,postEvent.getEventContent(),postEvent.getTimeHour(),postEvent.getTimeMin(),postEvent.getAlarmSet(),showId);
         }
     }
 }

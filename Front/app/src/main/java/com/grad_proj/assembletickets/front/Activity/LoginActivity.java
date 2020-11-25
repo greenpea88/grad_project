@@ -23,13 +23,22 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Database.CDatabaseOpen;
 import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
 import com.grad_proj.assembletickets.front.Event;
+import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.FormBody;
@@ -53,6 +62,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private CDatabaseOpen cDatabaseOpen;
     private SDatabaseOpen sDatabaseOpen;
+
+    private Intent intent;
+
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,21 +160,27 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            intent = new Intent(LoginActivity.this, HomeActivity.class);
             // 자동 로그인 토큰
             intent.putExtra("id", account.getId());
             intent.putExtra("email", account.getEmail());
+            email = account.getEmail();
             intent.putExtra("username", account.getDisplayName());
-            getCalendarData();
+//            getCalendarData();
+            new GetEventData().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
             getSearchData();
-            startActivity(intent);
-            this.finish();
+//            startActivity(intent);
+//            this.finish();
         } catch (ApiException e) {
             Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());
             Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
 //            getCalendarData();
             startActivity(intent);
         }
+    }
+
+    private void endActivity(){
+        this.finish();
     }
 
     public void onNotJoinYetClicked(View v){
@@ -171,17 +190,18 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void getCalendarData(){
+    public void setCalendarData(List<Event> events){
         //서버로부터 캘린더 데이터 가져오기 + db 생성하고 집어넣기
         cDatabaseOpen = new CDatabaseOpen(this);
         cDatabaseOpen.open();
         cDatabaseOpen.create();
 
-        cDatabaseOpen.insertColumn("2020-10-21","test1","test",1,1,1,21);
-        cDatabaseOpen.insertColumn("2020-10-22","test2","dafsf",1,2,1,21);
-        cDatabaseOpen.insertColumn("2020-10-21","test3",null,2,2,0,21);
-        cDatabaseOpen.insertColumn("2020-10-22","test4",null,4,3,1,21);
-        cDatabaseOpen.insertColumn("2020-10-21","test5","tttt",2,1,0,21);
+        for(int i=0;i<events.size();i++){
+            Event event = events.get(i);
+            System.out.println(event.getEventName());
+            cDatabaseOpen
+                    .insertColumn(event.getId(),event.getDate(),event.getEventName(),event.getEventContent(),event.getTimeHour(),event.getTimeMin(),event.getAlarmSet(),event.getShowId());
+        }
 
         cDatabaseOpen.close();
     }
@@ -200,7 +220,12 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected List<Event> doInBackground(String... strings) {
 
+            List<Event> eventList = new ArrayList<>();
+//            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+//                    .addQueryParameter("email",email)
+//                    .build().toString();
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email","user00@gmail.com")
                     .build().toString();
 
             try {
@@ -210,12 +235,45 @@ public class LoginActivity extends AppCompatActivity {
                         .build();
 
                 Response response = client.newCall(request).execute();
-                Log.d("EditSubscribeFragment","doInBackground : "+response.body().string());
+//                Log.d("EditSubscribeFragment","doInBackground : "+response.body().string());
+
+                JSONArray jsonArray = new JSONArray(response.body().string());
+                for(int i =0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    Event event = new Event();
+                    event.setId(jsonObject.getInt("id"));
+                    event.setDate(jsonObject.getString("calDate"));
+
+                    String eventTime = jsonObject.getString("calTime");
+                    String[] times = eventTime.split(":");
+//                    System.out.println(eventTime+"/"+times[0]+"/"+times[1]);
+                    event.setTimeHour(Integer.parseInt(times[0]));
+                    event.setTimeMin(Integer.parseInt(times[1]));
+
+                    event.setAlarmSet(jsonObject.getInt("alarmSet"));
+                    event.setEventName(jsonObject.getString("calTitle"));
+
+                    JSONObject show = jsonObject.getJSONObject("show");
+                    event.setShowId(show.getInt("id"));
+
+                    eventList.add(event);
+                }
+
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            return null;
+            return eventList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Event> events) {
+            setCalendarData(events);
+            startActivity(intent);
+            endActivity();
         }
     }
 
