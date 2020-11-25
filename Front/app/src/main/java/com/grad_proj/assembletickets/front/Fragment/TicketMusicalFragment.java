@@ -78,7 +78,7 @@ public class TicketMusicalFragment extends Fragment implements SwipeRefreshLayou
         });
 
         musicalSwipeToRefresh = (SwipeRefreshLayout)view.findViewById(R.id.musicalSwipeToRefresh);
-        musicalSwipeToRefresh.setOnRefreshListener(this);
+        musicalSwipeToRefresh.setOnRefreshListener(listener);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date = new Date();
