@@ -235,7 +235,6 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
                 JSONObject jsonObject = new JSONObject(response.body().string());
                 JSONArray jsonArray = jsonObject.getJSONArray("performers");
 
-
                 Gson gson = new Gson();
 
                 Type listType = new TypeToken<ArrayList<Performer>>() {}.getType();

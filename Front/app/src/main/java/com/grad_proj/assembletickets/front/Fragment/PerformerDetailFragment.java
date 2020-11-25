@@ -17,15 +17,23 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.ShowAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +51,6 @@ public class PerformerDetailFragment extends Fragment {
     private RecyclerView showListView;
     private ShowAdapter showAdapter;
 
-    private List<String> showList;
     private Performer performer;
 
     public static PerformerDetailFragment newInstance(Performer performer) {
@@ -66,7 +73,7 @@ public class PerformerDetailFragment extends Fragment {
         }
 
         performerImg = view.findViewById(R.id.performerImg);
-//        new ImgDownloadTask().execute("http://ticketimage.interpark.com/Play/image/large/20/20008287_p.gif");
+        new ImgDownloadTask().execute(performer.getImgSrc());
 
         performerName = view.findViewById(R.id.performerName);
         performerName.setText(performer.getName());
@@ -88,18 +95,15 @@ public class PerformerDetailFragment extends Fragment {
             }
         });
 
-//        getShowlist();
-
         new GetPerformerDetail().execute("http://10.0.2.2:8080/assemble-ticket/performer");
 
         return view;
     }
 
-    private void getShowlist(){
-        showList = Arrays.asList("test1","test2","test3","test4","test5","test6");
-        for(int i = 0; i < showList.size(); i++){
-            Show show = new Show();
-            show.setTitle(showList.get(i));
+    private void setShowList(List<Show> performShow){
+//        showList = Arrays.asList("test1","test2","test3","test4","test5","test6");
+        for(int i = 0; i < performShow.size(); i++){
+            Show show = performShow.get(i);
 
             //data를 adpater에 추가
             showAdapter.addItem(show);
@@ -107,14 +111,14 @@ public class PerformerDetailFragment extends Fragment {
         showAdapter.notifyDataSetChanged();
     }
 
-    private class GetPerformerDetail extends AsyncTask<String, Void ,Performer>{
+    private class GetPerformerDetail extends AsyncTask<String, Void ,List<Show>>{
 
         //        List<Show> loadedShows = new ArrayList<>();
         OkHttpClient client = new OkHttpClient();
 
         @Override
-        protected Performer doInBackground(String... strings) {
-            Performer loadedPerformer = new Performer();
+        protected List<Show> doInBackground(String... strings) {
+            List<Show> performShows = new ArrayList<>();
 
             //당겨서 새로고침 test 해보려면 time을 "2020-11-22T15:34:18" 로 넣어서 test해보기
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
@@ -128,16 +132,20 @@ public class PerformerDetailFragment extends Fragment {
                         .build();
 
                 Response response = client.newCall(request).execute();
-                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
-//                Gson gson = new Gson();
+//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+                JSONObject jsonObject = new JSONObject(response.body().string());
+                JSONArray jsonArray = jsonObject.getJSONArray("shows");
+                Gson gson = new Gson();
 //
-//                Type listType = new TypeToken<Performer>() {}.getType();
-//                loadedShows = gson.fromJson(response.body().string(), listType);
+                Type listType = new TypeToken<List<Show>>() {}.getType();
+                performShows = gson.fromJson(jsonArray.toString(), listType);
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            return loadedPerformer;
+            return performShows;
         }
 
         @Override
@@ -145,6 +153,11 @@ public class PerformerDetailFragment extends Fragment {
             super.onPreExecute();
         }
 
+        @Override
+        protected void onPostExecute(List<Show> shows) {
+//            super.onPostExecute(shows);
+            setShowList(shows);
+        }
     }
 
     private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
