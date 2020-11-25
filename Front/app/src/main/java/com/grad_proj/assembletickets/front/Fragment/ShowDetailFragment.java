@@ -95,7 +95,12 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         showDetailVenue.setText(show.getVenue());
 
         showDetailDate = (TextView)view.findViewById(R.id.showDetailDate);
-        showDetailDate.setText(show.getStartDate()+"~"+show.getEndDate());
+        if(show.getStartDate().equals(show.getEndDate())){
+            showDetailDate.setText(show.getStartDate());
+        }
+        else{
+            showDetailDate.setText(show.getStartDate()+" ~ "+show.getEndDate());
+        }
 
         showDetailTicketDate = (TextView)view.findViewById(R.id.showDetailTicketDate);
         if (TextUtils.isEmpty(show.getTicketOpen())){
@@ -201,7 +206,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
             ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간 : ",show.getStartDate(),show.getTitle()));
         }
         else{
-            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간 : ",show.getStartDate()+"~"+show.getEndDate(),show.getTitle()));
+            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간 : ",show.getStartDate()+" ~ "+show.getEndDate(),show.getTitle()));
         }
     }
 

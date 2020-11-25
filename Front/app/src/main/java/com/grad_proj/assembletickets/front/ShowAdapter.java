@@ -104,7 +104,12 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
             // poster.setImageDrawable(); URL로부터 이미지를 로드해오는 함수 필요
             venueText.setText(item.getVenue());
             titleText.setText(item.title);
-            dateText.setText(item.getStartDate()+"~"+item.getEndDate());
+            if(item.getStartDate().equals(item.getEndDate())){
+                dateText.setText(item.getStartDate());
+            }
+            else{
+                dateText.setText(item.getStartDate()+" ~ "+item.getEndDate());
+            }
             priceText.setText(item.getPrice());
             new ImgDownloadTask().execute(item.getPosterSrc());
         }
