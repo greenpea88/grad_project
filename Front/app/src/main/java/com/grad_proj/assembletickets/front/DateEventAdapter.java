@@ -62,6 +62,10 @@ public class DateEventAdapter extends RecyclerView.Adapter<DateEventAdapter.Item
         eventItems.set(position,event);
     }
 
+    public int getEventId(int position){
+        return eventItems.get(position).getId();
+    }
+
     public void setOnItemClickListener(DateEventAdapter.OnItemClickListener listener){
         this.onItemClickListener = listener;
     }

@@ -36,6 +36,7 @@ import com.grad_proj.assembletickets.front.UserSharedPreference;
 
 import java.io.IOException;
 
+import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -57,6 +58,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
     private OnDialogListener listener;
 
     private Event updateEvent;
+    private int deleteEvent;
 
 
     TextView dateTextView,emptyEventTextView;
@@ -98,9 +100,11 @@ public class DateFragment extends Fragment implements OnDialogListener {
         swipeToDelete = new SwipeToDelete(view.getContext(), "event",new SwipeToDeleteAction() {
             @Override
             public void onRightClicked(int position) {
+                deleteEvent = dateEventAdapter.getEventId(position);
                 int removeId = dateEventAdapter.removeItem(position);
                 dateEventAdapter.notifyItemRemoved(position);
                 dateEventAdapter.notifyItemRangeChanged(position,dateEventAdapter.getItemCount());
+                new DeleteEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
                 //자체 db에 알릴 것
                 ((HomeActivity)getActivity()).deleteEvent(removeId);
                 if(dateEventAdapter.getItemCount()==0){
@@ -302,6 +306,36 @@ public class DateFragment extends Fragment implements OnDialogListener {
         @Override
         protected void onPostExecute(Void aVoid) {
             ((HomeActivity)getActivity()).updateEvent(updateEvent);
+        }
+    }
+
+    private class DeleteEvent extends AsyncTask<String, Void ,Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .build().toString();
+
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("calId",Integer.toString(deleteEvent))
+                    .build();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .delete(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                Log.d("EditSubscribeFragment","doInBackground : "+response.body().string());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
         }
     }
 }
