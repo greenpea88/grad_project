@@ -93,7 +93,8 @@ public class HomeActivity extends AppCompatActivity {
             UserSharedPreference.setIdToken(this, "google" + intent.getStringExtra("id"));
         }
         if(intent.hasExtra("email")) {
-            UserSharedPreference.setUserEmail(this, intent.getStringExtra("email"));
+//            UserSharedPreference.setUserEmail(this, intent.getStringExtra("email"));
+            UserSharedPreference.setUserEmail(this, "user00@gmail.com");
         }
         if(intent.hasExtra("username")) {
             UserSharedPreference.setUserName(this, intent.getStringExtra("username"));

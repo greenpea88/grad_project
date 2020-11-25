@@ -40,5 +40,4 @@ public class SubscribeController {
     public List<Shows> getPerformerShows(@RequestParam String email, @Nullable Long performerId){
         return subscribeService.getPerformerShows(email, performerId);
     }
-
 }

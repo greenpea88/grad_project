@@ -2,6 +2,8 @@ package com.grad_proj.assembletickets.front.Fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +26,7 @@ import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.ShowAdapter;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,12 +37,13 @@ import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class PerformerDetailFragment extends Fragment {
@@ -48,10 +52,13 @@ public class PerformerDetailFragment extends Fragment {
 
     private ImageView performerImg;
     private TextView performerName;
+    private ImageView bookmarkSet;
     private RecyclerView showListView;
     private ShowAdapter showAdapter;
 
     private Performer performer;
+
+    private boolean setBookmark = false;
 
     public static PerformerDetailFragment newInstance(Performer performer) {
         //fragment 전환 시 이전 fragment로부터 데이터 넘겨받기
@@ -77,6 +84,31 @@ public class PerformerDetailFragment extends Fragment {
 
         performerName = view.findViewById(R.id.performerName);
         performerName.setText(performer.getName());
+
+        bookmarkSet = view.findViewById(R.id.bookmarkSet);
+        if(!setBookmark){
+            bookmarkSet.setImageResource(R.drawable.icon_bookmarkoff);
+        }
+        else{
+            bookmarkSet.setImageResource(R.drawable.icon_bookmarkon);
+        }
+        bookmarkSet.setColorFilter(Color.parseColor("#F25E3D"), PorterDuff.Mode.SRC_IN);
+        bookmarkSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("PerformerDetailFragment","subscribe Clicked");
+                if(!setBookmark){
+                    setBookmark=true;
+                    bookmarkSet.setImageResource(R.drawable.icon_bookmarkon);
+                    new SetSubscribe().execute("http://10.0.2.2:8080/assemble-ticket/subscribe");
+                }
+                else{
+                    setBookmark=false;
+                    bookmarkSet.setImageResource(R.drawable.icon_bookmarkoff);
+                }
+            }
+        });
+        //TODO: set 되어있는 것을 확인하는 api 되면 추가할 것
 
         showListView = view.findViewById(R.id.showList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
@@ -157,6 +189,46 @@ public class PerformerDetailFragment extends Fragment {
         protected void onPostExecute(List<Show> shows) {
 //            super.onPostExecute(shows);
             setShowList(shows);
+        }
+    }
+
+    private class SetSubscribe extends AsyncTask<String, Void, Void> {
+
+        //        List<Show> loadedShows = new ArrayList<>();
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            List<Show> performShows = new ArrayList<>();
+
+            //당겨서 새로고침 test 해보려면 time을 "2020-11-22T15:34:18" 로 넣어서 test해보기
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .build().toString();
+
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("email",UserSharedPreference.getUserEmail(getContext()).toString())
+                    .add("performerId",Integer.toString(performer.getId()))
+                    .build();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .post(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                Log.d("PerformerDetailFragment","doInBackground : "+response.body().string());
+//                JSONObject jsonObject = new JSONObject(response.body().string());
+//                JSONArray jsonArray = jsonObject.getJSONArray("shows");
+//                Gson gson = new Gson();
+////
+//                Type listType = new TypeToken<List<Show>>() {}.getType();
+//                performShows = gson.fromJson(jsonArray.toString(), listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
         }
     }
 

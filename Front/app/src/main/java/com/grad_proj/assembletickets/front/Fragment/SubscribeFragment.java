@@ -1,11 +1,16 @@
 package com.grad_proj.assembletickets.front.Fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,17 +18,28 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
+import com.grad_proj.assembletickets.front.LoadDataDialog;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.ShowAdapter;
 import com.grad_proj.assembletickets.front.SubscribeAdapter;
 import com.grad_proj.assembletickets.front.SubscribeListDeco;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class SubscribeFragment extends Fragment {
 
@@ -95,19 +111,19 @@ public class SubscribeFragment extends Fragment {
             }
         });
 
-        getSubscribeData();
+//        getSubscribeData();
 //        getSubscribeShowData();
+
+        new GetSubscribeList().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/performers");
 
         return view;
     }
 
-    private void getSubscribeData(){
+    private void getSubscribeData(List<Performer> subscribePerformer){
         //서버로부터 데이터를 받아오도록 할 것
-        subscribeName = Arrays.asList("test1","test2","test3","test4","test5","test6","test7","test8","test9","test10","test11");
 
-        for(int i=0; i<subscribeName.size(); i++){
-            Performer performer = new Performer();
-            performer.setName(subscribeName.get(i));
+        for(int i=0; i<subscribePerformer.size(); i++){
+            Performer performer = subscribePerformer.get(i);
 
             //data를 adpater에 추가하
             subscribeAdapter.addItem(performer);
@@ -156,5 +172,43 @@ public class SubscribeFragment extends Fragment {
             showAdapter.addItem(show);
         }
         showAdapter.notifyDataSetChanged();
+    }
+
+    private class GetSubscribeList extends AsyncTask<String, Void ,List<Performer>> {
+
+        //        List<Show> loadedShows = new ArrayList<>();
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected List<Performer> doInBackground(String... strings) {
+            List<Performer> userSubscribe = new ArrayList<>();
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email", UserSharedPreference.getUserEmail(getContext()))
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+                Gson gson = new Gson();
+
+                Type listType = new TypeToken<ArrayList<Performer>>() {}.getType();
+                userSubscribe = gson.fromJson(response.body().string(), listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return userSubscribe;
+        }
+
+        @Override
+        protected void onPostExecute(List<Performer> performers) {
+            getSubscribeData(performers);
+        }
     }
 }
