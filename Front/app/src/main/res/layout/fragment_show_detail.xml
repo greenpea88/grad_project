@@ -117,9 +117,36 @@
             android:layout_height="wrap_content"
             android:text="가격"
             android:textSize="18sp"
-            android:paddingTop="5dp"
             android:paddingLeft="8dp"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예매 페이지"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/showDetailTicketing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="예매페이지"
+            android:textSize="18sp"
+            android:paddingLeft="8dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="출연자"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:paddingTop="5dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showPerformerList"
@@ -127,5 +154,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="16dp"/>
+    <TextView
+        android:id="@+id/performerNone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="예매 상세 페이지 참고"
+        android:textSize="18sp"
+        android:paddingTop="5dp"
+        android:visibility="invisible"/>
 
 </LinearLayout>

@@ -3,33 +3,33 @@ package com.grad_proj.assembletickets.front;
 import java.io.Serializable;
 
 public class Performer implements Serializable {
-    int pId;
-    String pName;
-    String picSrc;
+    int id;
+    String name;
+    String imgSrc;
 //    Boolean setAlarm;
 
-    public int getpId() {
-        return pId;
+    public int getId() {
+        return id;
     }
 
-    public String getpName() {
-        return pName;
+    public String getName() {
+        return name;
     }
 
-    public String getPicSrc() {
-        return picSrc;
+    public String getImgSrc() {
+        return imgSrc;
     }
 
 //    public Boolean getSetAlarm() {
 //        return setAlarm;
 //    }
 
-    public void setpName(String pName) {
-        this.pName = pName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setPicSrc(String picSrc) {
-        this.picSrc = picSrc;
+    public void setImgSrc(String imgSrc) {
+        this.imgSrc = imgSrc;
     }
 
 //    public void setSetAlarm(Boolean setAlarm) {

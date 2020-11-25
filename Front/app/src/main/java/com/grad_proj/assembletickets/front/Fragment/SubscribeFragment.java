@@ -107,7 +107,7 @@ public class SubscribeFragment extends Fragment {
 
         for(int i=0; i<subscribeName.size(); i++){
             Performer performer = new Performer();
-            performer.setpName(subscribeName.get(i));
+            performer.setName(subscribeName.get(i));
 
             //data를 adpater에 추가하
             subscribeAdapter.addItem(performer);

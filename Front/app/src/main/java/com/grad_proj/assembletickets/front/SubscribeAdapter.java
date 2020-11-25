@@ -102,7 +102,7 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
         }
 
         void setData(Performer performer){
-            subscribeName.setText(performer.getpName());
+            subscribeName.setText(performer.getName());
             //사진 설정도 추가하기
         }
     }

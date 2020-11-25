@@ -63,7 +63,7 @@ public class PerformerDetailFragment extends Fragment {
         new ImgDownloadTask().execute("http://ticketimage.interpark.com/Play/image/large/20/20008287_p.gif");
 
         performerName = view.findViewById(R.id.performerName);
-        performerName.setText(performer.getpName());
+        performerName.setText(performer.getName());
 
         showListView = view.findViewById(R.id.showList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());

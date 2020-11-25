@@ -21,7 +21,6 @@ import com.grad_proj.assembletickets.front.SubscribeEditAdapter;
 import com.grad_proj.assembletickets.front.SwipeToDelete;
 import com.grad_proj.assembletickets.front.SwipeToDeleteAction;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -94,7 +93,7 @@ public class EditSubscribeFragment extends Fragment {
         for(int i=0;i<performerName.size();i++){
             Performer performer = new Performer();
 
-            performer.setpName(performerName.get(i));
+            performer.setName(performerName.get(i));
 //            performer.setSetAlarm(setAlarm.get(i));
 
             subscribeEditAdapter.addItem(performer);

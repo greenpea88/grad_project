@@ -1,7 +1,8 @@
-package com.grad_proj.assembletickets.front.Fragment;
+package com.grad_proj.assembletickets.front;
 
-import android.graphics.Color;
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,15 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.grad_proj.assembletickets.front.Activity.HomeActivity;
-import com.grad_proj.assembletickets.front.Performer;
-import com.grad_proj.assembletickets.front.R;
-import com.grad_proj.assembletickets.front.Show;
-import com.grad_proj.assembletickets.front.SubscribeAdapter;
-
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -84,8 +81,38 @@ public class PerformerAdapter extends RecyclerView.Adapter<PerformerAdapter.Item
         }
 
         void setData(Performer performer){
-            subscribeName.setText(performer.getpName());
+            subscribeName.setText(performer.getName());
             //사진 설정도 추가하기
+            new ImgDownloadTask().execute(performer.getImgSrc());
+        }
+
+        private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
+
+            @Override
+            protected Bitmap doInBackground(String... strings) {
+                Bitmap bitmap = null;
+
+                try {
+                    String imgUrl = strings[0];
+                    URL url = new URL(imgUrl);
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                }catch (MalformedURLException e){
+                    e.printStackTrace();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                return bitmap;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                subscribeProfile.setImageBitmap(bitmap);
+            }
         }
     }
 

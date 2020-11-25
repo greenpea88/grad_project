@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,21 +25,22 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.EventSelectDialog;
-import com.grad_proj.assembletickets.front.LoadDataDialog;
 import com.grad_proj.assembletickets.front.OnSelectDialogListener;
 import com.grad_proj.assembletickets.front.Performer;
+import com.grad_proj.assembletickets.front.PerformerAdapter;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.SubscribeListDeco;
 
-import org.w3c.dom.Text;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -55,12 +54,13 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
 
     private ImageView detailImgPoster;
     private Button addEventBtn;
-    private TextView showDetailTitle, showDetailVenue, showDetailDate, showDetailTicketDate,showDetailPrice;
+    private TextView showDetailTitle, showDetailVenue, showDetailDate, showDetailTicketDate,showDetailPrice, showDetailTicketing;
+    private TextView nonePerformer;
     private RecyclerView showPerformerList;
     private PerformerAdapter performerAdapter;
     private SubscribeListDeco performerDeco;
 
-    private List<String> performerList;
+//    private List<String> performers;
     private Show show;
 
     private OnSelectDialogListener listener;
@@ -108,6 +108,11 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         showDetailPrice = (TextView)view.findViewById(R.id.showDetailPrice);
         showDetailPrice.setText(show.getPrice());
 
+        showDetailTicketing = (TextView)view.findViewById(R.id.showDetailTicketing);
+        showDetailTicketing.setText(show.getBuyTicket());
+
+        nonePerformer = (TextView)view.findViewById(R.id.performerNone);
+
         addEventBtn = (Button)view.findViewById(R.id.addEventBtn);
         addEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +146,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         performerAdapter = new PerformerAdapter();
         showPerformerList.setAdapter(performerAdapter);
 
-        getPerformerList();
+//        getPerformerList();
 
         performerAdapter.setOnItemClickListener(new PerformerAdapter.OnItemClickListener() {
             @Override
@@ -156,15 +161,16 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         performerDeco = new SubscribeListDeco();
         showPerformerList.addItemDecoration(performerDeco);
 
+        new GetSubscribeList().execute("http://10.0.2.2:8080/assemble-ticket/show");
+
         return view;
     }
 
-    private void getPerformerList(){
-        performerList = Arrays.asList("test1","test2","test3","test4","test5","test6");
+    private void getPerformerList(List<Performer> performers){
+//        performerList = Arrays.asList("test1","test2","test3","test4","test5","test6");
 
-        for(int i=0; i<performerList.size(); i++){
-            Performer performer = new Performer();
-            performer.setpName(performerList.get(i));
+        for(int i = 0; i< performers.size(); i++){
+            Performer performer = performers.get(i);
 
             //data를 adpater에 추가
             performerAdapter.addItem(performer);
@@ -201,10 +207,11 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
 
         @Override
         protected List<Performer> doInBackground(String... strings) {
-            List<Performer> showPerfomer = new ArrayList<>();
+            List<Performer> showPerformer = new ArrayList<>();
 
             //당겨서 새로고침 test 해보려면 time을 "2020-11-22T15:34:18" 로 넣어서 test해보기
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("id",Integer.toString(show.getId()))
                     .build().toString();
 
             try {
@@ -214,21 +221,39 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
                         .build();
 
                 Response response = client.newCall(request).execute();
-//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+//                Log.d("ShowDetailFragment","doInBackground : "+response.body().string());
+                JSONObject jsonObject = new JSONObject(response.body().string());
+                JSONArray jsonArray = jsonObject.getJSONArray("performers");
+
+
                 Gson gson = new Gson();
 
-                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
-                showPerfomer = gson.fromJson(response.body().string(), listType);
+                Type listType = new TypeToken<ArrayList<Performer>>() {}.getType();
+                showPerformer = gson.fromJson(jsonArray.toString(), listType);
+
+                Log.d("ShowDetailFragment","doInBackground : "+jsonArray.toString());
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            return showPerfomer;
+            return showPerformer;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(List<Performer> performers) {
+            if(performers.size()==0){
+                nonePerformer.setVisibility(View.VISIBLE);
+            }
+            else{
+                getPerformerList(performers);
+            }
         }
     }
 

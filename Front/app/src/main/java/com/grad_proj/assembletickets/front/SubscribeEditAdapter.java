@@ -1,12 +1,8 @@
 package com.grad_proj.assembletickets.front;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -84,7 +80,7 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
         void setData(Performer performer){
 
             //profile 설정 추가
-            subscribeEditName.setText(performer.getpName());
+            subscribeEditName.setText(performer.getName());
 //            if(performer.getSetAlarm()){
 //                subscribeEditAlarm.setImageResource(R.drawable.icon_alarmon);
 //            }
