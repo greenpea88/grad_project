@@ -71,7 +71,6 @@ public class TicketMusicalFragment extends Fragment implements SwipeRefreshLayou
                 super.onScrolled(recyclerView, dx, dy);
                 //마지막 체크
                 if(!musicalTicketList.canScrollVertically(1)){
-                    Log.d("TicketTotalFragment","end of Scroll");
                     loadMoreShow();
                 }
             }

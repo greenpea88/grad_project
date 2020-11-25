@@ -69,7 +69,6 @@ public class TicketConcertFragment extends Fragment implements SwipeRefreshLayou
                 super.onScrolled(recyclerView, dx, dy);
                 //마지막 체크
                 if(!concertTicketList.canScrollVertically(1)){
-                    Log.d("TicketTotalFragment","end of Scroll");
                     loadMoreShow();
                 }
             }
@@ -135,7 +134,6 @@ public class TicketConcertFragment extends Fragment implements SwipeRefreshLayou
                         .build();
 
                 Response response = client.newCall(request).execute();
-//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
                 Gson gson = new Gson();
 
                 Type listType = new TypeToken<ArrayList<Show>>() {}.getType();

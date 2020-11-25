@@ -67,7 +67,6 @@ public class TicketPlayFragment extends Fragment implements SwipeRefreshLayout.O
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(!playTicketList.canScrollVertically(1)){
-                    Log.d("TicketTotalFragment","end of Scroll");
                     loadMoreShow();
                 }
             }
