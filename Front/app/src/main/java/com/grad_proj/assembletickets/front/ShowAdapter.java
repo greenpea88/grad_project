@@ -1,5 +1,8 @@
 package com.grad_proj.assembletickets.front;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
@@ -91,9 +97,41 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
         public void setItem(Show item) {
             // poster.setImageDrawable(); URL로부터 이미지를 로드해오는 함수 필요
             titleText.setText(item.title);
+            dateText.setText(item.getStartDate()+"~"+item.getEndDate());
+            priceText.setText(item.getPrice());
+            new ImgDownloadTask().execute(item.getPosterSrc());
 //            performersText.setText(item.performerList.get(0).pName); // 추후 수정해야함 리스트의 이름을 나열해 문자열로 정렬하는 함수 필요
 //            dateText.setText(item.startDate + " ~ " + item.endDate); // 추후 수정해야함 경우의 수에 따라 조건함수 필요
 //            priceText.setText(item.price);
+        }
+
+        private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
+
+            @Override
+            protected Bitmap doInBackground(String... strings) {
+                Bitmap bitmap = null;
+
+                try {
+                    String imgUrl = strings[0];
+                    URL url = new URL(imgUrl);
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                }catch (MalformedURLException e){
+                    e.printStackTrace();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                return bitmap;
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                poster.setImageBitmap(bitmap);
+            }
         }
     }
 }

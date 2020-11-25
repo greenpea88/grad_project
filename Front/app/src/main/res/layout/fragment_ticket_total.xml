@@ -6,12 +6,6 @@
     android:layout_marginTop="115dp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tabTotal"
-        android:text="total"
-        android:textSize="50sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/totalTicketList"
         android:layout_width="match_parent"
