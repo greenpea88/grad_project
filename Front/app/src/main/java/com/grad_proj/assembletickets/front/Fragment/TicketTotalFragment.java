@@ -2,10 +2,14 @@ package com.grad_proj.assembletickets.front.Fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.grad_proj.assembletickets.front.LoadDataDialog;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.ShowAdapter;
@@ -45,6 +50,8 @@ public class TicketTotalFragment extends Fragment {
 
     RecyclerView totalTicketList;
 
+    LoadDataDialog loadDataDialog = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,6 +69,11 @@ public class TicketTotalFragment extends Fragment {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                //마지막 체크
+                if(!totalTicketList.canScrollVertically(1)){
+                    Log.d("TicketTotalFragment","end of Scroll");
+                    loadMoreShow();
+                }
             }
         });
 
@@ -83,6 +95,10 @@ public class TicketTotalFragment extends Fragment {
             totalShowAdapter.addItem(show);
         }
         totalShowAdapter.notifyDataSetChanged();
+    }
+
+    private void loadMoreShow(){
+        new GetTotalShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/all");
     }
 
     private class GetTotalShows extends AsyncTask<String, Void ,List<Show>>{
@@ -122,27 +138,6 @@ public class TicketTotalFragment extends Fragment {
 
                 Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
                 loadedShows = gson.fromJson(response.body().string(), listType);
-
-//                JSONArray jsonArray = new JSONArray(response.body().string());
-//                for(int i=0; i<jsonArray.length(); i++){
-//                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                    Show show = new Show();
-//                    show.setId(jsonObject.getInt("id"));
-//                    show.setTitle(jsonObject.getString("title"));
-//                    show.setType(jsonObject.getInt("type"));
-//                    show.setStartDate(jsonObject.getString("startDate"));
-//                    show.setEndDate(jsonObject.getString("endDate"));
-//                    show.setTicketOpen(jsonObject.getString("ticketOpen"));
-//                    show.setTime(jsonObject.getString("time"));
-//                    show.setRunningTime(jsonObject.getInt("runningTime"));
-//                    show.setPrice(jsonObject.getString("price"));
-//                    show.setBuyTicket(jsonObject.getString("buyTicket"));
-//                    show.setPosterSrc(jsonObject.getString("posterSrc"));
-//                    show.setVenue(jsonObject.getString("venue"));
-//                    show.setRegisteredTime(jsonObject.getString("registeredTime"));
-//
-//                    loadedShows.add(show);
-//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -152,14 +147,35 @@ public class TicketTotalFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+//            super.onPreExecute();
+            loadDataDialog = new LoadDataDialog(view.getContext());
+
+            DisplayMetrics displayMetrics = view.getContext().getApplicationContext().getResources().getDisplayMetrics();
+
+            int width = displayMetrics.widthPixels;
+            int height = displayMetrics.heightPixels;
+
+            WindowManager.LayoutParams windowManger = loadDataDialog.getWindow().getAttributes();
+            windowManger.copyFrom(loadDataDialog.getWindow().getAttributes());
+            windowManger.width=(int)(width*0.8);
+            windowManger.height=(int)(height*0.2);
+
+            loadDataDialog.show();
         }
 
         @Override
         protected void onPostExecute(List<Show> shows) {
 //            super.onPostExecute(shows);
             page++;
-            setTotalList(shows);
+            loadDataDialog.dismiss();
+            if(shows.size()!=0){
+                setTotalList(shows);
+            }
+            else{
+                Toast toast = Toast.makeText(view.getContext(),"더 이상 불러올 공연이 없습니다.",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER,0,0);
+                toast.show();
+            }
         }
     }
 }
