@@ -86,12 +86,13 @@ public class PerformerDetailFragment extends Fragment {
         performerName.setText(performer.getName());
 
         bookmarkSet = view.findViewById(R.id.bookmarkSet);
-        if(!setBookmark){
-            bookmarkSet.setImageResource(R.drawable.icon_bookmarkoff);
-        }
-        else{
-            bookmarkSet.setImageResource(R.drawable.icon_bookmarkon);
-        }
+        new CheckSubscribe().execute("http://10.0.2.2:8080/assemble-ticket/subscribe");
+//        if(!setBookmark){
+//            bookmarkSet.setImageResource(R.drawable.icon_bookmarkoff);
+//        }
+//        else{
+//            bookmarkSet.setImageResource(R.drawable.icon_bookmarkon);
+//        }
         bookmarkSet.setColorFilter(Color.parseColor("#F25E3D"), PorterDuff.Mode.SRC_IN);
         bookmarkSet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,6 +194,50 @@ public class PerformerDetailFragment extends Fragment {
         }
     }
 
+    private class CheckSubscribe extends AsyncTask<String, Void ,Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email",UserSharedPreference.getUserEmail(getContext()))
+                    .addQueryParameter("performerId",Integer.toString(performer.getId()))
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+//                Log.d("PerformerDetailFragment","doInBackground : "+response.body().string());
+                if("false".equals(response.body().string())){
+                    setBookmark = false;
+                }
+                else{
+                    setBookmark = true;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void avoid) {
+            if(!setBookmark){
+                bookmarkSet.setImageResource(R.drawable.icon_bookmarkoff);
+            }
+            else{
+                bookmarkSet.setImageResource(R.drawable.icon_bookmarkon);
+            }
+        }
+    }
+
     private class SetSubscribe extends AsyncTask<String, Void, Void> {
 
         //        List<Show> loadedShows = new ArrayList<>();
@@ -231,9 +276,7 @@ public class PerformerDetailFragment extends Fragment {
 
             return null;
         }
-    }
-
-    private class DeleteSubscribe extends AsyncTask<String, Void ,Void> {
+    }private class DeleteSubscribe extends AsyncTask<String, Void ,Void> {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -263,6 +306,8 @@ public class PerformerDetailFragment extends Fragment {
             return null;
         }
     }
+
+
 
     private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
 
