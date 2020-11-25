@@ -1,16 +1,12 @@
 package com.grad_proj.assembletickets.front.Activity;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
@@ -28,7 +23,6 @@ import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Database.CDatabaseOpen;
 import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
 import com.grad_proj.assembletickets.front.Event;
-import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.User;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
@@ -42,11 +36,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 //TODO: 비밀번호 잊엇는지에 대한 문구를 언제 띄울 것인가?
@@ -67,7 +59,6 @@ public class LoginActivity extends AppCompatActivity {
     private SDatabaseOpen sDatabaseOpen;
 
     private Intent intent;
-    private String email;
     boolean isInDB;
 
     @Override
@@ -163,11 +154,11 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            new GetUserProfile().execute("http://10.0.2.2:8080/assemble-ticket/login");
+            new GetUserExists().execute("http://10.0.2.2:8080/assemble-ticket/login");
 
             if (isInDB) {
                 // 서버에 유저 정보 있으면
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                intent = new Intent(LoginActivity.this, HomeActivity.class);
                 // 자동 로그인 토큰
                 inputID = account.getId();
                 inputEmail = account.getEmail();
@@ -175,12 +166,13 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtra("id", inputID);
                 intent.putExtra("email", inputEmail);
                 intent.putExtra("username", inputUserName);
+                new GetUserProfile().execute("http://10.0.2.2:8080/assemble-ticket/profile");
                 new GetEventData().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
                 getSearchData();
-                startActivity(intent);
-                this.finish();
+//                startActivity(intent);
+//                this.finish();
             } else {
-                // 서버에 유저 정보 으면
+                // 서버에 유저 정보 없으면
                 Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG).show();
                 mGoogleSignInClient.signOut();
             }
@@ -204,8 +196,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void setCalendarData(List<Event> events){
         //서버로부터 캘린더 데이터 가져오기 + db 생성하고 집어넣기
-
-
         cDatabaseOpen = new CDatabaseOpen(this);
         cDatabaseOpen.open();
         cDatabaseOpen.create();
@@ -248,9 +238,11 @@ public class LoginActivity extends AppCompatActivity {
                         .get()
                         .build();
 
+//                Log.d("server get event data", "request : " + request.body());
+
                 Response response = client.newCall(request).execute();
 //                Log.d("EditSubscribeFragment","doInBackground : "+response.body().string());
-                Log.d("server get", String.valueOf(response));
+//                Log.d("server get event data", String.valueOf(response));
 
                 JSONArray jsonArray = new JSONArray(response.body().string());
                 for(int i =0;i<jsonArray.length();i++){
@@ -292,6 +284,38 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private class GetUserExists extends AsyncTask<String, Void, Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email", inputEmail)
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Log.d("server get ex", "request : " + request);
+
+                Response response = client.newCall(request).execute();
+
+                isInDB = Boolean.parseBoolean(response.body().string());
+                Log.d("server get ex", "result : " + isInDB);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
     private class GetUserProfile extends AsyncTask<String, Void, User> {
 
         OkHttpClient client = new OkHttpClient();
@@ -312,17 +336,28 @@ public class LoginActivity extends AppCompatActivity {
                         .get()
                         .build();
 
-                Response response = client.newCall(request).execute();
-//                Log.d("serverget", "response : " + response.body().string());
+                Log.d("server get user", "request : " + request);
 
-                isInDB = Boolean.parseBoolean(response.body().string());
-                Log.d("server get", "result : " + isInDB);
+                Response response = client.newCall(request).execute();
+//                Log.d("server get user", "response : " + response.body().string());
+
+                Gson gson = new Gson();
+                Type dataType = new TypeToken<User>(){}.getType();
+                user = gson.fromJson(response.body().string(), dataType);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return user;
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            super.onPostExecute(user);
+            if (user.getBirth()!= null)
+                intent.putExtra("birth", user.getBirth());
+            if (user.getGender() != null)
+                intent.putExtra("gender", user.getGender());
         }
     }
 

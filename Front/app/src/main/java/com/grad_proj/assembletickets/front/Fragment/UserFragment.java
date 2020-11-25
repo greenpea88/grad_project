@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
@@ -37,7 +38,16 @@ import com.grad_proj.assembletickets.front.Activity.LoginActivity;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class UserFragment extends Fragment {
 
@@ -50,6 +60,7 @@ public class UserFragment extends Fragment {
     private UserContactFragment userContactFragment = new UserContactFragment();
 
     private TextView editInfo;
+    private TextView userName;
     private TextView emailTxt;
     private TextView birthTxt;
     private TextView genderTxt;
@@ -101,6 +112,7 @@ public class UserFragment extends Fragment {
             public void onClick(View view) {
                 if(isEditing){
                     isEditing = false;
+                    new UpdateUserInfo().execute("http://10.0.2.2:8080/assemble-ticket/profile");
                     datePicker.setVisibility(View.GONE);
                     birthTxt.setVisibility(View.VISIBLE);
                     spinner.setVisibility(View.GONE);
@@ -120,6 +132,9 @@ public class UserFragment extends Fragment {
 
         emailTxt = view.findViewById(R.id.text_email);
         emailTxt.setText(UserSharedPreference.getUserEmail(getContext()));
+
+        userName = view.findViewById(R.id.text_username);
+        userName.setText(UserSharedPreference.getUserName(getContext()));
 
         Button notice = view.findViewById(R.id.btn_notice);
         notice.setOnClickListener(new View.OnClickListener() {
@@ -192,5 +207,46 @@ public class UserFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+
+    private class UpdateUserInfo extends AsyncTask<String, Void, Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .build().toString();
+
+            String json = "{\n" +
+                    "  \"email\" : \"" + UserSharedPreference.getUserEmail(getContext()) + "\",\n" +
+                    "  \"birthday\" : \"" + UserSharedPreference.getUserBirth(getContext()) + "\",\n" +
+                    "  \"gender\" : \"" + UserSharedPreference.getUserGender(getContext()) + "\"\n" +
+                    "  \n" +
+                    "}";
+
+            System.out.println(json);
+
+            RequestBody requestBody = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"), json);
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .put(requestBody)
+                        .build();
+
+                Log.d("server put", "request : " + request);
+
+                Response response = client.newCall(request).execute();
+                Log.d("server put", "result : " + response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 
 }

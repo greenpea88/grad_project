@@ -22,22 +22,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.R;
-import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.User;
-import com.grad_proj.assembletickets.front.UserSharedPreference;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
-import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -128,6 +117,10 @@ public class JoinActivity extends AppCompatActivity {
 
     }
 
+    private void endActivity(){
+        this.finish();
+    }
+
     public void onJoinBtnClicked(View v){
         Toast inputToast = Toast.makeText(this.getApplicationContext(),"회원 정보를 모두 입력해주세요.",Toast.LENGTH_SHORT);
         Handler timer = new Handler();
@@ -172,24 +165,15 @@ public class JoinActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            inputEmail = account.getEmail();
+            inputUserName = account.getDisplayName();
 
-            new GetUserProfile().execute("http://10.0.2.2:8080/assemble-ticket/login");
+            new GetUserExists().execute("http://10.0.2.2:8080/assemble-ticket/login");
 
             if (!isInDB) {
                 // 서버에 유저 정보 없으면
-                Intent intent = new Intent(JoinActivity.this, HomeActivity.class);
-                // 자동 로그인 토큰
-                inputID = account.getId();
-                inputEmail = account.getEmail();
-                inputUserName = account.getDisplayName();
-                intent.putExtra("id", inputID);
-                intent.putExtra("email", inputEmail);
-                intent.putExtra("username", inputUserName);
-
                 new SaveUserInfo().execute("http://10.0.2.2:8080/assemble-ticket/register");
-
-                this.finish();
-                startActivity(intent);
+                Toast.makeText(this, "회원가입이 완료되었습니다! 로그인 해주세요.", Toast.LENGTH_LONG).show();
             } else {
                  // 서버에 유저 정보 있으면
                  Toast.makeText(this, "이미 존재하는 이메일 입니다.", Toast.LENGTH_LONG).show();
@@ -202,7 +186,7 @@ public class JoinActivity extends AppCompatActivity {
         }
     }
 
-    private class GetUserProfile extends AsyncTask<String, Void, User> {
+    private class GetUserExists extends AsyncTask<String, Void, User> {
 
         OkHttpClient client = new OkHttpClient();
         User user;
@@ -222,15 +206,13 @@ public class JoinActivity extends AppCompatActivity {
                         .get()
                         .build();
 
+                Log.d("server get user", "request : " + request);
+
                 Response response = client.newCall(request).execute();
-//                Log.d("serverget", "response : " + response.body().string());
+//                Log.d("server get user", "response : " + response.body().string());
 
-                Log.d("server get", "response : " + String.valueOf(response));
-
-//                Gson gson = new Gson();
-
-//                isInDB = gson.fromJson(response.body().string(), Boolean);
-                Log.d("server get", "result : " + isInDB);
+                isInDB = Boolean.parseBoolean(response.body().string());
+                Log.d("server get user", "result : " + isInDB);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -250,27 +232,37 @@ public class JoinActivity extends AppCompatActivity {
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
                     .build().toString();
 
+            String json = "{\n" +
+                    "  \"email\" : \"" + inputEmail + "\", \n" +
+                    "  \"displayName\" : \"" + inputUserName + "\" \n" +
+                    "  \n" +
+                    "}";
+
+            System.out.println(json);
+
+            RequestBody requestBody = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"), json);
+
             try {
-                String json = "{\"email\":\"" + inputEmail + "\",\"displayName\":\"" + inputUserName + "\"}";
-
-                RequestBody requestBody = RequestBody.create(
-                        MediaType.parse("application/json"), json);
-
-                Log.d("server post", "requestbody : " + String.valueOf(requestBody));
-
                 Request request = new Request.Builder()
                         .url(strUrl)
                         .post(requestBody)
                         .build();
 
-                Log.d("server post", "request : " + request.body().toString());
+                Log.d("server post join", "request : " + request);
 
                 Response response = client.newCall(request).execute();
-                Log.d("server post", "result : " + String.valueOf(response));
+                Log.d("server post join", "result : " + response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            endActivity();
         }
     }
 
