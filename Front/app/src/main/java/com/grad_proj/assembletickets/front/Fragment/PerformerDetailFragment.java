@@ -105,6 +105,7 @@ public class PerformerDetailFragment extends Fragment {
                 else{
                     setBookmark=false;
                     bookmarkSet.setImageResource(R.drawable.icon_bookmarkoff);
+                    new DeleteSubscribe().execute("http://10.0.2.2:8080/assemble-ticket/subscribe");
                 }
             }
         });
@@ -206,7 +207,7 @@ public class PerformerDetailFragment extends Fragment {
                     .build().toString();
 
             RequestBody requestBody = new FormBody.Builder()
-                    .add("email",UserSharedPreference.getUserEmail(getContext()).toString())
+                    .add("email",UserSharedPreference.getUserEmail(getContext()))
                     .add("performerId",Integer.toString(performer.getId()))
                     .build();
 
@@ -224,6 +225,37 @@ public class PerformerDetailFragment extends Fragment {
 ////
 //                Type listType = new TypeToken<List<Show>>() {}.getType();
 //                performShows = gson.fromJson(jsonArray.toString(), listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+    private class DeleteSubscribe extends AsyncTask<String, Void ,Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .build().toString();
+
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("email",UserSharedPreference.getUserEmail(getContext()))
+                    .add("performerId",Integer.toString(performer.getId()))
+                    .build();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .delete(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                Log.d("PerformerDetailFragment","doInBackground : "+response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }
