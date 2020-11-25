@@ -2,15 +2,11 @@ package com.grad_proj.assembletickets.front.Fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
-import com.grad_proj.assembletickets.front.LoadDataDialog;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
@@ -33,7 +28,6 @@ import com.grad_proj.assembletickets.front.UserSharedPreference;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -49,6 +43,8 @@ public class SubscribeFragment extends Fragment {
     private SubscribeAdapter subscribeAdapter;
     private SubscribeListDeco subscribeListDeco;
     private ShowAdapter showAdapter;
+
+    private Integer selectPerformerId = null;
 
     private List<List<String>> totalSubscribeShowList = new ArrayList<>();
     private List<String> subscribeShowList = new ArrayList<>();
@@ -73,6 +69,7 @@ public class SubscribeFragment extends Fragment {
             @Override
             public void onItemClicked(View v, int position) {
                 Log.d("SubscribeFragment","performer item clicked");
+                //카테고리 바뀔 때!
                 changeSubscribeCategory(position);
             }
         });
@@ -111,10 +108,8 @@ public class SubscribeFragment extends Fragment {
             }
         });
 
-//        getSubscribeData();
-//        getSubscribeShowData();
-
         new GetSubscribeList().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/performers");
+        new GetPerformerShows().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/shows");
 
         return view;
     }
@@ -134,20 +129,13 @@ public class SubscribeFragment extends Fragment {
         subscribeAdapter.notifyDataSetChanged();
     }
 
-    private void getSubscribeShowData(){
-        //일단 서버로부터 데이터를 받아옴 -> 이중 리스트의 형태로 저장
-        //처음에는 total을 보여줌
+    private void setSubscribeShowList(List<Show> shows){
+        for(int i=0;i<shows.size();i++){
+            Show show = shows.get(i);
 
-
-        totalShows = Arrays.asList("total1","total2","total3","total4","total5","total6","total7");
-        subscribeShowList = totalShows;
-
-        for(int i=0; i<subscribeName.size(); i++){
-            List<String> temp = Arrays.asList("test1","test2","test3","test4");
-
-            totalSubscribeShowList.add(temp);
+            showAdapter.addItem(show);
         }
-        setSubscribeShowList();
+        showAdapter.notifyDataSetChanged();
     }
 
     private void changeSubscribeCategory(int position) {
@@ -155,24 +143,25 @@ public class SubscribeFragment extends Fragment {
         Log.d("SubscribeFragment","changeSubscribeCategory()");
         if(!subscribeAdapter.selectedList.get(position,false)){
             Log.d("Subscribe","clicked again");
-            subscribeShowList=totalShows;
+            selectPerformerId = null;
+            new GetPerformerShows().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/shows");
         }
         else{
-            subscribeShowList = totalSubscribeShowList.get(position);
+            selectPerformerId = subscribeAdapter.getPerformerId(position);
+            new GetPerformerShows().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/shows");
         }
         showAdapter.resetItem();
-        setSubscribeShowList();
     }
 
-    private void setSubscribeShowList(){
-        for(int i=0; i<subscribeShowList.size(); i++){
-            Show show = new Show();
-            show.setTitle(subscribeShowList.get(i));
-            //data를 adpater에 추가하기
-            showAdapter.addItem(show);
-        }
-        showAdapter.notifyDataSetChanged();
-    }
+//    private void setSubscribeShowList(){
+//        for(int i=0; i<subscribeShowList.size(); i++){
+//            Show show = new Show();
+//            show.setTitle(subscribeShowList.get(i));
+//            //data를 adpater에 추가하기
+//            showAdapter.addItem(show);
+//        }
+//        showAdapter.notifyDataSetChanged();
+//    }
 
     private class GetSubscribeList extends AsyncTask<String, Void ,List<Performer>> {
 
@@ -209,6 +198,55 @@ public class SubscribeFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Performer> performers) {
             getSubscribeData(performers);
+        }
+    }
+
+    private class GetPerformerShows extends AsyncTask<String, Void ,List<Show>> {
+
+        //        List<Show> loadedShows = new ArrayList<>();
+        OkHttpClient client = new OkHttpClient();
+
+        //null로 보내면 전체를 받을 수 있음
+        @Override
+        protected List<Show> doInBackground(String... strings) {
+            List<Show> totalShow = new ArrayList<>();
+
+            String strUrl;
+            if(selectPerformerId==null){
+                strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                        .addQueryParameter("email", UserSharedPreference.getUserEmail(getContext()))
+                        .addQueryParameter("performerId",null)
+                        .build().toString();
+            }
+            else{
+                strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                        .addQueryParameter("email", UserSharedPreference.getUserEmail(getContext()))
+                        .addQueryParameter("performerId",Integer.toString(selectPerformerId))
+                        .build().toString();
+            }
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+                Gson gson = new Gson();
+
+                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
+                totalShow = gson.fromJson(response.body().string(), listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return totalShow;
+        }
+
+        @Override
+        protected void onPostExecute(List<Show> shows) {
+            setSubscribeShowList(shows);
         }
     }
 }

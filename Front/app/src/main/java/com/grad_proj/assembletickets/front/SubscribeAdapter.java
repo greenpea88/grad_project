@@ -62,6 +62,10 @@ public class SubscribeAdapter extends RecyclerView.Adapter<SubscribeAdapter.Item
         subscribeList.add(performer);
     }
 
+    public int getPerformerId(int position){
+        return subscribeList.get(position).getId();
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener){
         this.onItemClickListener = listener;
     }
