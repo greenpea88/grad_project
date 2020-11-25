@@ -96,7 +96,7 @@ public class SubscribeFragment extends Fragment {
         });
 
         getSubscribeData();
-        getSubscribeShowData();
+//        getSubscribeShowData();
 
         return view;
     }

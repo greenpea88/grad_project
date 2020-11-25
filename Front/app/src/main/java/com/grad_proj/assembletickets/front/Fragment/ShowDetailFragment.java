@@ -191,7 +191,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("티켓팅 날짜 : ",show.getTicketOpen(),show.getTitle()));
+        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getTicketOpen(),show.getTitle()));
 //        ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance("2020-11-12",show.getsName()));
     }
 
@@ -203,10 +203,10 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
 
         if(show.getStartDate().equals(show.getEndDate())){
-            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간 : ",show.getStartDate(),show.getTitle()));
+            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getStartDate(),show.getTitle()));
         }
         else{
-            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간 : ",show.getStartDate()+" ~ "+show.getEndDate(),show.getTitle()));
+            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getStartDate()+" ~ "+show.getEndDate(),show.getTitle()));
         }
     }
 

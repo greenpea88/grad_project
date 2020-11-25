@@ -59,7 +59,7 @@ public class AddEventFragment extends Fragment {
 
         submitBtn = (Button)view.findViewById(R.id.submitBtn);
         eventTimePicker = (TimePicker)view.findViewById(R.id.eventTimePicker);
-        eventTimePicker.setIs24HourView(true);
+//        eventTimePicker.setIs24HourView(true);
         eventTitleText = (TextView)view.findViewById(R.id.eventTitleText);
         eventTitleText.setText(title);
 //        eventTitleEditText = (EditText)view.findViewById(R.id.eventTitleEditText);
