@@ -70,7 +70,7 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
 
         ImageView poster;
         TextView titleText;
-        TextView performersText;
+        TextView venueText;
         TextView dateText;
         TextView priceText;
 
@@ -79,7 +79,7 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
 
             poster = itemView.findViewById(R.id.imageView);
             titleText = itemView.findViewById(R.id.titleText);
-            performersText = itemView.findViewById(R.id.performersText);
+            venueText = itemView.findViewById(R.id.venueText);
             dateText = itemView.findViewById(R.id.dateText);
             priceText = itemView.findViewById(R.id.priceText);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +96,7 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
 
         public void setItem(Show item) {
             // poster.setImageDrawable(); URL로부터 이미지를 로드해오는 함수 필요
+            venueText.setText(item.getVenue());
             titleText.setText(item.title);
             dateText.setText(item.getStartDate()+"~"+item.getEndDate());
             priceText.setText(item.getPrice());
