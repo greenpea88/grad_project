@@ -33,8 +33,18 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/noResultTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="검색 결과 페이지" />
+        android:layout_marginVertical="@dimen/activity_vertical_margin"
+        android:text="검색 결과가 없습니다"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
