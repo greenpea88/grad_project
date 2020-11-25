@@ -177,11 +177,11 @@ public class LoginActivity extends AppCompatActivity {
         cDatabaseOpen.open();
         cDatabaseOpen.create();
 
-        cDatabaseOpen.insertColumn("2020-10-21","test1","test",1,1,1);
-        cDatabaseOpen.insertColumn("2020-10-22","test2","dafsf",1,2,1);
-        cDatabaseOpen.insertColumn("2020-10-21","test3",null,2,2,0);
-        cDatabaseOpen.insertColumn("2020-10-22","test4",null,4,3,1);
-        cDatabaseOpen.insertColumn("2020-10-21","test5","tttt",2,1,0);
+        cDatabaseOpen.insertColumn("2020-10-21","test1","test",1,1,1,21);
+        cDatabaseOpen.insertColumn("2020-10-22","test2","dafsf",1,2,1,21);
+        cDatabaseOpen.insertColumn("2020-10-21","test3",null,2,2,0,21);
+        cDatabaseOpen.insertColumn("2020-10-22","test4",null,4,3,1,21);
+        cDatabaseOpen.insertColumn("2020-10-21","test5","tttt",2,1,0,21);
 
         cDatabaseOpen.close();
     }

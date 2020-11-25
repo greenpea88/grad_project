@@ -305,10 +305,10 @@ public class HomeActivity extends AppCompatActivity {
         notificationAdapter.notifyDataSetChanged();
     }
 
-    public void insertEvent(String date,String eventName, String eventContent,int hour, int minute,int alarmSet){
+    public void insertEvent(String date,String eventName, String eventContent,int hour, int minute,int alarmSet,int showId){
         cDatabaseOpen.open();
 
-        cDatabaseOpen.insertColumn(date,eventName,eventContent,hour,minute,alarmSet);
+        cDatabaseOpen.insertColumn(date,eventName,eventContent,hour,minute,alarmSet,showId);
         cDatabaseOpen.close();
     }
 

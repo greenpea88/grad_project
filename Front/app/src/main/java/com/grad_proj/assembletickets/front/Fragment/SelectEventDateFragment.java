@@ -28,17 +28,19 @@ public class SelectEventDateFragment extends Fragment {
 
     private String sampleDate;
     private String title;
+    private int showId;
 
     private Calendar minDate = Calendar.getInstance();
     private Calendar maxDate = Calendar.getInstance();
 
-    public static SelectEventDateFragment newInstance(String sampleDate, String title) {
+    public static SelectEventDateFragment newInstance(String sampleDate, String title,int id) {
         //이전 fragment로부터 데이터 넘겨받기
         SelectEventDateFragment selectEventDateFragment = new SelectEventDateFragment();
         Bundle bundle = new Bundle();
 //        bundle.putString("eventType",eventType);
         bundle.putString("sampleDate", sampleDate);
         bundle.putString("title",title);
+        bundle.putInt("showId",id);
         selectEventDateFragment.setArguments(bundle);
 
         return selectEventDateFragment;
@@ -53,6 +55,7 @@ public class SelectEventDateFragment extends Fragment {
 //            eventType = getArguments().getString("eventType");
             sampleDate = getArguments().getString("sampleDate");
             title = getArguments().getString("title");
+            showId = getArguments().getInt("showId");
         }
 
 //        eventTypeText = view.findViewById(R.id.eventTypeText);
@@ -104,7 +107,7 @@ public class SelectEventDateFragment extends Fragment {
                 Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
                 ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-                ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance(selectDate,title));
+                ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance(selectDate,title,showId));
             }
         });
 

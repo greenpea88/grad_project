@@ -11,6 +11,7 @@ public class CalendarDatabase {
         public static final String HOUR = "hour";
         public static final String MINUTE = "minute";
         public static final String ALARMSET = "alarmset";
+        public static final String SHOWID = "show";
         public static final String _TABLENAME = "calendartable";
         public static final String _CREATE = "create table if not exists "+_TABLENAME+"("
                 + _ID + " integer primary key autoincrement, "
@@ -19,6 +20,7 @@ public class CalendarDatabase {
                 + EVENTCONTENT + " text, "
                 + HOUR + " integer not null , "
                 + MINUTE + " integer not null,"
-                + ALARMSET + " integer not null);";
+                + ALARMSET + " integer not null, "
+                +SHOWID+" integer not null);";
     }
 }

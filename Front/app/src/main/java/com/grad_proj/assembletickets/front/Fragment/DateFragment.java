@@ -2,6 +2,7 @@ package com.grad_proj.assembletickets.front.Fragment;
 
 import android.database.Cursor;
 import android.graphics.Canvas;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -29,6 +30,16 @@ import com.grad_proj.assembletickets.front.OnDialogListener;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SwipeToDelete;
 import com.grad_proj.assembletickets.front.SwipeToDeleteAction;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
+
+import java.io.IOException;
+
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class DateFragment extends Fragment implements OnDialogListener {
@@ -178,6 +189,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
             int hour = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.HOUR));
             int min = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.MINUTE));
             int alarmSet = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.ALARMSET));
+            int showId = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.SHOWID));
 
             Event event = new Event();
             event.setId(id);
@@ -186,6 +198,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
             event.setTimeHour(hour);
             event.setTimeMin(min);
             event.setAlarmSet(alarmSet);
+            event.setShowId(showId);
 
             dateEventAdapter.addItem(event);
         }
@@ -198,7 +211,54 @@ public class DateFragment extends Fragment implements OnDialogListener {
         Log.d("DateFragment","Dialog finish");
         ((HomeActivity)getActivity()).updateEvent(event);
 
+//        new UpdateEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+
         dateEventAdapter.changeItem(position,event);
         dateEventAdapter.notifyDataSetChanged();
+    }
+
+    private class UpdateEvent extends AsyncTask<String, Void ,Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .build().toString();
+
+
+//            String postJson = "{\n" +
+//                    "  \"showId\" : "+showId+",\n" +
+//                    "  \"calDate\" : \""+postEvent.getDate()+"\",\n" +
+//                    "  \"calTime\" : \""+hour+":"+minute+":00"+"\",\n" +
+//                    "  \"calTitle\" : \""+postEvent.getEventName()+"\",\n" +
+//                    "  \"calMemo\" : \""+content+"\",\n" +
+//                    "  \"alarmSet\" : "+postEvent.getAlarmSet()+"\n" +
+//                    "  \n" +
+//                    "}";
+//
+//            RequestBody requestBody = RequestBody.create(
+//                    MediaType.parse("application/json; charset=utf-8"),
+//                    postJson
+//            );
+
+//            try {
+//                Request request = new Request.Builder()
+//                        .url(strUrl)
+//                        .post(requestBody)
+//                        .build();
+//
+//                Response response = client.newCall(request).execute();
+//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+////                Gson gson = new Gson();
+////
+////                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
+////                newLoadedShows = gson.fromJson(response.body().string(), listType);
+////                System.out.println(newLoadedShows.size());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            return null;
+        }
     }
 }

@@ -191,7 +191,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getTicketOpen(),show.getTitle()));
+        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getTicketOpen(),show.getTitle(),show.getId()));
 //        ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance("2020-11-12",show.getsName()));
     }
 
@@ -203,10 +203,10 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
 
         if(TextUtils.isEmpty(show.getEndDate())||show.getStartDate().equals(show.getEndDate())){
-            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getStartDate(),show.getTitle()));
+            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getStartDate(),show.getTitle(),show.getId()));
         }
         else{
-            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getStartDate()+" ~ "+show.getEndDate(),show.getTitle()));
+            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getStartDate()+" ~ "+show.getEndDate(),show.getTitle(),show.getId()));
         }
     }
 
