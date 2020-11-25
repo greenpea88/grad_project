@@ -20,6 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.LoadDataDialog;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
@@ -61,6 +62,17 @@ public class TicketClassicFragment extends Fragment implements SwipeRefreshLayou
 
         classicShowAdapter = new ShowAdapter();
         classicTicketList.setAdapter(classicShowAdapter);
+
+        classicShowAdapter.setOnItemClickListener(new ShowAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(View v, int position) {
+                Log.d("SubscribeFragment","show item clicked");
+                //해당 item에 맞는 show에 대한 정보를 서버에 요청해서 받은 뒤 이동하는 page에 정보로 띄울 것
+                Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
+                ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
+                ((HomeActivity)getActivity()).replaceFragment(ShowDetailFragment.newInstance(classicShowAdapter.getItem(position)));
+            }
+        });
 
         classicTicketList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
