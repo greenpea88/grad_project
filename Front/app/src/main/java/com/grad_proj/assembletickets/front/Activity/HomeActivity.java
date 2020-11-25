@@ -348,6 +348,11 @@ public class HomeActivity extends AppCompatActivity {
         cDatabaseOpen.close();
     }
 
+    public void dropCalendarDB(){
+        cDatabaseOpen.open();
+        cDatabaseOpen.dropTable();
+    }
+
     public Cursor getHistoryAll(){
         sDatabaseOpen.open();
         return sDatabaseOpen.selectHistoryAll();

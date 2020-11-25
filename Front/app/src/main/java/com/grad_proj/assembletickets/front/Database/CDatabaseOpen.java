@@ -121,4 +121,8 @@ public class CDatabaseOpen {
 
         return mDB.update(CalendarDatabase.CalendarDB._TABLENAME,values, CalendarDatabase.CalendarDB._ID+"="+event.getId(),null) > 0;
     }
+
+    public void dropTable(){
+        mDB.execSQL("DROP TABLE "+ CalendarDatabase.CalendarDB._TABLENAME);
+    }
 }

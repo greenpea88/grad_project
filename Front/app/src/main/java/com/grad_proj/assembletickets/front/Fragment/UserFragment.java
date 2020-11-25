@@ -177,6 +177,7 @@ public class UserFragment extends Fragment {
                     Log.d("login", "google logout");
                 }
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
+                ((HomeActivity)getActivity()).dropCalendarDB();
                 startActivity(intent);
                 getActivity().finish();
             }
