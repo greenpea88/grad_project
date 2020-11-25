@@ -30,6 +30,7 @@ import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.User;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
 
 import org.json.JSONArray;
@@ -59,13 +60,15 @@ public class LoginActivity extends AppCompatActivity {
 
     String inputID = "";
     String inputPW = "";
+    String inputEmail = "";
+    String inputUserName = "";
 
     private CDatabaseOpen cDatabaseOpen;
     private SDatabaseOpen sDatabaseOpen;
 
     private Intent intent;
-
     private String email;
+    boolean isInDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,21 +163,30 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            intent = new Intent(LoginActivity.this, HomeActivity.class);
-            // 자동 로그인 토큰
-            intent.putExtra("id", account.getId());
-            intent.putExtra("email", account.getEmail());
-            email = account.getEmail();
-            intent.putExtra("username", account.getDisplayName());
-//            getCalendarData();
-            new GetEventData().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
-            getSearchData();
-//            startActivity(intent);
-//            this.finish();
+            new GetUserProfile().execute("http://10.0.2.2:8080/assemble-ticket/login");
+
+            if (isInDB) {
+                // 서버에 유저 정보 있으면
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                // 자동 로그인 토큰
+                inputID = account.getId();
+                inputEmail = account.getEmail();
+                inputUserName = account.getDisplayName();
+                intent.putExtra("id", inputID);
+                intent.putExtra("email", inputEmail);
+                intent.putExtra("username", inputUserName);
+                new GetEventData().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+                getSearchData();
+                startActivity(intent);
+                this.finish();
+            } else {
+                // 서버에 유저 정보 으면
+                Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG).show();
+                mGoogleSignInClient.signOut();
+            }
         } catch (ApiException e) {
             Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());
             Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
-//            getCalendarData();
             startActivity(intent);
         }
     }
@@ -192,6 +204,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void setCalendarData(List<Event> events){
         //서버로부터 캘린더 데이터 가져오기 + db 생성하고 집어넣기
+
+
         cDatabaseOpen = new CDatabaseOpen(this);
         cDatabaseOpen.open();
         cDatabaseOpen.create();
@@ -236,6 +250,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Response response = client.newCall(request).execute();
 //                Log.d("EditSubscribeFragment","doInBackground : "+response.body().string());
+                Log.d("server get", String.valueOf(response));
 
                 JSONArray jsonArray = new JSONArray(response.body().string());
                 for(int i =0;i<jsonArray.length();i++){
@@ -274,6 +289,40 @@ public class LoginActivity extends AppCompatActivity {
             setCalendarData(events);
             startActivity(intent);
             endActivity();
+        }
+    }
+
+    private class GetUserProfile extends AsyncTask<String, Void, User> {
+
+        OkHttpClient client = new OkHttpClient();
+        User user;
+
+        @Override
+        protected User doInBackground(String... strings) {
+
+            user = new User();
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email", inputEmail)
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+//                Log.d("serverget", "response : " + response.body().string());
+
+                isInDB = Boolean.parseBoolean(response.body().string());
+                Log.d("server get", "result : " + isInDB);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return user;
         }
     }
 
