@@ -121,7 +121,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
                 Log.d("ShowDetail","onAddEventBtnClicked()");
 
                 //티켓팅이나 공연 관람을 선택할 dialog 띄우기
-                EventSelectDialog  eventSelectDialog = new EventSelectDialog(view.getContext());
+                EventSelectDialog  eventSelectDialog = new EventSelectDialog(view.getContext(),show.getTicketOpen());
                 DisplayMetrics displayMetrics = view.getContext().getApplicationContext().getResources().getDisplayMetrics();
 
                 int width = displayMetrics.widthPixels;
@@ -167,7 +167,6 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
     }
 
     private void getPerformerList(List<Performer> performers){
-//        performerList = Arrays.asList("test1","test2","test3","test4","test5","test6");
 
         for(int i = 0; i< performers.size(); i++){
             Performer performer = performers.get(i);
@@ -187,7 +186,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("티켓팅 날짜",show.getTitle()));
+        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("티켓팅 날짜 : ",show.getTicketOpen(),show.getTitle()));
 //        ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance("2020-11-12",show.getsName()));
     }
 
@@ -197,7 +196,13 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간",show.getTitle()));
+
+        if(show.getStartDate().equals(show.getEndDate())){
+            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간 : ",show.getStartDate(),show.getTitle()));
+        }
+        else{
+            ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간 : ",show.getStartDate()+"~"+show.getEndDate(),show.getTitle()));
+        }
     }
 
     private class GetSubscribeList extends AsyncTask<String, Void ,List<Performer>>{

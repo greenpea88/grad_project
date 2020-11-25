@@ -32,8 +32,7 @@
         <ImageView
             android:id="@+id/detailImgPoster"
             android:layout_width="150dp"
-            android:layout_height="200dp"
-            android:src="@drawable/img_poster"/>
+            android:layout_height="200dp"/>
         <TextView
             android:id="@+id/showDetailTitle"
             android:layout_width="match_parent"

@@ -20,17 +20,19 @@ public class SelectEventDateFragment extends Fragment {
 
     View view;
 
-    private TextView eventSampleDate;
+    private TextView eventTypeText, eventSampleDate;
     private DatePicker eventDatePicker;
     private Button nextBtn;
 
+    private String eventType;
     private String sampleDate;
     private String title;
 
-    public static SelectEventDateFragment newInstance(String sampleDate,String title) {
+    public static SelectEventDateFragment newInstance(String eventType, String sampleDate,String title) {
         //이전 fragment로부터 데이터 넘겨받기
         SelectEventDateFragment selectEventDateFragment = new SelectEventDateFragment();
         Bundle bundle = new Bundle();
+        bundle.putString("eventType",eventType);
         bundle.putString("sampleDate", sampleDate);
         bundle.putString("title",title);
         selectEventDateFragment.setArguments(bundle);
@@ -44,9 +46,13 @@ public class SelectEventDateFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_select_eventdate,container, false);
 
         if(getArguments() != null){
+            eventType = getArguments().getString("eventType");
             sampleDate = getArguments().getString("sampleDate");
             title = getArguments().getString("title");
         }
+
+        eventTypeText = view.findViewById(R.id.eventTypeText);
+        eventTypeText.setText(eventType);
 
         eventSampleDate = view.findViewById(R.id.eventSampleDate);
         eventSampleDate.setText(sampleDate);
