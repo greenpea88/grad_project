@@ -3,6 +3,7 @@ package com.grad_proj.assembletickets.front;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +105,7 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
             // poster.setImageDrawable(); URL로부터 이미지를 로드해오는 함수 필요
             venueText.setText(item.getVenue());
             titleText.setText(item.title);
-            if(item.getStartDate().equals(item.getEndDate())){
+            if(TextUtils.isEmpty(item.getEndDate()) ||item.getStartDate().equals(item.getEndDate())){
                 dateText.setText(item.getStartDate());
             }
             else{

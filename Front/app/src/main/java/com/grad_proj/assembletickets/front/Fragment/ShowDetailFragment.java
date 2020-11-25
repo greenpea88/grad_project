@@ -202,7 +202,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
 
-        if(show.getStartDate().equals(show.getEndDate())){
+        if(TextUtils.isEmpty(show.getEndDate())||show.getStartDate().equals(show.getEndDate())){
             ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getStartDate(),show.getTitle()));
         }
         else{

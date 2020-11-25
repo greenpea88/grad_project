@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class PerformerDetailFragment extends Fragment {
 
@@ -60,7 +66,7 @@ public class PerformerDetailFragment extends Fragment {
         }
 
         performerImg = view.findViewById(R.id.performerImg);
-        new ImgDownloadTask().execute("http://ticketimage.interpark.com/Play/image/large/20/20008287_p.gif");
+//        new ImgDownloadTask().execute("http://ticketimage.interpark.com/Play/image/large/20/20008287_p.gif");
 
         performerName = view.findViewById(R.id.performerName);
         performerName.setText(performer.getName());
@@ -82,7 +88,9 @@ public class PerformerDetailFragment extends Fragment {
             }
         });
 
-        getShowlist();
+//        getShowlist();
+
+        new GetPerformerDetail().execute("http://10.0.2.2:8080/assemble-ticket/performer");
 
         return view;
     }
@@ -97,6 +105,46 @@ public class PerformerDetailFragment extends Fragment {
             showAdapter.addItem(show);
         }
         showAdapter.notifyDataSetChanged();
+    }
+
+    private class GetPerformerDetail extends AsyncTask<String, Void ,Performer>{
+
+        //        List<Show> loadedShows = new ArrayList<>();
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Performer doInBackground(String... strings) {
+            Performer loadedPerformer = new Performer();
+
+            //당겨서 새로고침 test 해보려면 time을 "2020-11-22T15:34:18" 로 넣어서 test해보기
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("id",Integer.toString(performer.getId()))
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+//                Gson gson = new Gson();
+//
+//                Type listType = new TypeToken<Performer>() {}.getType();
+//                loadedShows = gson.fromJson(response.body().string(), listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return loadedPerformer;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
     }
 
     private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
