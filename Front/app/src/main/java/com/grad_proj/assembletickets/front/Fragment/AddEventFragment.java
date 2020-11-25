@@ -24,6 +24,9 @@ import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
@@ -48,7 +51,8 @@ public class AddEventFragment extends Fragment {
     EditText eventContentEditText;
     SwitchMaterial alarmSwitch;
 
-    private Event postEvent;
+    private Event postEvent = new Event();
+    private int calId;
 //    private String eventTitle="";
 
     public static AddEventFragment newInstance(String date,String title,int id) {
@@ -117,7 +121,6 @@ public class AddEventFragment extends Fragment {
                 }
 
                 //새로 추가된 정보 서버에도 넣기
-                postEvent = new Event();
                 postEvent.setDate(date);
                 postEvent.setTimeHour(eventHour);
                 postEvent.setTimeMin(eventMin);
@@ -126,20 +129,23 @@ public class AddEventFragment extends Fragment {
                 postEvent.setAlarmSet(alarmSet);
 
                 new PostEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
-
-                //다시 원래 페이지로 돌아오기 -> pop 두 번 필요
-                ((HomeActivity)getActivity()).submitBtnAction();
             }
         });
         return view;
     }
 
-    private class PostEvent extends AsyncTask<String, Void ,Integer> {
+    private void postDB(){
+        ((HomeActivity)getActivity())
+                .insertEvent(calId,date,title,postEvent.getEventContent(),postEvent.getTimeHour(),postEvent.getTimeMin(),postEvent.getAlarmSet(),showId);
+        //다시 원래 페이지로 돌아오기 -> pop 두 번 필요
+        ((HomeActivity)getActivity()).submitBtnAction();
+    }
+
+    private class PostEvent extends AsyncTask<String, Void ,Void> {
 
         OkHttpClient client = new OkHttpClient();
-
         @Override
-        protected Integer doInBackground(String... strings) {
+        protected Void doInBackground(String... strings) {
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
                     .build().toString();
 
@@ -191,7 +197,10 @@ public class AddEventFragment extends Fragment {
                         .build();
 
                 Response response = client.newCall(request).execute();
-                Log.d("AddEventFragment","doInBackground : "+response.body().string());
+//                Log.d("AddEventFragment","doInBackground : "+response.body().string());
+                JSONObject jsonObject = new JSONObject(response.body().string());
+                calId = jsonObject.getInt("id");
+
 //                Gson gson = new Gson();
 //
 //                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
@@ -199,15 +208,16 @@ public class AddEventFragment extends Fragment {
 //                System.out.println(newLoadedShows.size());
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Integer calId) {
+        protected void onPostExecute(Void avoid) {
             //db에 새로 추가된 정보 넣기
-            ((HomeActivity)getActivity())
-                    .insertEvent(calId,date,title,postEvent.getEventContent(),postEvent.getTimeHour(),postEvent.getTimeMin(),postEvent.getAlarmSet(),showId);
+            postDB();
         }
     }
 }
