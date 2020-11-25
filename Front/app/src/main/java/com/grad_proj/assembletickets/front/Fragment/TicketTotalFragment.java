@@ -13,12 +13,20 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.ShowAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +40,8 @@ public class TicketTotalFragment extends Fragment {
 
     public View view;
     private ShowAdapter totalShowAdapter;
+    private String now;
+    int page = 0;
 
     RecyclerView totalTicketList;
 
@@ -47,36 +57,49 @@ public class TicketTotalFragment extends Fragment {
         totalShowAdapter = new ShowAdapter();
         totalTicketList.setAdapter(totalShowAdapter);
 
+        //무한 스크롤 관련
+        totalTicketList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date = new Date();
-        String now = simpleDateFormat.format(date);
+        now = simpleDateFormat.format(date);
 
-        System.out.println(now);
-
-        new GetTotalShows().execute("http://10.0.2.2:8080/assemble-ticket/search?keyword=팬텀");
-//        setTotalList();
+        new GetTotalShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/all");
         return view;
     }
 
-    private void setTotalList(){
-        List<String> totalShows = Arrays.asList("test1","test2","test3","test4","test5","test6","test7");
-        for(int i=0; i<totalShows.size(); i++){
-            Show show = new Show();
-            show.setsName(totalShows.get(i));
+    private void setTotalList(List<Show> loadedShows){
+//        List<String> totalShows = Arrays.asList("test1","test2","test3","test4","test5","test6","test7");
+        for(int i=0; i<loadedShows.size(); i++){
+            Show show = loadedShows.get(i);
+//            Log.d("TicketTotalFragment","getData : "+show.getTitle());
 
             //data를 adpater에 추가하
             totalShowAdapter.addItem(show);
         }
+        totalShowAdapter.notifyDataSetChanged();
     }
 
-    private static class GetTotalShows extends AsyncTask<String, Void ,String>{
+    private class GetTotalShows extends AsyncTask<String, Void ,List<Show>>{
 
+//        List<Show> loadedShows = new ArrayList<>();
         OkHttpClient client = new OkHttpClient();
 
         @Override
-        protected String doInBackground(String... strings) {
-            String result = null;
-            String strUrl = strings[0];
+        protected List<Show> doInBackground(String... strings) {
+//            String result = null;
+            List<Show> loadedShows = new ArrayList<>();
+//            String strUrl = strings[0];
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("page",Integer.toString(page))
+                    .addQueryParameter("time",now)
+                    .build().toString();
+
 
 //            HttpUrl httpUrl = new HttpUrl.Builder()
 //                    .scheme("http")
@@ -90,16 +113,41 @@ public class TicketTotalFragment extends Fragment {
             try {
                 Request request = new Request.Builder()
                         .url(strUrl)
+                        .get()
                         .build();
 
                 Response response = client.newCall(request).execute();
-                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
-//                result = response.body().string();
+//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+                Gson gson = new Gson();
+
+                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
+                loadedShows = gson.fromJson(response.body().string(), listType);
+
+//                JSONArray jsonArray = new JSONArray(response.body().string());
+//                for(int i=0; i<jsonArray.length(); i++){
+//                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                    Show show = new Show();
+//                    show.setId(jsonObject.getInt("id"));
+//                    show.setTitle(jsonObject.getString("title"));
+//                    show.setType(jsonObject.getInt("type"));
+//                    show.setStartDate(jsonObject.getString("startDate"));
+//                    show.setEndDate(jsonObject.getString("endDate"));
+//                    show.setTicketOpen(jsonObject.getString("ticketOpen"));
+//                    show.setTime(jsonObject.getString("time"));
+//                    show.setRunningTime(jsonObject.getInt("runningTime"));
+//                    show.setPrice(jsonObject.getString("price"));
+//                    show.setBuyTicket(jsonObject.getString("buyTicket"));
+//                    show.setPosterSrc(jsonObject.getString("posterSrc"));
+//                    show.setVenue(jsonObject.getString("venue"));
+//                    show.setRegisteredTime(jsonObject.getString("registeredTime"));
+//
+//                    loadedShows.add(show);
+//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return result;
+            return loadedShows;
         }
 
         @Override
@@ -108,9 +156,10 @@ public class TicketTotalFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(List<Show> shows) {
+//            super.onPostExecute(shows);
+            page++;
+            setTotalList(shows);
         }
-
     }
 }

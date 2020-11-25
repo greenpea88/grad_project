@@ -90,7 +90,7 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
 
         public void setItem(Show item) {
             // poster.setImageDrawable(); URL로부터 이미지를 로드해오는 함수 필요
-            titleText.setText(item.sName);
+            titleText.setText(item.title);
 //            performersText.setText(item.performerList.get(0).pName); // 추후 수정해야함 리스트의 이름을 나열해 문자열로 정렬하는 함수 필요
 //            dateText.setText(item.startDate + " ~ " + item.endDate); // 추후 수정해야함 경우의 수에 따라 조건함수 필요
 //            priceText.setText(item.price);

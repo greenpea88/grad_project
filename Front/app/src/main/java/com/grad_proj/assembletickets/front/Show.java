@@ -2,30 +2,37 @@ package com.grad_proj.assembletickets.front;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Show implements Serializable {
-    String sName;
-    int startDate;
-    int endDate;
-    String sTime;
-    String type;
-    String price;
-    Date ticketOpen;
-    String buyTicket;
+    int id;
+    String title;
+    int type;
+    String startDate;
+    String endDate;
+    String ticketOpen;
+    String time;
     int runningTime;
-    String picSrc;
-    ArrayList<Performer> performerList = new ArrayList<Performer>();
+    String price;
+    String buyTicket;
+    String posterSrc;
+    String venue;
+    String registeredTime;
 
-    public int getEndDate() {
+//    ArrayList<Performer> performerList = new ArrayList<Performer>();
+
+    public int getId() {
+        return id;
+    }
+
+    public String getEndDate() {
         return endDate;
     }
 
-    public String getsTime() {
-        return sTime;
+    public String getTime() {
+        return time;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
@@ -33,7 +40,7 @@ public class Show implements Serializable {
         return price;
     }
 
-    public Date getTicketOpen() {
+    public String getTicketOpen() {
         return ticketOpen;
     }
 
@@ -45,40 +52,52 @@ public class Show implements Serializable {
         return runningTime;
     }
 
-    public String getPicSrc() {
-        return picSrc;
+    public String getPosterSrc() {
+        return posterSrc;
     }
 
-    public ArrayList<Performer> getPerformerList() {
-        return performerList;
+//    public ArrayList<Performer> getPerformerList() {
+//        return performerList;
+//    }
+
+    public String getTitle() {
+        return title;
     }
 
-    public String getsName() {
-        return sName;
-    }
-
-    public int getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    //MARK: - setter
-    public void setsName(String sName) {
-        this.sName = sName;
+    public String getVenue() {
+        return venue;
     }
 
-    public void setStartDate(int startDate) {
+    public String getRegisteredTime() {
+        return registeredTime;
+    }
+
+    //MARK: - setter
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public void setEndDate(int endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public void setsTime(String sTime) {
-        this.sTime = sTime;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -86,7 +105,7 @@ public class Show implements Serializable {
         this.price = price;
     }
 
-    public void setTicketOpen(Date ticketOpen) {
+    public void setTicketOpen(String ticketOpen) {
         this.ticketOpen = ticketOpen;
     }
 
@@ -98,11 +117,19 @@ public class Show implements Serializable {
         this.runningTime = runningTime;
     }
 
-    public void setPicSrc(String picSrc) {
-        this.picSrc = picSrc;
+    public void setPosterSrc(String posterSrc) {
+        this.posterSrc = posterSrc;
     }
 
-    public void setPerformerList(ArrayList<Performer> performerList) {
-        this.performerList = performerList;
+    public void setVenue(String venue) {
+        this.venue = venue;
+    }
+
+//    public void setPerformerList(ArrayList<Performer> performerList) {
+//        this.performerList = performerList;
+//    }
+
+    public void setRegisteredTime(String registeredTime) {
+        this.registeredTime = registeredTime;
     }
 }

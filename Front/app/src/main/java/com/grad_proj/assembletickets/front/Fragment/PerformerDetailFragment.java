@@ -4,13 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,13 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
-import com.grad_proj.assembletickets.front.EventSelectDialog;
-import com.grad_proj.assembletickets.front.OnSelectDialogListener;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.ShowAdapter;
-import com.grad_proj.assembletickets.front.SubscribeListDeco;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -98,7 +91,7 @@ public class PerformerDetailFragment extends Fragment {
         showList = Arrays.asList("test1","test2","test3","test4","test5","test6");
         for(int i = 0; i < showList.size(); i++){
             Show show = new Show();
-            show.setsName(showList.get(i));
+            show.setTitle(showList.get(i));
 
             //data를 adpater에 추가
             showAdapter.addItem(show);

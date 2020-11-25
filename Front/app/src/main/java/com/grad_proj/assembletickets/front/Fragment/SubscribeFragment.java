@@ -151,7 +151,7 @@ public class SubscribeFragment extends Fragment {
     private void setSubscribeShowList(){
         for(int i=0; i<subscribeShowList.size(); i++){
             Show show = new Show();
-            show.setsName(subscribeShowList.get(i));
+            show.setTitle(subscribeShowList.get(i));
             //data를 adpater에 추가하기
             showAdapter.addItem(show);
         }

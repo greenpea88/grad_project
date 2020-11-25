@@ -22,12 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.EventSelectDialog;
-import com.grad_proj.assembletickets.front.OnDialogListener;
 import com.grad_proj.assembletickets.front.OnSelectDialogListener;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
-import com.grad_proj.assembletickets.front.SubscribeAdapter;
 import com.grad_proj.assembletickets.front.SubscribeListDeco;
 
 import java.io.IOException;
@@ -76,7 +74,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         new ImgDownloadTask().execute("http://ticketimage.interpark.com/Play/image/large/20/20008287_p.gif");
 
         showDetailTitle = (TextView)view.findViewById(R.id.showDetailTitle);
-        showDetailTitle.setText(show.getsName());
+        showDetailTitle.setText(show.getTitle());
 
         addEventBtn = (Button)view.findViewById(R.id.addEventBtn);
         addEventBtn.setOnClickListener(new View.OnClickListener() {
@@ -151,7 +149,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("티켓팅 날짜",show.getsName()));
+        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("티켓팅 날짜",show.getTitle()));
 //        ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance("2020-11-12",show.getsName()));
     }
 
@@ -161,7 +159,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간",show.getsName()));
+        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간",show.getTitle()));
     }
 
     private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
