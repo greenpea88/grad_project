@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,7 +56,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
     private SwipeToDelete swipeToDelete = null;
     private OnDialogListener listener;
 
-//    public List<Event> events;
+    private Event updateEvent;
 
 
     TextView dateTextView,emptyEventTextView;
@@ -210,9 +211,10 @@ public class DateFragment extends Fragment implements OnDialogListener {
     @Override
     public void onFinish(int position, Event event) {
         Log.d("DateFragment","Dialog finish");
-        ((HomeActivity)getActivity()).updateEvent(event);
 
-//        new UpdateEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+        updateEvent=event;
+        updateEvent.setDate(date);
+        new UpdateEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
 
         dateEventAdapter.changeItem(position,event);
         dateEventAdapter.notifyDataSetChanged();
@@ -238,39 +240,68 @@ public class DateFragment extends Fragment implements OnDialogListener {
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
                     .build().toString();
 
+            String hour;
+            if(Integer.toString(updateEvent.getTimeHour()).length()<2){
+                hour = "0"+updateEvent.getTimeHour();
+            }
+            else{
+                hour = Integer.toString(updateEvent.getTimeHour());
+            }
 
-//            String postJson = "{\n" +
-//                    "  \"showId\" : "+showId+",\n" +
-//                    "  \"calDate\" : \""+postEvent.getDate()+"\",\n" +
-//                    "  \"calTime\" : \""+hour+":"+minute+":00"+"\",\n" +
-//                    "  \"calTitle\" : \""+postEvent.getEventName()+"\",\n" +
-//                    "  \"calMemo\" : \""+content+"\",\n" +
-//                    "  \"alarmSet\" : "+postEvent.getAlarmSet()+"\n" +
-//                    "  \n" +
-//                    "}";
-//
-//            RequestBody requestBody = RequestBody.create(
-//                    MediaType.parse("application/json; charset=utf-8"),
-//                    postJson
-//            );
+            String minute;
+            if(Integer.toString(updateEvent.getTimeMin()).length()<2){
+                minute = "0"+updateEvent.getTimeMin();
+            }
+            else{
+                minute = Integer.toString(updateEvent.getTimeMin());
+            }
 
-//            try {
-//                Request request = new Request.Builder()
-//                        .url(strUrl)
-//                        .post(requestBody)
-//                        .build();
+            String content;
+            if(TextUtils.isEmpty(updateEvent.getEventContent())){
+                content="";
+            }
+            else{
+                content=updateEvent.getEventContent();
+            }
+
+            String postJson = "{\n" +
+                    "  \"calId\" : "+updateEvent.getId()+",\n" +
+                    "  \"calDate\" : \""+updateEvent.getDate()+"\",\n" +
+                    "  \"calTime\" : \""+hour+":"+minute+":00"+"\",\n" +
+                    "  \"calTitle\" : \""+updateEvent.getEventName()+"\",\n" +
+                    "  \"calMemo\" : \""+content+"\",\n" +
+                    "  \"alarmSet\" : "+updateEvent.getAlarmSet()+"\n"+
+                    "}";
+
+            System.out.println(postJson);
+
+            RequestBody requestBody = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"),
+                    postJson
+            );
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .put(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+//                Gson gson = new Gson();
 //
-//                Response response = client.newCall(request).execute();
-//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
-////                Gson gson = new Gson();
-////
-////                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
-////                newLoadedShows = gson.fromJson(response.body().string(), listType);
-////                System.out.println(newLoadedShows.size());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+//                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
+//                newLoadedShows = gson.fromJson(response.body().string(), listType);
+//                System.out.println(newLoadedShows.size());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            ((HomeActivity)getActivity()).updateEvent(updateEvent);
         }
     }
 }
