@@ -3,6 +3,7 @@ package com.grad_proj.assembletickets.front.Fragment;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +32,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class EditSubscribeFragment extends Fragment {
@@ -43,6 +46,8 @@ public class EditSubscribeFragment extends Fragment {
     View view;
     public RecyclerView editDetailList;
     private SubscribeEditAdapter subscribeEditAdapter;
+
+    private int deleteId;
 
     private SwipeToDelete swipeToDelete = null;
 
@@ -65,6 +70,8 @@ public class EditSubscribeFragment extends Fragment {
         swipeToDelete = new SwipeToDelete(view.getContext(),"subscribe",new SwipeToDeleteAction() {
             @Override
             public void onRightClicked(int position){
+                deleteId = subscribeEditAdapter.getPerformerId(position);
+                new DeleteSubscribe().execute("http://10.0.2.2:8080/assemble-ticket/subscribe");
                 subscribeEditAdapter.removeItem(position);
                 subscribeEditAdapter.notifyItemRemoved(position);
                 subscribeEditAdapter.notifyItemRangeChanged(position,subscribeEditAdapter.getItemCount());
@@ -155,16 +162,21 @@ public class EditSubscribeFragment extends Fragment {
         protected Void doInBackground(String... strings) {
 
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
-                    .addQueryParameter("email", UserSharedPreference.getUserEmail(getContext()))
                     .build().toString();
+
+            RequestBody requestBody = new FormBody.Builder()
+                    .add("email",UserSharedPreference.getUserEmail(getContext()))
+                    .add("performerId",Integer.toString(deleteId))
+                    .build();
 
             try {
                 Request request = new Request.Builder()
                         .url(strUrl)
+                        .delete(requestBody)
                         .build();
 
                 Response response = client.newCall(request).execute();
-//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+                Log.d("EditSubscribeFragment","doInBackground : "+response.body().string());
             } catch (IOException e) {
                 e.printStackTrace();
             }

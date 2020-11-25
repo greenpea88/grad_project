@@ -41,6 +41,10 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
         return subscribeEditList.size();
     }
 
+    public int getPerformerId(int position){
+        return subscribeEditList.get(position).getId();
+    }
+
     public void addItem(Performer performer){
         subscribeEditList.add(performer);
     }
