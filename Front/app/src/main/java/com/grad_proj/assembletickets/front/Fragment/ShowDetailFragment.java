@@ -4,8 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,19 +23,31 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.EventSelectDialog;
+import com.grad_proj.assembletickets.front.LoadDataDialog;
 import com.grad_proj.assembletickets.front.OnSelectDialogListener;
 import com.grad_proj.assembletickets.front.Performer;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.Show;
 import com.grad_proj.assembletickets.front.SubscribeListDeco;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ShowDetailFragment extends Fragment implements OnSelectDialogListener{
 
@@ -40,7 +55,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
 
     private ImageView detailImgPoster;
     private Button addEventBtn;
-    private TextView showDetailTitle;
+    private TextView showDetailTitle, showDetailVenue, showDetailDate, showDetailTicketDate,showDetailPrice;
     private RecyclerView showPerformerList;
     private PerformerAdapter performerAdapter;
     private SubscribeListDeco performerDeco;
@@ -71,10 +86,27 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         }
 
         detailImgPoster = (ImageView)view.findViewById(R.id.detailImgPoster);
-        new ImgDownloadTask().execute("http://ticketimage.interpark.com/Play/image/large/20/20008287_p.gif");
+        new ImgDownloadTask().execute(show.getPosterSrc());
 
         showDetailTitle = (TextView)view.findViewById(R.id.showDetailTitle);
         showDetailTitle.setText(show.getTitle());
+
+        showDetailVenue = (TextView)view.findViewById(R.id.showDetailVenue);
+        showDetailVenue.setText(show.getVenue());
+
+        showDetailDate = (TextView)view.findViewById(R.id.showDetailDate);
+        showDetailDate.setText(show.getStartDate()+"~"+show.getEndDate());
+
+        showDetailTicketDate = (TextView)view.findViewById(R.id.showDetailTicketDate);
+        if (TextUtils.isEmpty(show.getTicketOpen())){
+            showDetailTicketDate.setText("추후 공지 예정");
+        }
+        else{
+            showDetailTicketDate.setText(show.getTicketOpen());
+        }
+
+        showDetailPrice = (TextView)view.findViewById(R.id.showDetailPrice);
+        showDetailPrice.setText(show.getPrice());
 
         addEventBtn = (Button)view.findViewById(R.id.addEventBtn);
         addEventBtn.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +192,44 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
         ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance("공연 기간",show.getTitle()));
+    }
+
+    private class GetSubscribeList extends AsyncTask<String, Void ,List<Performer>>{
+
+        //        List<Show> loadedShows = new ArrayList<>();
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected List<Performer> doInBackground(String... strings) {
+            List<Performer> showPerfomer = new ArrayList<>();
+
+            //당겨서 새로고침 test 해보려면 time을 "2020-11-22T15:34:18" 로 넣어서 test해보기
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+                Gson gson = new Gson();
+
+                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
+                showPerfomer = gson.fromJson(response.body().string(), listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return showPerfomer;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
     }
 
     private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
