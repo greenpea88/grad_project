@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
 
@@ -23,7 +24,7 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
         void onItemClicked(View v, int position);
     }
 
-    ArrayList<Show> items = new ArrayList<Show>();
+    List<Show> items = new ArrayList<Show>();
 
     private ShowAdapter.OnItemClickListener onItemClickListener = null;
 
@@ -48,6 +49,11 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
 
     public void addItem(Show item) {
         items.add(item);
+    }
+
+    public void addNewItems(List<Show> newLoadedShows){
+        newLoadedShows.addAll(items);
+        items=newLoadedShows;
     }
 
     public void resetItem(){
@@ -101,9 +107,6 @@ public class ShowAdapter extends RecyclerView.Adapter<ShowAdapter.ViewHolder> {
             dateText.setText(item.getStartDate()+"~"+item.getEndDate());
             priceText.setText(item.getPrice());
             new ImgDownloadTask().execute(item.getPosterSrc());
-//            performersText.setText(item.performerList.get(0).pName); // 추후 수정해야함 리스트의 이름을 나열해 문자열로 정렬하는 함수 필요
-//            dateText.setText(item.startDate + " ~ " + item.endDate); // 추후 수정해야함 경우의 수에 따라 조건함수 필요
-//            priceText.setText(item.price);
         }
 
         private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {

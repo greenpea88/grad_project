@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -41,13 +42,16 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class TicketTotalFragment extends Fragment {
+public class TicketTotalFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     public View view;
     private ShowAdapter totalShowAdapter;
+    private SwipeRefreshLayout.OnRefreshListener listener;
+
     private String now;
     int page = 0;
 
+    SwipeRefreshLayout totalSwipeToRefresh;
     RecyclerView totalTicketList;
 
     LoadDataDialog loadDataDialog = null;
@@ -56,6 +60,7 @@ public class TicketTotalFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ticket_total,container, false);
+        listener = this;
 
         totalTicketList = (RecyclerView)view.findViewById(R.id.totalTicketList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
@@ -77,6 +82,9 @@ public class TicketTotalFragment extends Fragment {
             }
         });
 
+        totalSwipeToRefresh = (SwipeRefreshLayout)view.findViewById(R.id.totalSwipeToRefresh);
+        totalSwipeToRefresh.setOnRefreshListener(listener);
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Date date = new Date();
         now = simpleDateFormat.format(date);
@@ -91,7 +99,7 @@ public class TicketTotalFragment extends Fragment {
             Show show = loadedShows.get(i);
 //            Log.d("TicketTotalFragment","getData : "+show.getTitle());
 
-            //data를 adpater에 추가하
+            //data를 adpater에 추가하기
             totalShowAdapter.addItem(show);
         }
         totalShowAdapter.notifyDataSetChanged();
@@ -101,6 +109,19 @@ public class TicketTotalFragment extends Fragment {
         new GetTotalShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/all");
     }
 
+    private void loadNewShow(){
+        new GetNewShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/all/new");
+    }
+
+    @Override
+    public void onRefresh() {
+        //당겨서 새로고침할 시 동작
+        Log.d("TicketTotalFragment","swipe to refresh");
+        loadNewShow();
+        //새로고침 끝내기
+        totalSwipeToRefresh.setRefreshing(false);
+    }
+
     private class GetTotalShows extends AsyncTask<String, Void ,List<Show>>{
 
 //        List<Show> loadedShows = new ArrayList<>();
@@ -108,23 +129,13 @@ public class TicketTotalFragment extends Fragment {
 
         @Override
         protected List<Show> doInBackground(String... strings) {
-//            String result = null;
             List<Show> loadedShows = new ArrayList<>();
-//            String strUrl = strings[0];
+
+            //당겨서 새로고침 test 해보려면 time을 "2020-11-22T15:34:18" 로 넣어서 test해보기
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
                     .addQueryParameter("page",Integer.toString(page))
                     .addQueryParameter("time",now)
                     .build().toString();
-
-
-//            HttpUrl httpUrl = new HttpUrl.Builder()
-//                    .scheme("http")
-//                    .host(strUrl)
-//                    .addPathSegment("/assemble-ticket/search")
-//                    .addQueryParameter("keyword","팬텀")
-//                    .build();
-
-//            System.out.println(httpUrl);
 
             try {
                 Request request = new Request.Builder()
@@ -170,6 +181,80 @@ public class TicketTotalFragment extends Fragment {
             loadDataDialog.dismiss();
             if(shows.size()!=0){
                 setTotalList(shows);
+            }
+            else{
+                Toast toast = Toast.makeText(view.getContext(),"더 이상 불러올 공연이 없습니다.",Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER,0,0);
+                toast.show();
+            }
+        }
+    }
+
+    private class GetNewShows extends AsyncTask<String, Void ,List<Show>>{
+
+        OkHttpClient client = new OkHttpClient();
+        List<Show> newLoadedShows;
+
+        @Override
+        protected List<Show> doInBackground(String... strings) {
+            newLoadedShows = new ArrayList<>();
+
+            //recyclerView 가장 상단 Item의 시간 받아오기
+            String refresh = totalShowAdapter.getItem(0).getRegisteredTime();
+
+            System.out.println(refresh);
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("time",refresh)
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+//                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+                Gson gson = new Gson();
+
+                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
+                newLoadedShows = gson.fromJson(response.body().string(), listType);
+//                System.out.println(newLoadedShows.size());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(newLoadedShows.size());
+            return newLoadedShows;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loadDataDialog = new LoadDataDialog(view.getContext());
+
+            DisplayMetrics displayMetrics = view.getContext().getApplicationContext().getResources().getDisplayMetrics();
+
+            int width = displayMetrics.widthPixels;
+            int height = displayMetrics.heightPixels;
+
+            WindowManager.LayoutParams windowManger = loadDataDialog.getWindow().getAttributes();
+            windowManger.copyFrom(loadDataDialog.getWindow().getAttributes());
+            windowManger.width=(int)(width*0.8);
+            windowManger.height=(int)(height*0.2);
+
+            loadDataDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(List<Show> shows) {
+            super.onPostExecute(shows);
+            loadDataDialog.dismiss();
+            System.out.println(shows.size());
+            if(newLoadedShows.size()!=0){
+                //현재 리스트 앞쪽으로 붙여야함
+                totalShowAdapter.addNewItems(newLoadedShows);
+                totalShowAdapter.notifyDataSetChanged();
             }
             else{
                 Toast toast = Toast.makeText(view.getContext(),"더 이상 불러올 공연이 없습니다.",Toast.LENGTH_SHORT);
