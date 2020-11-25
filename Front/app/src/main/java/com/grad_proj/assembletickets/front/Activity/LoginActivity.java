@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,8 +25,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.grad_proj.assembletickets.front.Database.CDatabaseOpen;
 import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
+import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
+
+import java.io.IOException;
+import java.util.List;
+
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 //TODO: 비밀번호 잊엇는지에 대한 문구를 언제 띄울 것인가?
 
@@ -179,6 +191,32 @@ public class LoginActivity extends AppCompatActivity {
         sDatabaseOpen.open();
         sDatabaseOpen.create();
         sDatabaseOpen.close();
+    }
+
+    private class GetEventData extends AsyncTask<String, Void , List<Event>> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected List<Event> doInBackground(String... strings) {
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                Log.d("EditSubscribeFragment","doInBackground : "+response.body().string());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 
 }
