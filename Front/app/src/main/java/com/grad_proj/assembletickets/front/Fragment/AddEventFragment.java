@@ -3,18 +3,15 @@ package com.grad_proj.assembletickets.front.Fragment;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,18 +19,12 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.grad_proj.assembletickets.front.Activity.HomeActivity;
 import com.grad_proj.assembletickets.front.Event;
-import com.grad_proj.assembletickets.front.LoadDataDialog;
 import com.grad_proj.assembletickets.front.R;
-import com.grad_proj.assembletickets.front.Show;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -49,6 +40,7 @@ public class AddEventFragment extends Fragment {
     private static final String DATE="date";
     private String date;
     private String title;
+    private int showId;
 
     Button submitBtn;
     TimePicker eventTimePicker;
@@ -56,15 +48,16 @@ public class AddEventFragment extends Fragment {
     EditText eventContentEditText;
     SwitchMaterial alarmSwitch;
 
-    private String postJson;
+    private Event postEvent;
 //    private String eventTitle="";
 
-    public static AddEventFragment newInstance(String date,String title) {
+    public static AddEventFragment newInstance(String date,String title,int id) {
         //이전 fragment로부터 데이터 넘겨받기
         AddEventFragment addEventFragment = new AddEventFragment();
         Bundle bundle = new Bundle();
         bundle.putString(DATE, date);
         bundle.putString("title",title);
+        bundle.putInt("showId",id);
         addEventFragment.setArguments(bundle);
 
         return addEventFragment;
@@ -79,6 +72,7 @@ public class AddEventFragment extends Fragment {
         if(getArguments() != null){
             date = getArguments().getString(DATE);
             title = getArguments().getString("title");
+            showId = getArguments().getInt("showId");
         }
 
         submitBtn = (Button)view.findViewById(R.id.submitBtn);
@@ -126,18 +120,15 @@ public class AddEventFragment extends Fragment {
                 ((HomeActivity)getActivity()).insertEvent(date,title,eventContent,eventHour,eventMin,alarmSet);
 
                 //새로 추가된 정보 서버에도 넣기
-                Event event = new Event();
-                event.setDate(date);
-                event.setTimeHour(eventHour);
-                event.setTimeMin(eventMin);
-                event.setEventName(title);
-                event.setEventContent(eventContent);
-                event.setAlarmSet(alarmSet);
+                postEvent = new Event();
+                postEvent.setDate(date);
+                postEvent.setTimeHour(eventHour);
+                postEvent.setTimeMin(eventMin);
+                postEvent.setEventName(title);
+                postEvent.setEventContent(eventContent);
+                postEvent.setAlarmSet(alarmSet);
 
-                Gson gson = new Gson();
-                postJson = gson.toJson(event);
-
-                new UpdateEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+                new PostEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
 
                 //다시 원래 페이지로 돌아오기 -> pop 두 번 필요
                 ((HomeActivity)getActivity()).submitBtnAction();
@@ -146,7 +137,7 @@ public class AddEventFragment extends Fragment {
         return view;
     }
 
-    private class UpdateEvent extends AsyncTask<String, Void ,Void> {
+    private class PostEvent extends AsyncTask<String, Void ,Void> {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -155,6 +146,51 @@ public class AddEventFragment extends Fragment {
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
                     .build().toString();
 
+
+//            RequestBody requestBody = RequestBody.create(
+//                    MediaType.parse("application/json; charset=utf-8"),
+//
+//            );
+//            Gson gson = new Gson();
+//            String test = gson.toJson(newEvent);
+//            System.out.println(test);
+//
+            String hour;
+            if(Integer.toString(postEvent.getTimeHour()).length()<2){
+                hour = "0"+postEvent.getTimeHour();
+            }
+            else{
+                hour = Integer.toString(postEvent.getTimeHour());
+            }
+
+            String minute;
+            if(Integer.toString(postEvent.getTimeMin()).length()<2){
+                minute = "0"+postEvent.getTimeMin();
+            }
+            else{
+                minute = Integer.toString(postEvent.getTimeMin());
+            }
+
+            String content;
+            if(TextUtils.isEmpty(postEvent.getEventContent())){
+                content="";
+            }
+            else{
+                content=postEvent.getEventContent();
+            }
+
+            String postJson = "{\n" +
+                    "  \"email\" : \""+UserSharedPreference.getUserEmail(getContext())+"\",\n" +
+                    "  \"showId\" : "+showId+",\n" +
+                    "  \"calDate\" : \""+postEvent.getDate()+"\",\n" +
+                    "  \"calTime\" : \""+hour+":"+minute+":00"+"\",\n" +
+                    "  \"calTitle\" : \""+postEvent.getEventName()+"\",\n" +
+                    "  \"calMemo\" : \""+content+"\",\n" +
+                    "  \"alarmSet\" : "+postEvent.getAlarmSet()+"\n" +
+                    "  \n" +
+                    "}";
+
+            System.out.println(postJson);
             RequestBody requestBody = RequestBody.create(
                     MediaType.parse("application/json; charset=utf-8"),
                     postJson
@@ -167,7 +203,7 @@ public class AddEventFragment extends Fragment {
                         .build();
 
                 Response response = client.newCall(request).execute();
-                Log.d("TicketTotalFragment","doInBackground : "+response.body().string());
+                Log.d("AddEventFragment","doInBackground : "+response.body().string());
 //                Gson gson = new Gson();
 //
 //                Type listType = new TypeToken<ArrayList<Show>>() {}.getType();
