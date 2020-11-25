@@ -58,7 +58,7 @@ public class CDatabaseOpen {
         mDBHelper.close();
     }
 
-    public long insertColumn(String eventDate,String eventName,String eventContent,int hour,int min,int alarmSet){
+    public long insertColumn(String eventDate,String eventName,String eventContent,int hour,int min,int alarmSet,int showId){
         //insert DB - with content
         ContentValues values = new ContentValues();
         values.put(CalendarDatabase.CalendarDB.EVENTDATE,eventDate);
@@ -67,6 +67,7 @@ public class CDatabaseOpen {
         values.put(CalendarDatabase.CalendarDB.HOUR,hour);
         values.put(CalendarDatabase.CalendarDB.MINUTE,min);
         values.put(CalendarDatabase.CalendarDB.ALARMSET,alarmSet);
+        values.put(CalendarDatabase.CalendarDB.SHOWID,showId);
 
         return mDB.insert(CalendarDatabase.CalendarDB._TABLENAME,null,values);
     }

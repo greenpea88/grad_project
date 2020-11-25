@@ -116,9 +116,6 @@ public class AddEventFragment extends Fragment {
                     alarmSet=0;
                 }
 
-                //db에 새로 추가된 정보 넣기
-                ((HomeActivity)getActivity()).insertEvent(date,title,eventContent,eventHour,eventMin,alarmSet);
-
                 //새로 추가된 정보 서버에도 넣기
                 postEvent = new Event();
                 postEvent.setDate(date);
@@ -137,24 +134,15 @@ public class AddEventFragment extends Fragment {
         return view;
     }
 
-    private class PostEvent extends AsyncTask<String, Void ,Void> {
+    private class PostEvent extends AsyncTask<String, Void ,Integer> {
 
         OkHttpClient client = new OkHttpClient();
 
         @Override
-        protected Void doInBackground(String... strings) {
+        protected Integer doInBackground(String... strings) {
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
                     .build().toString();
 
-
-//            RequestBody requestBody = RequestBody.create(
-//                    MediaType.parse("application/json; charset=utf-8"),
-//
-//            );
-//            Gson gson = new Gson();
-//            String test = gson.toJson(newEvent);
-//            System.out.println(test);
-//
             String hour;
             if(Integer.toString(postEvent.getTimeHour()).length()<2){
                 hour = "0"+postEvent.getTimeHour();
@@ -213,6 +201,13 @@ public class AddEventFragment extends Fragment {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer calId) {
+            //db에 새로 추가된 정보 넣기
+            ((HomeActivity)getActivity())
+                    .insertEvent(date,title,postEvent.getEventContent(),postEvent.getTimeHour(),postEvent.getTimeMin(),postEvent.getAlarmSet(),showId);
         }
     }
 }

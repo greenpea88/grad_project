@@ -30,6 +30,7 @@ import com.grad_proj.assembletickets.front.OnDialogListener;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.SwipeToDelete;
 import com.grad_proj.assembletickets.front.SwipeToDeleteAction;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
 
 import java.io.IOException;
 
@@ -188,6 +189,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
             int hour = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.HOUR));
             int min = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.MINUTE));
             int alarmSet = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.ALARMSET));
+            int showId = cursor.getInt(cursor.getColumnIndex(CalendarDatabase.CalendarDB.SHOWID));
 
             Event event = new Event();
             event.setId(id);
@@ -196,6 +198,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
             event.setTimeHour(hour);
             event.setTimeMin(min);
             event.setAlarmSet(alarmSet);
+            event.setShowId(showId);
 
             dateEventAdapter.addItem(event);
         }
@@ -214,20 +217,31 @@ public class DateFragment extends Fragment implements OnDialogListener {
         dateEventAdapter.notifyDataSetChanged();
     }
 
-//    private class UpdateEvent extends AsyncTask<String, Void ,Void> {
-//
-//        OkHttpClient client = new OkHttpClient();
-//
-//        @Override
-//        protected Void doInBackground(String... strings) {
-//            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
-//                    .build().toString();
+    private class UpdateEvent extends AsyncTask<String, Void ,Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .build().toString();
+
+
+//            String postJson = "{\n" +
+//                    "  \"showId\" : "+showId+",\n" +
+//                    "  \"calDate\" : \""+postEvent.getDate()+"\",\n" +
+//                    "  \"calTime\" : \""+hour+":"+minute+":00"+"\",\n" +
+//                    "  \"calTitle\" : \""+postEvent.getEventName()+"\",\n" +
+//                    "  \"calMemo\" : \""+content+"\",\n" +
+//                    "  \"alarmSet\" : "+postEvent.getAlarmSet()+"\n" +
+//                    "  \n" +
+//                    "}";
 //
 //            RequestBody requestBody = RequestBody.create(
 //                    MediaType.parse("application/json; charset=utf-8"),
 //                    postJson
 //            );
-//
+
 //            try {
 //                Request request = new Request.Builder()
 //                        .url(strUrl)
@@ -244,7 +258,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
-//            return null;
-//        }
-//    }
+            return null;
+        }
+    }
 }
