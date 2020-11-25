@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,8 +24,8 @@ public class CalendarService {
     private final ShowRepository showRepository;
 
     // 해당 User 해당 Date의 일정 가져오기
-    public List<Calendar> getCalendar(String email, LocalDate date){
-        return calendarRepository.findAllByUserEmailAndCalDateAndCalDeletedFalse(email, date);
+    public List<Calendar> getCalendar(String email){
+        return calendarRepository.findAllByUserEmailAndCalDeletedFalse(email);
     }
 
     // 일정 등록하기

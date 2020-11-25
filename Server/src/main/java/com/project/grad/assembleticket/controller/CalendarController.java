@@ -7,7 +7,6 @@ import com.project.grad.assembleticket.service.CalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RequestMapping("/assemble-ticket")
@@ -19,8 +18,8 @@ public class CalendarController {
 
     // 해당 User 해당 Date의 일정 가져오기
     @GetMapping("/calendar")
-    public List<Calendar> getCalendar(@RequestParam String email, @RequestParam String date) {
-        return calendarService.getCalendar(email, LocalDate.parse(date));
+    public List<Calendar> getCalendar(@RequestParam String email) {
+        return calendarService.getCalendar(email);
     }
 
     // 일정 등록하기
