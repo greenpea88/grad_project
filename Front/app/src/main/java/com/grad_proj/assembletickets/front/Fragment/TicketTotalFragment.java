@@ -159,7 +159,12 @@ public class TicketTotalFragment extends Fragment implements SwipeRefreshLayout.
         @Override
         protected void onPreExecute() {
 //            super.onPreExecute();
-            loadDataDialog = new LoadDataDialog(view.getContext());
+            if(totalShowAdapter.getItemCount()!=0){
+                loadDataDialog = new LoadDataDialog(view.getContext(),"더 불러오는 중...");
+            }
+            else{
+                loadDataDialog = new LoadDataDialog(view.getContext(),"공연 정보를 불러오는 중...");
+            }
 
             DisplayMetrics displayMetrics = view.getContext().getApplicationContext().getResources().getDisplayMetrics();
 
@@ -231,7 +236,7 @@ public class TicketTotalFragment extends Fragment implements SwipeRefreshLayout.
 
         @Override
         protected void onPreExecute() {
-            loadDataDialog = new LoadDataDialog(view.getContext());
+            loadDataDialog = new LoadDataDialog(view.getContext(),"더 불러오는 중...");
 
             DisplayMetrics displayMetrics = view.getContext().getApplicationContext().getResources().getDisplayMetrics();
 

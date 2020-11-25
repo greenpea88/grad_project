@@ -19,6 +19,7 @@
             android:indeterminate="true"
             android:paddingRight="16dp"/>
         <TextView
+            android:id="@+id/loadTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="더 불러오는 중..."
