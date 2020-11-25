@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -29,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grad_proj.assembletickets.front.Alarm.AlarmReceiver;
 import com.grad_proj.assembletickets.front.Database.CDatabaseOpen;
+import com.grad_proj.assembletickets.front.Database.CalendarDatabase;
 import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
 import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.Fragment.CalendarFragment;
@@ -36,10 +38,14 @@ import com.grad_proj.assembletickets.front.Fragment.SearchFragment;
 import com.grad_proj.assembletickets.front.Fragment.SubscribeFragment;
 import com.grad_proj.assembletickets.front.Fragment.TicketFragment;
 import com.grad_proj.assembletickets.front.Fragment.UserFragment;
+import com.grad_proj.assembletickets.front.Notification;
+import com.grad_proj.assembletickets.front.NotificationAdapter;
 import com.grad_proj.assembletickets.front.R;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Stack;
 
 public class HomeActivity extends AppCompatActivity {
@@ -70,6 +76,8 @@ public class HomeActivity extends AppCompatActivity {
 
     GoogleSignInClient mGoogleSignInClient;
 
+    RecyclerView notiRecyclerview;
+    NotificationAdapter notificationAdapter;
     AlarmManager alarmManager;
     Intent alarmIntent;
     PendingIntent pendingIntent;
@@ -140,6 +148,10 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        notificationAdapter = new NotificationAdapter();
+        notiRecyclerview = findViewById(R.id.notiRecyclerview);
+        notiRecyclerview.setAdapter(notificationAdapter);
+
         // 알림 사이드바
         notificationBtn = findViewById(R.id.notiButton);
         notificationBtn.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +160,7 @@ public class HomeActivity extends AppCompatActivity {
                 if (isPageOpen) {
                     notiPage.startAnimation(translateUp);
                 } else {
+                    updateNotification();
                     notiPage.setVisibility(View.VISIBLE);
                     notiPage.startAnimation(translateDown);
                 }
@@ -268,6 +281,29 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    public void updateNotification(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH mm");
+        Date date = new Date();
+        String now = simpleDateFormat.format(date);
+        String[] dateSet = now.split(" ");
+        String dateString = dateSet[0];
+        String hour = dateSet[1];
+        String min = dateSet[2];
+
+        notificationAdapter.removeAll();
+        Cursor cursor = getDateEvents(dateString);
+
+        while(cursor.moveToNext()){
+            Notification notification = new Notification();
+            notification.setContext(cursor.getString(cursor.getColumnIndex(CalendarDatabase.CalendarDB.EVENTNAME)));
+            notification.setDate(cursor.getString(cursor.getColumnIndex(CalendarDatabase.CalendarDB.EVENTDATE)));
+
+            notificationAdapter.addItem(notification);
+        }
+        closeCalendarDB();
+        notificationAdapter.notifyDataSetChanged();
+    }
+
     public void insertEvent(String date,String eventName, String eventContent,int hour, int minute,int alarmSet){
         cDatabaseOpen.open();
 
@@ -275,16 +311,16 @@ public class HomeActivity extends AppCompatActivity {
         cDatabaseOpen.close();
     }
 
-    public Cursor getEventId(String eventName){
-        cDatabaseOpen.open();
-
-        return cDatabaseOpen.selectDateByTitle(eventName);
-    }
-
     public Cursor getDateEvents(String date){
         cDatabaseOpen.open();
 
         return cDatabaseOpen.selectDataEvent(date);
+    }
+
+    public Cursor getEventsAfterDate(String date){
+        cDatabaseOpen.open();
+
+        return cDatabaseOpen.selectEventsAfterDate(date);
     }
 
     public Cursor getEventDates(){
@@ -309,17 +345,6 @@ public class HomeActivity extends AppCompatActivity {
 
     public void closeCalendarDB(){
         cDatabaseOpen.close();
-    }
-
-    public void insertHistory(String context){
-        sDatabaseOpen.open();
-        sDatabaseOpen.insertColumn(context);
-        sDatabaseOpen.close();
-    }
-
-    public Cursor getHistory(String context){
-        sDatabaseOpen.open();
-        return sDatabaseOpen.selectHistory(context);
     }
 
     public Cursor getHistoryAll(){
