@@ -17,6 +17,12 @@ public class SubscribeController {
     @Autowired
     private SubscribeService subscribeService;
 
+    // 구독되어 있는 공연자인지 확인
+    @GetMapping("/subscribe")
+    public boolean isSubscribed(@RequestParam String email, @RequestParam Long performerId){
+        return subscribeService.isSubscribed(email, performerId);
+    }
+
     // 구독 등록
     @PostMapping("/subscribe")
     public Subscribe saveSubscribe(@RequestParam String email, @RequestParam Long performerId){

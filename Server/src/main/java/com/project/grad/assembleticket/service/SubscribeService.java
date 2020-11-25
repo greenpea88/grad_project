@@ -22,6 +22,12 @@ public class SubscribeService {
     private final PerformerRepository performerRepository;
     private final ShowPerformerRepository showPerformerRepository;
 
+    // 구독되어 있는 공연자인지 확인
+    public boolean isSubscribed(String email, Long performerId){
+        if(subscribeRepository.countByUserEmailAndPerformerId(email, performerId)==0) return false;
+        else return true;
+    }
+
     // 구독 등록
     public Subscribe saveSubscribe(String email, Long performerId){
         User user = userRepository.findByEmail(email);
