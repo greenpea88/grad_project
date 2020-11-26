@@ -62,6 +62,8 @@ public class LoginActivity extends AppCompatActivity {
     private Intent intent;
     boolean isInDB;
 
+    GoogleSignInAccount account;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,31 +156,31 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            account = completedTask.getResult(ApiException.class);
+            inputEmail = account.getEmail();
             new GetUserExists().execute("http://10.0.2.2:8080/assemble-ticket/login");
-
-            if (isInDB) {
-                // 서버에 유저 정보 있으면
-                intent = new Intent(LoginActivity.this, HomeActivity.class);
-                // 자동 로그인 토큰
-                inputID = account.getId();
-                inputEmail = account.getEmail();
-                inputUserName = account.getDisplayName();
-                intent.putExtra("id", inputID);
-                intent.putExtra("email", inputEmail);
-                intent.putExtra("username", inputUserName);
-                new GetUserProfile().execute("http://10.0.2.2:8080/assemble-ticket/profile");
-                new GetEventData().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
-                getSearchData();
-//                startActivity(intent);
-//                this.finish();
-            } else {
-                // 서버에 유저 정보 없으면
-                Toast toast = Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER,0,0);
-                toast.show();
-                mGoogleSignInClient.signOut();
-            }
+//            if (isInDB) {
+//                // 서버에 유저 정보 있으면
+//                intent = new Intent(LoginActivity.this, HomeActivity.class);
+//                // 자동 로그인 토큰
+//                inputID = account.getId();
+//                inputEmail = account.getEmail();
+//                inputUserName = account.getDisplayName();
+//                intent.putExtra("id", inputID);
+//                intent.putExtra("email", inputEmail);
+//                intent.putExtra("username", inputUserName);
+//                new GetUserProfile().execute("http://10.0.2.2:8080/assemble-ticket/profile");
+//                new GetEventData().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+//                getSearchData();
+////                startActivity(intent);
+////                this.finish();
+//            } else {
+//                // 서버에 유저 정보 없으면
+//                Toast toast = Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG);
+//                toast.setGravity(Gravity.CENTER,0,0);
+//                toast.show();
+//                mGoogleSignInClient.signOut();
+//            }
         } catch (ApiException e) {
             Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());
             Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
@@ -228,12 +230,12 @@ public class LoginActivity extends AppCompatActivity {
         protected List<Event> doInBackground(String... strings) {
 
             List<Event> eventList = new ArrayList<>();
-//            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
-//                    .addQueryParameter("email",email)
-//                    .build().toString();
             String strUrl = HttpUrl.parse(strings[0]).newBuilder()
-                    .addQueryParameter("email","user00@gmail.com")
+                    .addQueryParameter("email",inputEmail)
                     .build().toString();
+//            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+//                    .addQueryParameter("email","user00@gmail.com")
+//                    .build().toString();
 
             try {
                 Request request = new Request.Builder()
@@ -317,6 +319,36 @@ public class LoginActivity extends AppCompatActivity {
 
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (isInDB) {
+                // 서버에 유저 정보 있으면
+                intent = new Intent(LoginActivity.this, HomeActivity.class);
+                // 자동 로그인 토큰
+                inputID = account.getId();
+                inputEmail = account.getEmail();
+                inputUserName = account.getDisplayName();
+                intent.putExtra("id", inputID);
+                intent.putExtra("email", inputEmail);
+                intent.putExtra("username", inputUserName);
+                new GetUserProfile().execute("http://10.0.2.2:8080/assemble-ticket/profile");
+                new GetEventData().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+                getSearchData();
+//                startActivity(intent);
+//                this.finish();
+            } else {
+                // 서버에 유저 정보 없으면
+                makeJoinToast();
+                mGoogleSignInClient.signOut();
+            }
+        }
+    }
+
+    private void makeJoinToast(){
+        Toast toast = Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER,0,0);
+        toast.show();
     }
 
     private class GetUserProfile extends AsyncTask<String, Void, User> {
