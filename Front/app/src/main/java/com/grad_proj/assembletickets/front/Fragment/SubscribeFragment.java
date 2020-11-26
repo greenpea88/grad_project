@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,7 @@ public class SubscribeFragment extends Fragment {
 
     View view;
     public RecyclerView subscribeRecyclerView, subscribeShowRecyclerView;
+    public TextView subscribeNone;
     public Button totalBtn;
     private SubscribeAdapter subscribeAdapter;
     private SubscribeListDeco subscribeListDeco;
@@ -55,6 +57,8 @@ public class SubscribeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_subscribe,container,false);
+
+        subscribeNone = (TextView)view.findViewById(R.id.subscribeNone);
 
         //구독하는 배우 리스트
         subscribeRecyclerView = (RecyclerView)view.findViewById(R.id.subscribeList);
@@ -130,10 +134,17 @@ public class SubscribeFragment extends Fragment {
     }
 
     private void setSubscribeShowList(List<Show> shows){
-        for(int i=0;i<shows.size();i++){
-            Show show = shows.get(i);
 
-            showAdapter.addItem(show);
+        if(shows.size()==0){
+            subscribeNone.setVisibility(View.VISIBLE);
+        }
+        else {
+            subscribeNone.setVisibility(View.INVISIBLE);
+            for(int i=0;i<shows.size();i++){
+                Show show = shows.get(i);
+
+                showAdapter.addItem(show);
+            }
         }
         showAdapter.notifyDataSetChanged();
     }
