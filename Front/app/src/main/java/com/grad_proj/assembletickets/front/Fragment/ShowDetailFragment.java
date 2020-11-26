@@ -107,7 +107,9 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
             showDetailTicketDate.setText("추후 공지 예정");
         }
         else{
-            showDetailTicketDate.setText(show.getTicketOpen());
+            String[] ticketDateTime = show.getTicketOpen().split("T");
+            String[] ticketTime = ticketDateTime[1].split(":");
+            showDetailTicketDate.setText(ticketDateTime[0]+" "+ticketTime[0]+"시"+ticketTime[1]+"분");
         }
 
         showDetailPrice = (TextView)view.findViewById(R.id.showDetailPrice);
