@@ -187,11 +187,14 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
 
     @Override
     public void onTicketingSelect() {
+        //show.getTicketOper format yyyy-MM-DDTHH:mm:ss
+        String[] ticketDates = show.getTicketOpen().split("T");
+
         //티켓팅 날짜와 공연 이름 넘겨주기
         Fragment currentFragment = ((HomeActivity)getActivity()).fragmentManager.findFragmentById(R.id.frameLayout);
 
         ((HomeActivity)getActivity()).fragmentStack.push(currentFragment);
-        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(show.getTicketOpen(),show.getTitle(),show.getId()));
+        ((HomeActivity)getActivity()).replaceFragment(SelectEventDateFragment.newInstance(ticketDates[0],show.getTitle(),show.getId()));
 //        ((HomeActivity)getActivity()).replaceFragment(AddEventFragment.newInstance("2020-11-12",show.getsName()));
     }
 
