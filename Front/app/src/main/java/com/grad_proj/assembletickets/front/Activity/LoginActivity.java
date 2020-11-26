@@ -188,6 +188,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void makeJoinToast(){
+        Toast toast = Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER,0,0);
+        toast.show();
+    }
+
+
     private void endActivity(){
         this.finish();
     }
@@ -343,12 +350,6 @@ public class LoginActivity extends AppCompatActivity {
                 mGoogleSignInClient.signOut();
             }
         }
-    }
-
-    private void makeJoinToast(){
-        Toast toast = Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER,0,0);
-        toast.show();
     }
 
     private class GetUserProfile extends AsyncTask<String, Void, User> {
