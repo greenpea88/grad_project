@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -173,7 +174,9 @@ public class LoginActivity extends AppCompatActivity {
 //                this.finish();
             } else {
                 // 서버에 유저 정보 없으면
-                Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG).show();
+                Toast toast = Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER,0,0);
+                toast.show();
                 mGoogleSignInClient.signOut();
             }
         } catch (ApiException e) {
