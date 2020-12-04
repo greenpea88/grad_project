@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.grad_proj.assembletickets.front">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -11,8 +13,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Activity.AutoLoginActivity">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".Activity.AutoLoginActivity"
+            android:allowBackup="false"
+            android:fullBackupOnly="false"
+            android:fullBackupContent="false"
+            tools:replace="android:allowBackup,android:fullBackupOnly,android:fullBackupContent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,12 +28,29 @@
         <activity
             android:name=".Activity.LoginActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize">
+        </activity>
         <activity
             android:name=".Activity.JoinActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".Activity.HomeActivity"></activity>
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity android:name=".Activity.HomeActivity">
+            <intent-filter>
+                <action android:name = "android.intent.action.MAIN" />
+                <category android:name = "android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <receiver android:name=".Alarm.AlarmReceiver"/>
+        <service
+            android:name = ".Alarm.NotificationService"
+            android:enabled="true"
+            android:label = "@string/app_name" >
+            <intent-filter>
+                <action
+                    android:name = "app.tutorialspoint.com.notifyme.NotificationService" />
+                <category android:name= "android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

@@ -27,7 +27,7 @@ public class AutoLoginActivity extends AppCompatActivity {
         } else {
             // Call Next Activity
             intent = new Intent(AutoLoginActivity.this, HomeActivity.class);
-            intent.putExtra("ID_TOKEN", UserSharedPreference.getIdToken(this).toString());
+            intent.putExtra("username", UserSharedPreference.getUserName(this).toString());
             startActivity(intent);
             this.finish();
         }

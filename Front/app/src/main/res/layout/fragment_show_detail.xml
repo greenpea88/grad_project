@@ -1,67 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+    <LinearLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
-
+    <Button
+        android:id="@+id/addEventBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="+"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorFastWithUs3"
+        android:background="#000FF000"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/detailImgPoster"
+            android:layout_width="150dp"
+            android:layout_height="200dp"/>
+        <TextView
+            android:id="@+id/showDetailTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="제목"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:paddingLeft="10dp"/>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="16dp">
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="200dp"
-            android:src="@drawable/img_poster"/>
-        <LinearLayout
+        android:paddingTop="10dp">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="장   소"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/showDetailVenue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/addEventBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:text="+"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorFastWithUs3"
-                android:background="#000FF000"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="16dp"
-                android:layout_gravity="center">
-                <TextView
-                    android:id="@+id/showDetailTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="제목"
-                    android:textSize="28sp"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="장소"
-                    android:textSize="18sp"
-                    android:paddingTop="5dp"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="기간"
-                    android:textSize="18sp"
-                    android:paddingTop="5dp"/>
-            </LinearLayout>
-        </LinearLayout>
+            android:text="장소"
+            android:textSize="18sp"
+            android:paddingLeft="8dp"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="기   간"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/showDetailDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="기간"
+            android:textSize="18sp"
+            android:paddingLeft="8dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="티켓팅"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/showDetailTicketDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="티켓팅 날짜"
+            android:textSize="18sp"
+            android:paddingLeft="8dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="가   격"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/showDetailPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="가격"
+            android:textSize="18sp"
+            android:paddingLeft="8dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예매 페이지"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/showDetailTicketing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="예매페이지"
+            android:textSize="18sp"
+            android:paddingLeft="8dp"/>
+    </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="가격"
-        android:textSize="18sp"/>
+        android:text="출연자"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:paddingTop="5dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/showPerformerList"
@@ -69,5 +156,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="16dp"/>
-
-</LinearLayout>
+    <TextView
+        android:id="@+id/performerNone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="예매 상세 페이지 참고"
+        android:textSize="18sp"
+        android:visibility="invisible"/>
+    </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

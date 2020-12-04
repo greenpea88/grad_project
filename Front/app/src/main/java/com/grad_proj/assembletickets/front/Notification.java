@@ -1,6 +1,31 @@
 package com.grad_proj.assembletickets.front;
 
 public class Notification {
-    String context;
-    // firebase 푸시 알림에 알림 시간을 가져오는 방법? 예를 들어 3분 전, 3시간 전, 1일 전...
+    private int id;
+    private String context;
+    private String date;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

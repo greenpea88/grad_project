@@ -7,10 +7,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.grad_proj.assembletickets.front.Database.CalendarDatabase;
 import com.grad_proj.assembletickets.front.Event;
 
-public class DatabaseOpen{
+public class CDatabaseOpen {
 
     public static String DATABASE_NAME = "userdataManager.db";
     public static int VERSION = 1;
@@ -40,11 +39,11 @@ public class DatabaseOpen{
         }
     }
 
-    public DatabaseOpen(Context context){
+    public CDatabaseOpen(Context context){
         this.context=context;
     }
 
-    public DatabaseOpen open() throws SQLException{
+    public CDatabaseOpen open() throws SQLException{
         //해당 데이터베이스를 열어서 사용 가능하도록 함
         mDBHelper = new DatabaseHelper(context);
         mDB = mDBHelper.getWritableDatabase();
@@ -59,14 +58,17 @@ public class DatabaseOpen{
         mDBHelper.close();
     }
 
-    public long insertColumn(String eventDate,String eventName,String eventContent,int hour,int min){
+    public long insertColumn(int id,String eventDate,String eventName,String eventContent,int hour,int min,int alarmSet,int showId){
         //insert DB - with content
         ContentValues values = new ContentValues();
+        values.put(CalendarDatabase.CalendarDB._ID,id);
         values.put(CalendarDatabase.CalendarDB.EVENTDATE,eventDate);
         values.put(CalendarDatabase.CalendarDB.EVENTNAME,eventName);
         values.put(CalendarDatabase.CalendarDB.EVENTCONTENT,eventContent);
         values.put(CalendarDatabase.CalendarDB.HOUR,hour);
         values.put(CalendarDatabase.CalendarDB.MINUTE,min);
+        values.put(CalendarDatabase.CalendarDB.ALARMSET,alarmSet);
+        values.put(CalendarDatabase.CalendarDB.SHOWID,showId);
 
         return mDB.insert(CalendarDatabase.CalendarDB._TABLENAME,null,values);
     }
@@ -75,6 +77,29 @@ public class DatabaseOpen{
         String sql = "SELECT * FROM "+ CalendarDatabase.CalendarDB._TABLENAME
                 +" WHERE "+ CalendarDatabase.CalendarDB.EVENTDATE+"='"+date+"'"
                 +" ORDER BY "+ CalendarDatabase.CalendarDB.HOUR;
+
+        return mDB.rawQuery(sql,null);
+    }
+
+    public Cursor selectDate(){
+        String sql = "SELECT DISTINCT "+ CalendarDatabase.CalendarDB.EVENTDATE
+                +" FROM "+ CalendarDatabase.CalendarDB._TABLENAME;
+
+        return mDB.rawQuery(sql,null);
+    }
+
+    public Cursor selectEventsAfterDate(String date){
+        String sql = "SELECT * FROM "+ CalendarDatabase.CalendarDB._TABLENAME
+                +" WHERE "+ CalendarDatabase.CalendarDB.EVENTDATE+">='"+date+"'"
+                +" ORDER BY "+ CalendarDatabase.CalendarDB.HOUR;
+
+        return mDB.rawQuery(sql,null);
+    }
+
+    public Cursor selectDateByTitle(String title){
+        String sql = "SELECT DISTINCT "+ CalendarDatabase.CalendarDB.EVENTDATE
+                + " WHERE " + CalendarDatabase.CalendarDB.EVENTNAME + "='" + title + "'"
+                +" FROM "+ CalendarDatabase.CalendarDB._TABLENAME;
 
         return mDB.rawQuery(sql,null);
     }
@@ -92,7 +117,12 @@ public class DatabaseOpen{
         values.put(CalendarDatabase.CalendarDB.EVENTCONTENT,event.getEventContent());
         values.put(CalendarDatabase.CalendarDB.HOUR,event.getTimeHour());
         values.put(CalendarDatabase.CalendarDB.MINUTE,event.getTimeMin());
+        values.put(CalendarDatabase.CalendarDB.ALARMSET,event.getAlarmSet());
 
         return mDB.update(CalendarDatabase.CalendarDB._TABLENAME,values, CalendarDatabase.CalendarDB._ID+"="+event.getId(),null) > 0;
+    }
+
+    public void dropTable(){
+        mDB.execSQL("DROP TABLE "+ CalendarDatabase.CalendarDB._TABLENAME);
     }
 }

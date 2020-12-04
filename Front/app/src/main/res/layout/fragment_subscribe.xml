@@ -29,9 +29,23 @@
             android:layout_gravity="center"/>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/subscribeShowList"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/subscribeNone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="구독하신 정보가 없습니다.\n둘러보기, 검색을 통해 등록해보세요!"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:visibility="invisible"
+            app:layout_constraintTop_toTopOf="parent"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/subscribeShowList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

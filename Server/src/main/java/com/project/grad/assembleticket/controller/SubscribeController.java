@@ -17,28 +17,33 @@ public class SubscribeController {
     @Autowired
     private SubscribeService subscribeService;
 
+    // 구독되어 있는 공연자인지 확인
+    @GetMapping("/subscribe")
+    public boolean isSubscribed(@RequestParam String email, @RequestParam Long performerId){
+        return subscribeService.isSubscribed(email, performerId);
+    }
+
     // 구독 등록
     @PostMapping("/subscribe")
-    public Subscribe saveSubscribe(@RequestParam Long userId, @RequestParam Long performerId){
-        return subscribeService.saveSubscribe(userId, performerId);
+    public Subscribe saveSubscribe(@RequestParam String email, @RequestParam Long performerId){
+        return subscribeService.saveSubscribe(email, performerId);
     }
     
     // 구독 해제
     @DeleteMapping("/subscribe")
-    public Long deleteSubscribe(@RequestParam Long userId, @RequestParam Long performerId){
-        return subscribeService.deleteSubscribe(userId, performerId);
+    public Long deleteSubscribe(@RequestParam String email, @RequestParam Long performerId){
+        return subscribeService.deleteSubscribe(email, performerId);
     }
 
     // 공연자 리스트
     @GetMapping("/subscribe/performers")
-    public List<Performer> getSubscribedPerformers(@RequestParam Long userId){
-        return subscribeService.getSubscribedPerformers(userId);
+    public List<Performer> getSubscribedPerformers(@RequestParam String email){
+        return subscribeService.getSubscribedPerformers(email);
     }
     
     // 공연 리스트
     @GetMapping("/subscribe/shows")
-    public List<Shows> getPerformerShows(@RequestParam Long userId, @Nullable Long performerId){
-        return subscribeService.getPerformerShows(userId, performerId);
+    public List<Shows> getPerformerShows(@RequestParam String email, @Nullable Long performerId){
+        return subscribeService.getPerformerShows(email, performerId);
     }
-
 }

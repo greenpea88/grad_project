@@ -16,21 +16,25 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
 public class CalendarEditDialog extends Dialog {
 
     private int alarmHour;
     private int alarmMin;
     private String title;
     private String eventContent;
+    private int alarmSet;
 
     private TimePicker eventEditTime;
     private EditText eventEditTitle,eventEditContent;
     private Button eventEditBtn;
+    private SwitchMaterial alarmEditSwitch;
 
     private OnDialogListener listener;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public CalendarEditDialog(Context context, final int position, final Event event){
+    public CalendarEditDialog(final Context context, final int position, final Event event){
         super(context);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -44,6 +48,7 @@ public class CalendarEditDialog extends Dialog {
             System.out.println("empty");
             eventContent="";
         }
+        alarmSet=event.getAlarmSet();
 
         eventEditTime =findViewById(R.id.eventEditTimePicker);
         eventEditTime.setHour(alarmHour);
@@ -54,6 +59,14 @@ public class CalendarEditDialog extends Dialog {
 
         eventEditContent=findViewById(R.id.eventEditContent);
         eventEditContent.setText(eventContent);
+
+        alarmEditSwitch = findViewById(R.id.alarmEditSwitch);
+        if(alarmSet==0){
+            alarmEditSwitch.setChecked(false);
+        }
+        else{
+            alarmEditSwitch.setChecked(true);
+        }
 
         eventEditBtn=findViewById(R.id.eventEditBtn);
         eventEditBtn.setOnClickListener(new View.OnClickListener() {
@@ -66,9 +79,16 @@ public class CalendarEditDialog extends Dialog {
                     int newMin=eventEditTime.getMinute();
                     String newTitle=eventEditTitle.getText().toString();
                     String newContent=eventEditContent.getText().toString();
+                    int editAlarmSet;
+                    if(alarmEditSwitch.isChecked()){
+                        editAlarmSet=1;
+                    }
+                    else{
+                        editAlarmSet=0;
+                    }
                     Log.d("Dialog",newContent);
 
-                    if(newHour==alarmHour && newMin==alarmMin && title.equals(newTitle) && eventContent.equals(newContent)){
+                    if(newHour==alarmHour && newMin==alarmMin && title.equals(newTitle) && eventContent.equals(newContent) && alarmSet==editAlarmSet){
                         //값의 변화가 없을 경우
                         Toast toast=Toast.makeText(view.getContext(),"수정 사항이 없습니다",Toast.LENGTH_SHORT);
                         toast.setGravity(Gravity.CENTER,0,0);
@@ -87,6 +107,15 @@ public class CalendarEditDialog extends Dialog {
                             newEvent.setTimeMin(newMin);
                             newEvent.setEventName(newTitle);
                             newEvent.setEventContent(newContent);
+                            newEvent.setAlarmSet(editAlarmSet);
+
+//                            if (editAlarmSet == 1){
+//                                ((HomeActivity)getOwnerActivity()).unsetAlarm(event.getId());
+//                                ((HomeActivity)getOwnerActivity()).setAlarm(event.getDate(), newHour, newMin, title);
+//                            }
+//                            else{
+//                                ((HomeActivity)getOwnerActivity()).unsetAlarm(event.getId());
+//                            }
 
                             listener.onFinish(position,newEvent);
 

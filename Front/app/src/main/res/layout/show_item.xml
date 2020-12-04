@@ -49,7 +49,7 @@
                         android:maxLines="1"
                         android:text="제목"
                         android:textColor="@android:color/black"
-                        android:textSize="26sp" />
+                        android:textSize="24sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -60,12 +60,12 @@
                         android:layout_width="50sp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="출연진"
+                        android:text="장   소"
                         android:textSize="16sp"
                         android:gravity="center" />
 
                     <TextView
-                        android:id="@+id/performersText"
+                        android:id="@+id/venueText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -89,9 +89,10 @@
                         android:id="@+id/dateText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:paddingRight="10dp"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:text="ddddd"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -110,7 +111,7 @@
                         android:id="@+id/priceText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:paddingRight="10dp"
                         android:textSize="16sp" />
                 </LinearLayout>

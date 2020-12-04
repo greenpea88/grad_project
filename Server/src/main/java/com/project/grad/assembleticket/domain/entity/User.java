@@ -13,9 +13,6 @@ import java.time.LocalDate;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(length = 50, unique = true)
     private String email;
 
@@ -25,14 +22,16 @@ public class User {
     @Column(columnDefinition = "DATE")
     private LocalDate birthday;
 
-    @Column(columnDefinition = "TINYINT")
-    private int gender;
+    @Column(length = 10)
+    private String gender;
 
     @Builder
-    public User(Long id, String email, String displayName, LocalDate birthday, int gender){
-        this.id = id;
+    public User(String email, String displayName){
         this.email = email;
         this.displayName = displayName;
+    }
+
+    public void update(LocalDate birthday, String gender){
         this.birthday = birthday;
         this.gender = gender;
     }

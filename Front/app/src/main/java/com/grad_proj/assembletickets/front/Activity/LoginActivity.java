@@ -4,10 +4,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -21,9 +19,28 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.grad_proj.assembletickets.front.Database.DatabaseOpen;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.grad_proj.assembletickets.front.Database.CDatabaseOpen;
+import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
+import com.grad_proj.assembletickets.front.Event;
 import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.User;
 import com.grad_proj.assembletickets.front.UserSharedPreference;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 //TODO: 비밀번호 잊엇는지에 대한 문구를 언제 띄울 것인가?
 
@@ -36,83 +53,91 @@ public class LoginActivity extends AppCompatActivity {
 
     String inputID = "";
     String inputPW = "";
+    String inputEmail = "";
+    String inputUserName = "";
 
-    private DatabaseOpen databaseOpen;
+    private CDatabaseOpen cDatabaseOpen;
+    private SDatabaseOpen sDatabaseOpen;
+
+    private Intent intent;
+    boolean isInDB;
+
+    GoogleSignInAccount account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
-
-        loginIDEditText = findViewById(R.id.loginIDEditText);
-        loginPWEditText = findViewById(R.id.loginPWEditText);
-        lostPW = findViewById(R.id.lostPW);
+        setContentView(R.layout.activity_login);
+//
+//        loginIDEditText = findViewById(R.id.loginIDEditText);
+//        loginPWEditText = findViewById(R.id.loginPWEditText);
+//        lostPW = findViewById(R.id.lostPW);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        loginIDEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence!=null){
-                    inputID=charSequence.toString();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        loginPWEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence!=null){
-                    inputPW=charSequence.toString();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+//
+//        loginIDEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                if(charSequence!=null){
+//                    inputID=charSequence.toString();
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
+//
+//        loginPWEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                if(charSequence!=null){
+//                    inputPW=charSequence.toString();
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
     }
 
-    public void onLoginBtnClicked(View v){
-
-        Toast inputToast = Toast.makeText(this.getApplicationContext(),"Email, Password를 모두 입력해주세요", Toast.LENGTH_SHORT);
-
-        inputToast.setGravity(Gravity.CENTER,0,0);
-//        inputToast.show();
-        Log.d("Text",inputID+" / "+inputPW);
-        if("".equals(inputID) || "".equals(inputPW)){
-            inputToast.show();
-        }
-        //TODO: 로그인 토큰 받도록 서버 설정해서 받도록 하기
-        else{
-            Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
-
-            getCalendarData();
-
-            startActivity(intent);
-            UserSharedPreference.setIdToken(LoginActivity.this, "testid" + inputID);
-            this.finish();
-        }
-    }
+//    public void onLoginBtnClicked(View v){
+//
+//        Toast inputToast = Toast.makeText(this.getApplicationContext(),"Email, Password를 모두 입력해주세요", Toast.LENGTH_SHORT);
+//
+//        inputToast.setGravity(Gravity.CENTER,0,0);
+////        inputToast.show();
+//        Log.d("Text",inputID+" / "+inputPW);
+//        if("".equals(inputID) || "".equals(inputPW)){
+//            inputToast.show();
+//        }
+//        //TODO: 로그인 토큰 받도록 서버 설정해서 받도록 하기
+//        else{
+//            Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+//            getCalendarData();
+//            startActivity(intent);
+//            // 자동 로그인 토큰
+//            UserSharedPreference.setIdToken(LoginActivity.this, "testid" + inputID);
+//            Toast.makeText(this, inputID + "님, 안녕하세요!", Toast.LENGTH_LONG).show();
+//            this.finish();
+//        }
+//    }
 
     public void onGoogleLoginClicked(View v){
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -131,17 +156,47 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-//            UserSharedPreference.setIdToken(LoginActivity.this, account.getIdToken());
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
-            Toast.makeText(this, account.getDisplayName()+"("+account.getEmail()+")님, 안녕하세요!", Toast.LENGTH_LONG).show();
-            this.finish();
+            account = completedTask.getResult(ApiException.class);
+            inputEmail = account.getEmail();
+            new GetUserExists().execute("http://10.0.2.2:8080/assemble-ticket/login");
+//            if (isInDB) {
+//                // 서버에 유저 정보 있으면
+//                intent = new Intent(LoginActivity.this, HomeActivity.class);
+//                // 자동 로그인 토큰
+//                inputID = account.getId();
+//                inputEmail = account.getEmail();
+//                inputUserName = account.getDisplayName();
+//                intent.putExtra("id", inputID);
+//                intent.putExtra("email", inputEmail);
+//                intent.putExtra("username", inputUserName);
+//                new GetUserProfile().execute("http://10.0.2.2:8080/assemble-ticket/profile");
+//                new GetEventData().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+//                getSearchData();
+////                startActivity(intent);
+////                this.finish();
+//            } else {
+//                // 서버에 유저 정보 없으면
+//                Toast toast = Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG);
+//                toast.setGravity(Gravity.CENTER,0,0);
+//                toast.show();
+//                mGoogleSignInClient.signOut();
+//            }
         } catch (ApiException e) {
             Log.d("Login", "Sign In Result: Failed Code = "+e.getStatusCode());
             Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
             startActivity(intent);
         }
+    }
+
+    private void makeJoinToast(){
+        Toast toast = Toast.makeText(this, "회원가입을 먼저 진행해주세요.", Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER,0,0);
+        toast.show();
+    }
+
+
+    private void endActivity(){
+        this.finish();
     }
 
     public void onNotJoinYetClicked(View v){
@@ -151,19 +206,195 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void getCalendarData(){
+    public void setCalendarData(List<Event> events){
         //서버로부터 캘린더 데이터 가져오기 + db 생성하고 집어넣기
-        databaseOpen = new DatabaseOpen(this);
-        databaseOpen.open();
-        databaseOpen.create();
+        cDatabaseOpen = new CDatabaseOpen(this);
+        cDatabaseOpen.open();
+        cDatabaseOpen.create();
 
-        databaseOpen.insertColumn("2020-10-21","test1","test",1,1);
-        databaseOpen.insertColumn("2020-10-22","test2","dafsf",1,2);
-        databaseOpen.insertColumn("2020-10-21","test3",null,2,2);
-        databaseOpen.insertColumn("2020-10-22","test4",null,4,3);
-        databaseOpen.insertColumn("2020-10-21","test5","tttt",2,1);
+        for(int i=0;i<events.size();i++){
+            Event event = events.get(i);
+            System.out.println(event.getEventName());
+            cDatabaseOpen
+                    .insertColumn(event.getId(),event.getDate(),event.getEventName(),event.getEventContent(),event.getTimeHour(),event.getTimeMin(),event.getAlarmSet(),event.getShowId());
+        }
 
-        databaseOpen.close();
+        cDatabaseOpen.close();
+    }
+
+    public void getSearchData(){
+        sDatabaseOpen = new SDatabaseOpen(this);
+        sDatabaseOpen.open();
+        sDatabaseOpen.create();
+        sDatabaseOpen.close();
+    }
+
+    private class GetEventData extends AsyncTask<String, Void , List<Event>> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected List<Event> doInBackground(String... strings) {
+
+            List<Event> eventList = new ArrayList<>();
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email",inputEmail)
+                    .build().toString();
+//            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+//                    .addQueryParameter("email","user00@gmail.com")
+//                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+//                Log.d("server get event data", "request : " + request.body());
+
+                Response response = client.newCall(request).execute();
+//                Log.d("EditSubscribeFragment","doInBackground : "+response.body().string());
+//                Log.d("server get event data", String.valueOf(response));
+
+                JSONArray jsonArray = new JSONArray(response.body().string());
+                for(int i =0;i<jsonArray.length();i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    Event event = new Event();
+                    event.setId(jsonObject.getInt("id"));
+                    event.setDate(jsonObject.getString("calDate"));
+
+                    String eventTime = jsonObject.getString("calTime");
+                    String[] times = eventTime.split(":");
+//                    System.out.println(eventTime+"/"+times[0]+"/"+times[1]);
+                    event.setTimeHour(Integer.parseInt(times[0]));
+                    event.setTimeMin(Integer.parseInt(times[1]));
+
+                    event.setAlarmSet(jsonObject.getInt("alarmSet"));
+                    event.setEventName(jsonObject.getString("calTitle"));
+
+                    JSONObject show = jsonObject.getJSONObject("show");
+                    event.setShowId(show.getInt("id"));
+
+                    eventList.add(event);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return eventList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Event> events) {
+            setCalendarData(events);
+            startActivity(intent);
+            endActivity();
+        }
+    }
+
+    private class GetUserExists extends AsyncTask<String, Void, Void> {
+
+        OkHttpClient client = new OkHttpClient();
+
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email", inputEmail)
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Log.d("server get ex", "request : " + request);
+
+                Response response = client.newCall(request).execute();
+
+                isInDB = Boolean.parseBoolean(response.body().string());
+                Log.d("server get ex", "result : " + isInDB);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (isInDB) {
+                // 서버에 유저 정보 있으면
+                intent = new Intent(LoginActivity.this, HomeActivity.class);
+                // 자동 로그인 토큰
+                inputID = account.getId();
+                inputEmail = account.getEmail();
+                inputUserName = account.getDisplayName();
+                intent.putExtra("id", inputID);
+                intent.putExtra("email", inputEmail);
+                intent.putExtra("username", inputUserName);
+                new GetUserProfile().execute("http://10.0.2.2:8080/assemble-ticket/profile");
+                new GetEventData().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+                getSearchData();
+//                startActivity(intent);
+//                this.finish();
+            } else {
+                // 서버에 유저 정보 없으면
+                makeJoinToast();
+                mGoogleSignInClient.signOut();
+            }
+        }
+    }
+
+    private class GetUserProfile extends AsyncTask<String, Void, User> {
+
+        OkHttpClient client = new OkHttpClient();
+        User user;
+
+        @Override
+        protected User doInBackground(String... strings) {
+
+            user = new User();
+
+            String strUrl = HttpUrl.parse(strings[0]).newBuilder()
+                    .addQueryParameter("email", inputEmail)
+                    .build().toString();
+
+            try {
+                Request request = new Request.Builder()
+                        .url(strUrl)
+                        .get()
+                        .build();
+
+                Log.d("server get user", "request : " + request);
+
+                Response response = client.newCall(request).execute();
+//                Log.d("server get user", "response : " + response.body().string());
+
+                Gson gson = new Gson();
+                Type dataType = new TypeToken<User>(){}.getType();
+                user = gson.fromJson(response.body().string(), dataType);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return user;
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            super.onPostExecute(user);
+            if (user.getBirth()!= null)
+                intent.putExtra("birth", user.getBirth());
+            if (user.getGender() != null)
+                intent.putExtra("gender", user.getGender());
+        }
     }
 
 }

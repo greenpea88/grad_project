@@ -14,8 +14,12 @@
     <string name="subscribe">구독</string>
     <string name="ticket">둘러보기</string>
     <string name="user">설정</string>
-    <string name="contact_email">jsg2804@gmail.com</string>
+    <string name="contact_email">8pep8per8@gmail.com</string>
+    <string name="contact_email2">jsg2804@gmail.com</string>
+    <string name="contact_email3">hidua1124@naver.com</string>
     <string name="eventEmpty">등록된 event가 없습니다.</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="eventSelect">등록할 event 종류를 선택하세요.</string>
+    <string name="ticketing">티켓팅</string>
+    <string name="watchShow">공연 관람</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

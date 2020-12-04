@@ -1,23 +1,26 @@
 package com.grad_proj.assembletickets.front;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdapter.ItemViewHolder> {
 
+    private SubscribeEditAdapter.OnItemClickListener onItemClickListener;
 
     ArrayList<Performer> subscribeEditList = new ArrayList<>();
 
@@ -30,8 +33,14 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, final int position) {
         holder.setData(subscribeEditList.get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectOnItemClicked(view,position);
+            }
+        });
     }
 
     @Override
@@ -39,12 +48,24 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
         return subscribeEditList.size();
     }
 
+    public int getPerformerId(int position){
+        return subscribeEditList.get(position).getId();
+    }
+
     public void addItem(Performer performer){
         subscribeEditList.add(performer);
     }
 
+    public Performer getItem(int position){
+        return subscribeEditList.get(position);
+    }
+
     public void removeItem(int position){
         subscribeEditList.remove(position);
+    }
+
+    public void setOnItemClickListener(SubscribeEditAdapter.OnItemClickListener listener){
+        this.onItemClickListener = listener;
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -84,13 +105,39 @@ public class SubscribeEditAdapter extends RecyclerView.Adapter<SubscribeEditAdap
         void setData(Performer performer){
 
             //profile 설정 추가
-            subscribeEditName.setText(performer.getpName());
-//            if(performer.getSetAlarm()){
-//                subscribeEditAlarm.setImageResource(R.drawable.icon_alarmon);
-//            }
-//            else{
-//                subscribeEditAlarm.setImageResource(R.drawable.icon_alarmoff);
-//            }
+            subscribeEditName.setText(performer.getName());
+            new ImgDownloadTask().execute(performer.getImgSrc());
         }
+        private class ImgDownloadTask extends AsyncTask<String,Void, Bitmap> {
+
+            @Override
+            protected Bitmap doInBackground(String... strings) {
+                Bitmap bitmap = null;
+
+                try {
+                    String imgUrl = strings[0];
+                    URL url = new URL(imgUrl);
+                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                }catch (MalformedURLException e){
+                    e.printStackTrace();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                return bitmap;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                subscribeEditProfile.setImageBitmap(bitmap);
+            }
+        }
+    }
+
+    public interface OnItemClickListener{
+        void onItemClicked(View v, int position);
+    }
+
+    private void selectOnItemClicked(View v, int p) {
+        onItemClickListener.onItemClicked(v, p);
     }
 }

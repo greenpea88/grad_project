@@ -2,12 +2,9 @@ package com.grad_proj.assembletickets.front.Activity;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,32 +14,38 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.grad_proj.assembletickets.front.Alarm.AlarmReceiver;
-import com.grad_proj.assembletickets.front.Alarm.DeviceBootReceiver;
-import com.grad_proj.assembletickets.front.Database.DatabaseOpen;
+import com.grad_proj.assembletickets.front.Database.CDatabaseOpen;
+import com.grad_proj.assembletickets.front.Database.CalendarDatabase;
+import com.grad_proj.assembletickets.front.Database.SDatabaseOpen;
 import com.grad_proj.assembletickets.front.Event;
-import com.grad_proj.assembletickets.front.Fragment.DateFragment;
-import com.grad_proj.assembletickets.front.Fragment.SearchFragment;
-import com.grad_proj.assembletickets.front.R;
-
 import com.grad_proj.assembletickets.front.Fragment.CalendarFragment;
+import com.grad_proj.assembletickets.front.Fragment.SearchFragment;
 import com.grad_proj.assembletickets.front.Fragment.SubscribeFragment;
 import com.grad_proj.assembletickets.front.Fragment.TicketFragment;
 import com.grad_proj.assembletickets.front.Fragment.UserFragment;
+import com.grad_proj.assembletickets.front.Notification;
+import com.grad_proj.assembletickets.front.NotificationAdapter;
+import com.grad_proj.assembletickets.front.R;
+import com.grad_proj.assembletickets.front.UserSharedPreference;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Stack;
 
 public class HomeActivity extends AppCompatActivity {
@@ -50,7 +53,8 @@ public class HomeActivity extends AppCompatActivity {
     public Stack<Fragment> fragmentStack = new Stack<>();
     private static final String TAG_PARENT = "TAG_PARENT";
 
-    public DatabaseOpen databaseOpen;
+    public CDatabaseOpen cDatabaseOpen;
+    public SDatabaseOpen sDatabaseOpen;
 
     public FragmentManager fragmentManager = getSupportFragmentManager();
     private CalendarFragment calendarFragment = new CalendarFragment();
@@ -70,13 +74,41 @@ public class HomeActivity extends AppCompatActivity {
     private Animation translateDown;
     private Animation translateUp;
 
+    GoogleSignInClient mGoogleSignInClient;
+
+    RecyclerView notiRecyclerview;
+    NotificationAdapter notificationAdapter;
+    AlarmManager alarmManager;
+    Intent alarmIntent;
+    PendingIntent pendingIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home);
+        setContentView(R.layout.activity_home);
 
-        databaseOpen = new DatabaseOpen(this);
+        Intent intent = getIntent();
+
+        if(intent.hasExtra("id")) {
+            UserSharedPreference.setIdToken(this, "google" + intent.getStringExtra("id"));
+        }
+        if(intent.hasExtra("email")) {
+            System.out.println(intent.getStringExtra("email"));
+            UserSharedPreference.setUserEmail(this, intent.getStringExtra("email"));
+//            UserSharedPreference.setUserEmail(this, "user00@gmail.com");
+        }
+        if(intent.hasExtra("username")) {
+            UserSharedPreference.setUserName(this, intent.getStringExtra("username"));
+            Toast.makeText(this, UserSharedPreference.getUserName(this) + "님, 안녕하세요!", Toast.LENGTH_LONG).show();
+        }
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        cDatabaseOpen = new CDatabaseOpen(this);
+        sDatabaseOpen = new SDatabaseOpen(this);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,19 +145,29 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Fragment currentFragment = fragmentManager.findFragmentById(R.id.frameLayout);
-//                if(currentFragment instanceof TicketFragment){
-//                    fragmentStack.push(fragmentManager.findFragmentByTag(TAG_PARENT));
-//                }
-//                else{
-//                    fragmentStack.push(currentFragment);
-//                }
                 fragmentStack.push(currentFragment);
                 replaceFragment(searchFragment);
-                ActionBar actionBar = getSupportActionBar();
-                actionBar.hide();
             }
         });
 
+        notificationAdapter = new NotificationAdapter();
+        notiRecyclerview = findViewById(R.id.notiRecyclerview);
+        notiRecyclerview.setAdapter(notificationAdapter);
+
+        // 알림 사이드바
+        notificationBtn = findViewById(R.id.notiButton);
+        notificationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPageOpen) {
+                    notiPage.startAnimation(translateUp);
+                } else {
+                    updateNotification();
+                    notiPage.setVisibility(View.VISIBLE);
+                    notiPage.startAnimation(translateDown);
+                }
+            }
+        });
     }
 
     private void switchFragment(@NonNull MenuItem menuItem) {
@@ -178,6 +220,17 @@ public class HomeActivity extends AppCompatActivity {
         Log.i("submit button","pressed");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if(!fragmentStack.isEmpty()){
+            //date 선택 fragment -> 시간 및 세부사항 선택 fragment 총 두가지를 거치므로 두번의 pop을 필요로 함.
+            fragmentStack.pop();
+            Fragment lastFragment = fragmentStack.pop();
+            fragmentTransaction.replace(R.id.frameLayout, lastFragment).commitAllowingStateLoss();
+        }
+    }
+
+    public void editSubmitBtnAction(){
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if(!fragmentStack.isEmpty()){
+            //date 선택 fragment -> 시간 및 세부사항 선택 fragment 총 두가지를 거치므로 두번의 pop을 필요로 함.
             Fragment lastFragment = fragmentStack.pop();
             fragmentTransaction.replace(R.id.frameLayout, lastFragment).commitAllowingStateLoss();
         }
@@ -230,40 +283,107 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void insertEvent(String date,String eventName, String eventContent,int hour, int minute){
-        databaseOpen.open();
+    public void updateNotification(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH mm");
+        Date date = new Date();
+        String now = simpleDateFormat.format(date);
+        String[] dateSet = now.split(" ");
+        String dateString = dateSet[0];
+        String hour = dateSet[1];
+        String min = dateSet[2];
 
-        databaseOpen.insertColumn(date,eventName,eventContent,hour,minute);
-        databaseOpen.close();
+        notificationAdapter.removeAll();
+        Cursor cursor = getDateEvents(dateString);
+
+        while(cursor.moveToNext()){
+            Notification notification = new Notification();
+            notification.setContext(cursor.getString(cursor.getColumnIndex(CalendarDatabase.CalendarDB.EVENTNAME)));
+            notification.setDate(cursor.getString(cursor.getColumnIndex(CalendarDatabase.CalendarDB.EVENTDATE)));
+
+            notificationAdapter.addItem(notification);
+        }
+        closeCalendarDB();
+        notificationAdapter.notifyDataSetChanged();
+    }
+
+    public void insertEvent(int id,String date,String eventName, String eventContent,int hour, int minute,int alarmSet,int showId){
+        cDatabaseOpen.open();
+
+        cDatabaseOpen.insertColumn(id,date,eventName,eventContent,hour,minute,alarmSet,showId);
+        cDatabaseOpen.close();
     }
 
     public Cursor getDateEvents(String date){
-        databaseOpen.open();
+        cDatabaseOpen.open();
 
-        return databaseOpen.selectDataEvent(date);
+        return cDatabaseOpen.selectDataEvent(date);
+    }
+
+    public Cursor getEventsAfterDate(String date){
+        cDatabaseOpen.open();
+
+        return cDatabaseOpen.selectEventsAfterDate(date);
+    }
+
+    public Cursor getEventDates(){
+        cDatabaseOpen.open();
+
+        return cDatabaseOpen.selectDate();
     }
 
     public void deleteEvent(int id){
-        databaseOpen.open();
+        cDatabaseOpen.open();
 
-        databaseOpen.deleteColumn(id);
-        databaseOpen.close();
+        cDatabaseOpen.deleteColumn(id);
+        cDatabaseOpen.close();
     }
 
     public void updateEvent(Event event){
-        databaseOpen.open();
+        cDatabaseOpen.open();
 
-        databaseOpen.updateColumn(event);
-        databaseOpen.close();
+        cDatabaseOpen.updateColumn(event);
+        cDatabaseOpen.close();
     }
 
-    public void closeDB(){
-        databaseOpen.close();
+    public void closeCalendarDB(){
+        cDatabaseOpen.close();
     }
 
+    public void dropCalendarDB(){
+        cDatabaseOpen.open();
+        cDatabaseOpen.dropTable();
+    }
+
+    public Cursor getHistoryAll(){
+        sDatabaseOpen.open();
+        return sDatabaseOpen.selectHistoryAll();
+    }
+
+    public void deleteDupAndInsertHistory(String context){
+        sDatabaseOpen.open();
+        sDatabaseOpen.deleteDuplicateColumn(context);
+        sDatabaseOpen.insertColumn(context);
+        sDatabaseOpen.close();
+    }
+
+    public void deleteHistory(int id){
+        sDatabaseOpen.open();
+        sDatabaseOpen.deleteColumn(id);
+        sDatabaseOpen.close();
+    }
+
+    public void deleteHistoryAll(){
+        sDatabaseOpen.open();
+        sDatabaseOpen.deleteAll();
+        sDatabaseOpen.close();
+    }
+
+    public void closeHistoryDB(){
+        sDatabaseOpen.close();
+    }
 
     //alarm notification
-    public void setAlarm(String date, int hour, int min){
+    public void setAlarm(String date, int hour, int min, String title){
         String[] dateSet = date.split("-"); //YYYY-MM-DD
 
         Calendar calendar= Calendar.getInstance();
@@ -274,14 +394,31 @@ public class HomeActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY,hour);
         calendar.set(Calendar.MINUTE,min);
 
-        PackageManager packageManager = this.getPackageManager();
-        ComponentName receiver = new ComponentName(this, DeviceBootReceiver.class);
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,alarmIntent,0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        String dateString = dateSet[0] + dateSet[1] + dateSet[2];
+
+        int id = Integer.parseInt(dateString) * 100;
+        id += hour;
+        id *= 100;
+        id += min;
+
+        alarmIntent = new Intent(this, AlarmReceiver.class);
+        alarmIntent.putExtra("title", title);
+        pendingIntent = PendingIntent.getBroadcast(HomeActivity.this, id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
         if(alarmManager!=null){
-            
+            Log.d("alarm", "set");
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
+    }
+
+    public void unsetAlarm(int requestCode){
+        pendingIntent = PendingIntent.getBroadcast(HomeActivity.this, requestCode, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
+        sendBroadcast(alarmIntent);
+    }
+
+    public void googleSignOut(){
+        mGoogleSignInClient.signOut();
     }
 }
