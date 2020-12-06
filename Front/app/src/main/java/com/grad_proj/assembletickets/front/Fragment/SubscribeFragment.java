@@ -112,8 +112,8 @@ public class SubscribeFragment extends Fragment {
             }
         });
 
-        new GetSubscribeList().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/performers");
-        new GetPerformerShows().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/shows");
+        new GetSubscribeList().execute("https://ticketdate.azurewebsites.net/assemble-ticket/subscribe/performers");
+        new GetPerformerShows().execute("https://ticketdate.azurewebsites.net/assemble-ticket/subscribe/shows");
 
         return view;
     }
@@ -155,11 +155,11 @@ public class SubscribeFragment extends Fragment {
         if(!subscribeAdapter.selectedList.get(position,false)){
             Log.d("Subscribe","clicked again");
             selectPerformerId = null;
-            new GetPerformerShows().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/shows");
+            new GetPerformerShows().execute("https://ticketdate.azurewebsites.net/assemble-ticket/subscribe/shows");
         }
         else{
             selectPerformerId = subscribeAdapter.getPerformerId(position);
-            new GetPerformerShows().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/shows");
+            new GetPerformerShows().execute("https://ticketdate.azurewebsites.net/assemble-ticket/subscribe/shows");
         }
         showAdapter.resetItem();
     }

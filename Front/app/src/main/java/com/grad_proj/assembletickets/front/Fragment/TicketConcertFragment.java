@@ -93,7 +93,7 @@ public class TicketConcertFragment extends Fragment implements SwipeRefreshLayou
         Date date = new Date();
         now = simpleDateFormat.format(date);
 
-        new GetConcertShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/type");
+        new GetConcertShows().execute("http://ticketdate.azurewebsites.net/assemble-ticket/shows/type");
 
         return view;
     }
@@ -109,11 +109,11 @@ public class TicketConcertFragment extends Fragment implements SwipeRefreshLayou
     }
 
     private void loadMoreShow(){
-        new GetConcertShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/type");
+        new GetConcertShows().execute("http://ticketdate.azurewebsites.net/assemble-ticket/shows/type");
     }
 
     private void loadNewShows(){
-        new GetNewShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/type/new");
+        new GetNewShows().execute("http://ticketdate.azurewebsites.net/assemble-ticket/shows/type/new");
     }
 
     @Override

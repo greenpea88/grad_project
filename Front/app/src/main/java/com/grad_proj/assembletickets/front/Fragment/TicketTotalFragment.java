@@ -118,11 +118,11 @@ public class TicketTotalFragment extends Fragment implements SwipeRefreshLayout.
     }
 
     private void loadMoreShow(){
-        new GetTotalShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/all");
+        new GetTotalShows().execute("http://ticketdate.azurewebsites.net/assemble-ticket/shows/all");
     }
 
     private void loadNewShow(){
-        new GetNewShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/all/new");
+        new GetNewShows().execute("http://ticketdate.azurewebsites.net/assemble-ticket/shows/all/new");
     }
 
     @Override

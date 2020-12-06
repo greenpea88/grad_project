@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             account = completedTask.getResult(ApiException.class);
             inputEmail = account.getEmail();
-            new GetUserExists().execute("http://10.0.2.2:8080/assemble-ticket/login");
+            new GetUserExists().execute("https://ticketdate.azurewebsites.net/assemble-ticket/login");
 //            if (isInDB) {
 //                // 서버에 유저 정보 있으면
 //                intent = new Intent(LoginActivity.this, HomeActivity.class);

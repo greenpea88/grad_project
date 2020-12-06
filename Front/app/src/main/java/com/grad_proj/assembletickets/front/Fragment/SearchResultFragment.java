@@ -86,7 +86,7 @@ public class SearchResultFragment extends Fragment {
                 ((HomeActivity)getActivity()).replaceFragment(ShowDetailFragment.newInstance(showAdapter.getItem(position)));
             }
         });
-        new GetSearchResult().execute("http://10.0.2.2:8080/assemble-ticket/search");
+        new GetSearchResult().execute("https://ticketdate.azurewebsites.net/assemble-ticket/search");
         return view;
     }
 

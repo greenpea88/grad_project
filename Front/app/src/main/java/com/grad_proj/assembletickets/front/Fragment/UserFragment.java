@@ -112,7 +112,7 @@ public class UserFragment extends Fragment {
             public void onClick(View view) {
                 if(isEditing){
                     isEditing = false;
-                    new UpdateUserInfo().execute("http://10.0.2.2:8080/assemble-ticket/profile");
+                    new UpdateUserInfo().execute("https://ticketdate.azurewebsites.net/assemble-ticket/profile");
                     datePicker.setVisibility(View.GONE);
                     birthTxt.setVisibility(View.VISIBLE);
                     spinner.setVisibility(View.GONE);

@@ -104,7 +104,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
                 int removeId = dateEventAdapter.removeItem(position);
                 dateEventAdapter.notifyItemRemoved(position);
                 dateEventAdapter.notifyItemRangeChanged(position,dateEventAdapter.getItemCount());
-                new DeleteEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+                new DeleteEvent().execute("https://ticketdate.azurewebsites.net/assemble-ticket/calendar");
                 //자체 db에 알릴 것
                 ((HomeActivity)getActivity()).deleteEvent(removeId);
                 if(dateEventAdapter.getItemCount()==0){
@@ -218,7 +218,7 @@ public class DateFragment extends Fragment implements OnDialogListener {
 
         updateEvent=event;
         updateEvent.setDate(date);
-        new UpdateEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+        new UpdateEvent().execute("https://ticketdate.azurewebsites.net/assemble-ticket/calendar");
 
         dateEventAdapter.changeItem(position,event);
         dateEventAdapter.notifyDataSetChanged();
