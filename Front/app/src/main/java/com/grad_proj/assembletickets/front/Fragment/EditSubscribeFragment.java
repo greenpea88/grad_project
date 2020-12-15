@@ -82,7 +82,7 @@ public class EditSubscribeFragment extends Fragment {
             @Override
             public void onRightClicked(int position){
                 deleteId = subscribeEditAdapter.getPerformerId(position);
-                new DeleteSubscribe().execute("http://10.0.2.2:8080/assemble-ticket/subscribe");
+                new DeleteSubscribe().execute("https://ticketdate.azurewebsites.net/assemble-ticket/subscribe");
                 subscribeEditAdapter.removeItem(position);
                 subscribeEditAdapter.notifyItemRemoved(position);
                 subscribeEditAdapter.notifyItemRangeChanged(position,subscribeEditAdapter.getItemCount());
@@ -94,7 +94,7 @@ public class EditSubscribeFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDelete);
         itemTouchHelper.attachToRecyclerView(editDetailList);
 
-        new GetSubscribeList().execute("http://10.0.2.2:8080/assemble-ticket/subscribe/performers");
+        new GetSubscribeList().execute("https://ticketdate.azurewebsites.net/assemble-ticket/subscribe/performers");
 
         //화면에 삭제 버튼 그리기
        editDetailList.addItemDecoration(new RecyclerView.ItemDecoration() {

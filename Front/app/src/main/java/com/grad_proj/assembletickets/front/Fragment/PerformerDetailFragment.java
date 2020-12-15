@@ -86,7 +86,7 @@ public class PerformerDetailFragment extends Fragment {
         performerName.setText(performer.getName());
 
         bookmarkSet = view.findViewById(R.id.bookmarkSet);
-        new CheckSubscribe().execute("http://10.0.2.2:8080/assemble-ticket/subscribe");
+        new CheckSubscribe().execute("https://ticketdate.azurewebsites.net/assemble-ticket/subscribe");
 //        if(!setBookmark){
 //            bookmarkSet.setImageResource(R.drawable.icon_bookmarkoff);
 //        }
@@ -101,12 +101,12 @@ public class PerformerDetailFragment extends Fragment {
                 if(!setBookmark){
                     setBookmark=true;
                     bookmarkSet.setImageResource(R.drawable.icon_bookmarkon);
-                    new SetSubscribe().execute("http://10.0.2.2:8080/assemble-ticket/subscribe");
+                    new SetSubscribe().execute("https://ticketdate.azurewebsites.net/assemble-ticket/subscribe");
                 }
                 else{
                     setBookmark=false;
                     bookmarkSet.setImageResource(R.drawable.icon_bookmarkoff);
-                    new DeleteSubscribe().execute("http://10.0.2.2:8080/assemble-ticket/subscribe");
+                    new DeleteSubscribe().execute("https://ticketdate.azurewebsites.net/assemble-ticket/subscribe");
                 }
             }
         });
@@ -129,7 +129,7 @@ public class PerformerDetailFragment extends Fragment {
             }
         });
 
-        new GetPerformerDetail().execute("http://10.0.2.2:8080/assemble-ticket/performer");
+        new GetPerformerDetail().execute("https://ticketdate.azurewebsites.net/assemble-ticket/performer");
 
         return view;
     }

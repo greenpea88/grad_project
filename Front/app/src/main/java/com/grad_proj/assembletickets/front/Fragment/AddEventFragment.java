@@ -128,7 +128,7 @@ public class AddEventFragment extends Fragment {
                 postEvent.setEventContent(eventContent);
                 postEvent.setAlarmSet(alarmSet);
 
-                new PostEvent().execute("http://10.0.2.2:8080/assemble-ticket/calendar");
+                new PostEvent().execute("https://ticketdate.azurewebsites.net/assemble-ticket/calendar");
             }
         });
         return view;

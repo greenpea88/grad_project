@@ -168,7 +168,7 @@ public class ShowDetailFragment extends Fragment implements OnSelectDialogListen
         performerDeco = new SubscribeListDeco();
         showPerformerList.addItemDecoration(performerDeco);
 
-        new GetSubscribeList().execute("http://10.0.2.2:8080/assemble-ticket/show");
+        new GetSubscribeList().execute("https://ticketdate.azurewebsites.net/assemble-ticket/show");
 
         return view;
     }

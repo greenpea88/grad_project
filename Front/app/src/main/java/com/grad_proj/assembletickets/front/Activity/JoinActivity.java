@@ -168,11 +168,11 @@ public class JoinActivity extends AppCompatActivity {
             inputEmail = account.getEmail();
             inputUserName = account.getDisplayName();
 
-            new GetUserExists().execute("http://10.0.2.2:8080/assemble-ticket/login");
+            new GetUserExists().execute("https://ticketdate.azurewebsites.net/assemble-ticket/login");
 
             if (!isInDB) {
                 // 서버에 유저 정보 없으면
-                new SaveUserInfo().execute("http://10.0.2.2:8080/assemble-ticket/register");
+                new SaveUserInfo().execute("https://ticketdate.azurewebsites.net/assemble-ticket/register");
                 Toast.makeText(this, "회원가입이 완료되었습니다! 로그인 해주세요.", Toast.LENGTH_LONG).show();
             } else {
                  // 서버에 유저 정보 있으면

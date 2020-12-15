@@ -91,7 +91,7 @@ public class TicketPlayFragment extends Fragment implements SwipeRefreshLayout.O
         Date date = new Date();
         now = simpleDateFormat.format(date);
 
-        new GetPlayShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/type");
+        new GetPlayShows().execute("http://ticketdate.azurewebsites.net/assemble-ticket/shows/type");
 
         return view;
     }
@@ -107,13 +107,13 @@ public class TicketPlayFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     private void loadMoreShow(){
-        new GetPlayShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/type");
+        new GetPlayShows().execute("http://ticketdate.azurewebsites.net/assemble-ticket/shows/type");
     }
 
     @Override
     public void onRefresh() {
 
-        new GetNewShows().execute("http://10.0.2.2:8080/assemble-ticket/shows/type/new");
+        new GetNewShows().execute("http://ticketdate.azurewebsites.net/assemble-ticket/shows/type/new");
         playSwipeToRefresh.setRefreshing(false);
     }
 
